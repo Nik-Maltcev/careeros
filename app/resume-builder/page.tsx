@@ -43,6 +43,7 @@ interface JobData {
 
 export default function CoverLetterBuilderPage() {
   const [jobUrl, setJobUrl] = useState("")
+  const [jobDescription, setJobDescription] = useState("")
   const [candidateInfo, setCandidateInfo] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedCoverLetter, setGeneratedCoverLetter] = useState("")
@@ -98,6 +99,7 @@ export default function CoverLetterBuilderPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           jobUrl: jobUrl,
+          jobDescription: jobDescription,
           candidateInfo: candidateInfo,
         }),
       })
@@ -239,6 +241,27 @@ export default function CoverLetterBuilderPage() {
                     onChange={(e) => setJobUrl(e.target.value)}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                   />
+                  <p className="text-gray-400 text-xs">
+                    Вставьте ссылку на вакансию с любого сайта (hh.ru, LinkedIn, и др.)
+                  </p>
+                </div>
+
+                {/* Job Description (Optional) */}
+                <div className="space-y-2">
+                  <Label htmlFor="jobDescription" className="text-white flex items-center">
+                    <FileText className="w-4 h-4 mr-2" />
+                    Описание вакансии (опционально)
+                  </Label>
+                  <Textarea
+                    id="jobDescription"
+                    placeholder="Если автоматическое извлечение не работает, вставьте сюда описание вакансии, требования и обязанности..."
+                    value={jobDescription}
+                    onChange={(e) => setJobDescription(e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[100px]"
+                  />
+                  <p className="text-gray-400 text-xs">
+                    Поможет создать более точное сопроводительное письмо
+                  </p>
                 </div>
 
                 {/* Candidate Info */}

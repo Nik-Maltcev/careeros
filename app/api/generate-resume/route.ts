@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const { jobUrl, candidateInfo } = await request.json()
+    const { jobUrl, jobDescription, candidateInfo } = await request.json()
 
     if (!jobUrl || !candidateInfo) {
       return NextResponse.json({ error: "Job URL and candidate info are required" }, { status: 400 })
@@ -23,16 +23,53 @@ export async function POST(request: NextRequest) {
     let jobData: any = {}
 
     if (!firecrawlKey) {
-      console.warn("Firecrawl API key not found, using fallback mode")
-      // Fallback: создаем базовую структуру данных из URL
-      jobData = {
-        company_name: "Компания",
-        job_title: "Позиция",
-        job_description: `Вакансия по ссылке: ${jobUrl}`,
-        requirements: "Требования не извлечены",
-        responsibilities: "Обязанности не извлечены",
-        location: "Не указано",
-        employment_type: "Не указано"
+      console.warn("Firecrawl API key not found, using simple scraping fallback")
+      
+      try {
+        // Простое извлечение данных без Firecrawl
+        const response = await fetch(jobUrl, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+          }
+        })
+        
+        if (response.ok) {
+          const html = await response.text()
+          
+          // Простое извлечение title из HTML
+          const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+          const title = titleMatch ? titleMatch[1].trim() : "Позиция"
+          
+          // Попытка найти название компании в title или meta
+          const companyMatch = html.match(/company["\s]*:[\s]*["']([^"']+)["']/i) || 
+                              html.match(/organization["\s]*:[\s]*["']([^"']+)["']/i) ||
+                              html.match(/<meta[^>]*property=["']og:site_name["'][^>]*content=["']([^"']+)["']/i)
+          const company = companyMatch ? companyMatch[1].trim() : "Компания"
+          
+          jobData = {
+            company_name: company,
+            job_title: title,
+            job_description: `Вакансия: ${title} в компании ${company}. Ссылка: ${jobUrl}. Пожалуйста, изучите подробности по ссылке для более точного понимания требований.`,
+            requirements: "Требования указаны в оригинальной вакансии по ссылке",
+            responsibilities: "Обязанности указаны в оригинальной вакансии по ссылке", 
+            location: "Уточните в оригинальной вакансии",
+            employment_type: "Уточните в оригинальной вакансии"
+          }
+        } else {
+          throw new Error("Failed to fetch job page")
+        }
+      } catch (fetchError) {
+        console.error("Simple scraping failed:", fetchError)
+        // Базовый fallback
+        jobData = {
+          company_name: "Компания",
+          job_title: "Позиция", 
+          job_description: `Вакансия по ссылке: ${jobUrl}. Для создания более точного сопроводительного письма рекомендуется настроить Firecrawl API.`,
+          requirements: "Требования не извлечены - изучите вакансию по ссылке",
+          responsibilities: "Обязанности не извлечены - изучите вакансию по ссылке",
+          location: "Не указано",
+          employment_type: "Не указано"
+        }
       }
     } else {
       try {
@@ -95,6 +132,19 @@ export async function POST(request: NextRequest) {
           location: "Не указано",
           employment_type: "Не указано"
         }
+      }
+    }
+
+    // Если пользователь предоставил описание вакансии, используем его
+    if (jobDescription && jobDescription.trim()) {
+      console.log("Using user-provided job description")
+      jobData.job_description = jobDescription.trim()
+      // Также попробуем извлечь дополнительную информацию из описания
+      if (jobDescription.toLowerCase().includes('требования') || jobDescription.toLowerCase().includes('requirements')) {
+        jobData.requirements = jobDescription.trim()
+      }
+      if (jobDescription.toLowerCase().includes('обязанности') || jobDescription.toLowerCase().includes('responsibilities')) {
+        jobData.responsibilities = jobDescription.trim()
       }
     }
 
