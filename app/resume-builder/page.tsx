@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
 import {
-  Upload,
   LinkIcon,
   FileText,
   Sparkles,
@@ -22,6 +21,9 @@ import {
   Brain,
   Target,
   Zap,
+  Mail,
+  Building,
+  User,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -32,40 +34,35 @@ interface GenerationStep {
   description: string
 }
 
-export default function ResumeBuilderPage() {
+interface JobData {
+  company_name?: string
+  job_title?: string
+  job_description?: string
+  location?: string
+}
+
+export default function CoverLetterBuilderPage() {
   const [jobUrl, setJobUrl] = useState("")
-  const [resumeFile, setResumeFile] = useState<File | null>(null)
-  const [additionalInfo, setAdditionalInfo] = useState("")
+  const [candidateInfo, setCandidateInfo] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
-  const [generatedResume, setGeneratedResume] = useState("")
+  const [generatedCoverLetter, setGeneratedCoverLetter] = useState("")
+  const [jobData, setJobData] = useState<JobData | null>(null)
   const [progress, setProgress] = useState(0)
   const [currentStep, setCurrentStep] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
 
   const [steps, setSteps] = useState<GenerationStep[]>([
     {
-      id: "scrape",
+      id: "extract",
       title: "Анализ вакансии",
       status: "pending",
-      description: "Извлекаем требования из вакансии",
-    },
-    {
-      id: "parse",
-      title: "Обработка резюме",
-      status: "pending",
-      description: "Анализируем ваше текущее резюме",
+      description: "Извлекаем данные о вакансии через Firecrawl",
     },
     {
       id: "generate",
-      title: "Генерация резюме",
+      title: "Генерация письма",
       status: "pending",
-      description: "Создаем персонализированное резюме",
-    },
-    {
-      id: "optimize",
-      title: "ATS оптимизация",
-      status: "pending",
-      description: "Добавляем ключевые слова для ATS",
+      description: "Создаем персонализированное сопроводительное письмо",
     },
   ])
 
@@ -73,18 +70,8 @@ export default function ResumeBuilderPage() {
     setSteps((prev) => prev.map((step) => (step.id === stepId ? { ...step, status } : step)))
   }
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file && file.type === "application/pdf") {
-      setResumeFile(file)
-      setError(null)
-    } else {
-      setError("Пожалуйста, загрузите PDF файл")
-    }
-  }
-
   const handleGenerate = async () => {
-    if (!jobUrl || !resumeFile) {
+    if (!jobUrl || !candidateInfo.trim()) {
       setError("Пожалуйста, заполните все поля")
       return
     }
@@ -92,51 +79,17 @@ export default function ResumeBuilderPage() {
     setIsGenerating(true)
     setError(null)
     setProgress(0)
-    setGeneratedResume("")
+    setGeneratedCoverLetter("")
+    setJobData(null)
 
     try {
-      // Шаг 1: Скрапинг вакансии
+      // Шаг 1: Извлечение данных о вакансии
       setCurrentStep("Анализируем вакансию...")
-      updateStepStatus("scrape", "processing")
-      setProgress(25)
-
-      const scrapeResponse = await fetch("/api/scrape-job", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: jobUrl }),
-      })
-
-      if (!scrapeResponse.ok) {
-        throw new Error("Ошибка при анализе вакансии")
-      }
-
-      const jobData = await scrapeResponse.json()
-      updateStepStatus("scrape", "completed")
-
-      // Шаг 2: Обработка резюме
-      setCurrentStep("Обрабатываем ваше резюме...")
-      updateStepStatus("parse", "processing")
+      updateStepStatus("extract", "processing")
       setProgress(50)
 
-      const formData = new FormData()
-      formData.append("resume", resumeFile)
-      formData.append("jobData", JSON.stringify(jobData))
-      formData.append("additionalInfo", additionalInfo)
-
-      const parseResponse = await fetch("/api/parse-resume", {
-        method: "POST",
-        body: formData,
-      })
-
-      if (!parseResponse.ok) {
-        throw new Error("Ошибка при обработке резюме")
-      }
-
-      const parseData = await parseResponse.json()
-      updateStepStatus("parse", "completed")
-
-      // Шаг 3: Генерация резюме
-      setCurrentStep("Создаем персонализированное резюме...")
+      // Шаг 2: Генерация сопроводительного письма
+      setCurrentStep("Создаем сопроводительное письмо...")
       updateStepStatus("generate", "processing")
       setProgress(75)
 
@@ -144,33 +97,28 @@ export default function ResumeBuilderPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          jobData: jobData,
-          resumeData: parseData,
-          additionalInfo: additionalInfo,
+          jobUrl: jobUrl,
+          candidateInfo: candidateInfo,
         }),
       })
 
       if (!generateResponse.ok) {
-        throw new Error("Ошибка при генерации резюме")
+        const errorData = await generateResponse.json()
+        throw new Error(errorData.error || "Ошибка при генерации сопроводительного письма")
       }
 
       const result = await generateResponse.json()
+      
+      updateStepStatus("extract", "completed")
       updateStepStatus("generate", "completed")
-
-      // Шаг 4: ATS оптимизация
-      setCurrentStep("Оптимизируем для ATS...")
-      updateStepStatus("optimize", "processing")
       setProgress(100)
 
-      // Имитируем небольшую задержку для ATS оптимизации
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      updateStepStatus("optimize", "completed")
-
-      setGeneratedResume(result.resume)
+      setGeneratedCoverLetter(result.coverLetter)
+      setJobData(result.jobData)
       setCurrentStep("Готово!")
     } catch (error: any) {
       console.error("Generation error:", error)
-      setError(error.message || "Произошла ошибка при генерации резюме")
+      setError(error.message || "Произошла ошибка при генерации сопроводительного письма")
 
       // Отмечаем текущий шаг как ошибочный
       const currentStepId = steps.find((s) => s.status === "processing")?.id
@@ -182,12 +130,12 @@ export default function ResumeBuilderPage() {
     }
   }
 
-  const downloadResume = () => {
-    const blob = new Blob([generatedResume], { type: "text/plain" })
+  const downloadCoverLetter = () => {
+    const blob = new Blob([generatedCoverLetter], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "personalized-resume.txt"
+    a.download = "cover-letter.txt"
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -210,7 +158,7 @@ export default function ResumeBuilderPage() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">AI Resume Builder</span>
+              <span className="text-xl font-bold text-white">AI Cover Letter Builder</span>
             </div>
           </div>
         </div>
@@ -221,13 +169,13 @@ export default function ResumeBuilderPage() {
           {/* Hero Section */}
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Создайте резюме под{" "}
+              Создайте{" "}
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                конкретную вакансию
+                сопроводительное письмо
               </span>
             </h1>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-              ИИ проанализирует вакансию и адаптирует ваше резюме, добавив нужные ключевые слова для прохождения ATS
+              ИИ проанализирует вакансию и создаст персонализированное сопроводительное письмо, которое поможет получить интервью
             </p>
           </div>
 
@@ -239,7 +187,7 @@ export default function ResumeBuilderPage() {
                   <Target className="w-6 h-6 text-blue-400" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Точное соответствие</h3>
-                <p className="text-gray-300 text-sm">Резюме адаптируется под требования конкретной вакансии</p>
+                <p className="text-gray-300 text-sm">Письмо адаптируется под требования конкретной вакансии</p>
               </CardContent>
             </Card>
 
@@ -273,7 +221,7 @@ export default function ResumeBuilderPage() {
                   Данные для генерации
                 </CardTitle>
                 <CardDescription className="text-gray-300">
-                  Загрузите ссылку на вакансию и ваше текущее резюме
+                  Укажите ссылку на вакансию и информацию о себе
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -293,41 +241,28 @@ export default function ResumeBuilderPage() {
                   />
                 </div>
 
-                {/* Resume Upload */}
+                {/* Candidate Info */}
                 <div className="space-y-2">
-                  <Label htmlFor="resume" className="text-white flex items-center">
-                    <Upload className="w-4 h-4 mr-2" />
-                    Текущее резюме (PDF)
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="resume"
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleFileUpload}
-                      className="bg-white/10 border-white/20 text-white file:bg-white/20 file:border-0 file:text-white file:mr-4"
-                    />
-                  </div>
-                  {resumeFile && (
-                    <div className="flex items-center space-x-2 text-green-400 text-sm">
-                      <CheckCircle className="w-4 h-4" />
-                      <span>{resumeFile.name}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Additional Info */}
-                <div className="space-y-2">
-                  <Label htmlFor="additionalInfo" className="text-white">
-                    Дополнительная информация (опционально)
+                  <Label htmlFor="candidateInfo" className="text-white flex items-center">
+                    <User className="w-4 h-4 mr-2" />
+                    Информация о себе
                   </Label>
                   <Textarea
-                    id="additionalInfo"
-                    placeholder="Укажите дополнительные навыки, достижения или особенности, которые хотите подчеркнуть..."
-                    value={additionalInfo}
-                    onChange={(e) => setAdditionalInfo(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[100px]"
+                    id="candidateInfo"
+                    placeholder="Расскажите о своем опыте, навыках, достижениях и мотивации. Например:
+- Опыт работы и ключевые проекты
+- Технические навыки и компетенции  
+- Образование и сертификаты
+- Достижения и результаты
+- Почему вас интересует эта сфера"
+                    value={candidateInfo}
+                    onChange={(e) => setCandidateInfo(e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[150px]"
+                    required
                   />
+                  <p className="text-gray-400 text-xs">
+                    Чем подробнее информация, тем лучше будет сопроводительное письмо
+                  </p>
                 </div>
 
                 {/* Error Message */}
@@ -341,18 +276,18 @@ export default function ResumeBuilderPage() {
                 {/* Generate Button */}
                 <Button
                   onClick={handleGenerate}
-                  disabled={isGenerating || !jobUrl || !resumeFile}
+                  disabled={isGenerating || !jobUrl || !candidateInfo.trim()}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
                 >
                   {isGenerating ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Генерируем резюме...
+                      Создаем письмо...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Создать резюме
+                      <Mail className="w-4 h-4 mr-2" />
+                      Создать сопроводительное письмо
                     </>
                   )}
                 </Button>
@@ -367,7 +302,7 @@ export default function ResumeBuilderPage() {
                   Процесс генерации
                 </CardTitle>
                 <CardDescription className="text-gray-300">
-                  Отслеживайте прогресс создания вашего резюме
+                  Отслеживайте прогресс создания сопроводительного письма
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -400,18 +335,31 @@ export default function ResumeBuilderPage() {
                   ))}
                 </div>
 
-                {/* Generated Resume */}
-                {generatedResume && (
+                {/* Generated Cover Letter */}
+                {generatedCoverLetter && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-white font-semibold">Готовое резюме</h3>
-                      <Button onClick={downloadResume} size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                      <h3 className="text-white font-semibold">Сопроводительное письмо</h3>
+                      <Button onClick={downloadCoverLetter} size="sm" className="bg-green-600 hover:bg-green-700 text-white">
                         <Download className="w-4 h-4 mr-2" />
                         Скачать
                       </Button>
                     </div>
+                    {jobData && (
+                      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-4">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Building className="w-4 h-4 text-blue-400" />
+                          <span className="text-blue-300 font-medium">Информация о вакансии</span>
+                        </div>
+                        <div className="text-sm text-gray-300 space-y-1">
+                          {jobData.company_name && <p><strong>Компания:</strong> {jobData.company_name}</p>}
+                          {jobData.job_title && <p><strong>Должность:</strong> {jobData.job_title}</p>}
+                          {jobData.location && <p><strong>Местоположение:</strong> {jobData.location}</p>}
+                        </div>
+                      </div>
+                    )}
                     <div className="bg-white/10 border border-white/20 rounded-lg p-4 max-h-96 overflow-y-auto">
-                      <pre className="text-gray-300 text-sm whitespace-pre-wrap font-mono">{generatedResume}</pre>
+                      <pre className="text-gray-300 text-sm whitespace-pre-wrap">{generatedCoverLetter}</pre>
                     </div>
                   </div>
                 )}

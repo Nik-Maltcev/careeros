@@ -160,7 +160,7 @@ export default function LandingPage() {
               Интервью
             </Link>
             <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
-              Создать резюме
+              Сопроводительное письмо
             </Link>
             <Link href="/interview-results" className="text-white hover:text-blue-300 transition-colors">
               Результаты
@@ -441,7 +441,7 @@ export default function LandingPage() {
                 Главная
               </Link>
               <Link href="/resume-builder" className="hover:text-white transition-colors">
-                Создать резюме
+                Сопроводительное письмо
               </Link>
               <Link href="/interview-results" className="hover:text-white transition-colors">
                 Результаты

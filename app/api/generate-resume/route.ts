@@ -2,54 +2,124 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const { jobData, resumeData, additionalInfo } = await request.json()
+    const { jobUrl, candidateInfo } = await request.json()
 
-    if (!jobData || !resumeData) {
-      return NextResponse.json({ error: "Job data and resume data are required" }, { status: 400 })
+    if (!jobUrl || !candidateInfo) {
+      return NextResponse.json({ error: "Job URL and candidate info are required" }, { status: 400 })
     }
 
-    console.log("Generating resume with GPT-4...")
-    console.log("Job title:", jobData.title)
-    console.log("Resume length:", resumeData.resumeText?.length || 0)
+    console.log("Generating cover letter...")
+    console.log("Job URL:", jobUrl)
+    console.log("Candidate info length:", candidateInfo?.length || 0)
 
-    const openaiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API
+    const openaiKey = process.env.OPENAI_API_KEY
+    const firecrawlKey = process.env.FIRECRAWL_API_KEY
 
     if (!openaiKey) {
       console.error("OpenAI API key not found")
       return NextResponse.json({ error: "OpenAI API key not configured" }, { status: 500 })
     }
 
+    if (!firecrawlKey) {
+      console.error("Firecrawl API key not found")
+      return NextResponse.json({ error: "Firecrawl API key not configured" }, { status: 500 })
+    }
+
+    // Извлекаем данные о вакансии через Firecrawl
+    console.log("Extracting job data with Firecrawl...")
+    
+    const firecrawlResponse = await fetch("https://api.firecrawl.dev/v1/extract", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${firecrawlKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        urls: [jobUrl],
+        prompt: "Extract job details including: company name, job title, job description, requirements, responsibilities, benefits, and any other relevant information about this job posting.",
+        schema: {
+          type: "object",
+          properties: {
+            company_name: { type: "string" },
+            job_title: { type: "string" },
+            job_description: { type: "string" },
+            requirements: { type: "string" },
+            responsibilities: { type: "string" },
+            benefits: { type: "string" },
+            location: { type: "string" },
+            employment_type: { type: "string" }
+          },
+          required: ["company_name", "job_title", "job_description"]
+        }
+      }),
+    })
+
+    if (!firecrawlResponse.ok) {
+      const errorData = await firecrawlResponse.json().catch(() => ({}))
+      console.error("Firecrawl API error:", firecrawlResponse.status, errorData)
+      throw new Error(`Failed to extract job data: ${firecrawlResponse.status}`)
+    }
+
+    const firecrawlResult = await firecrawlResponse.json()
+    
+    if (!firecrawlResult.success || !firecrawlResult.data) {
+      throw new Error("Failed to extract job data from URL")
+    }
+
+    const jobData = firecrawlResult.data
+    console.log("Job data extracted:", {
+      company: jobData.company_name,
+      title: jobData.job_title,
+      hasDescription: !!jobData.job_description
+    })
+
+    // Генерируем сопроводительное письмо через ChatGPT
     const prompt = `
-Ты эксперт по созданию резюме и HR-специалист. Твоя задача - адаптировать существующее резюме под конкретную вакансию, чтобы максимально увеличить шансы на получение интервью.
+Ты эксперт по написанию сопроводительных писем и карьерный консультант. Твоя задача - создать персонализированное и убедительное сопроводительное письмо для конкретной вакансии.
 
-ВАКАНСИЯ:
-Название: ${jobData.title}
-Описание: ${jobData.content}
+ИНФОРМАЦИЯ О ВАКАНСИИ:
+Компания: ${jobData.company_name}
+Должность: ${jobData.job_title}
+Описание: ${jobData.job_description}
+Требования: ${jobData.requirements || "Не указаны"}
+Обязанности: ${jobData.responsibilities || "Не указаны"}
+Местоположение: ${jobData.location || "Не указано"}
+Тип занятости: ${jobData.employment_type || "Не указан"}
 
-ТЕКУЩЕЕ РЕЗЮМЕ:
-${resumeData.resumeText}
-
-ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ:
-${additionalInfo || "Не указана"}
+ИНФОРМАЦИЯ О КАНДИДАТЕ:
+${candidateInfo}
 
 ЗАДАЧА:
-1. Проанализируй требования вакансии и выдели ключевые навыки, технологии и качества
-2. Адаптируй резюме под эти требования:
-   - Переформулируй опыт работы, подчеркнув релевантные навыки
-   - Добавь ключевые слова из вакансии для прохождения ATS
-   - Переструктурируй разделы для максимального соответствия
-   - Выдели достижения, которые наиболее релевантны для позиции
-3. Сохрани профессиональный тон и структуру резюме
-4. Убедись, что все данные остаются правдивыми, но представлены в лучшем свете
+Создай профессиональное сопроводительное письмо, которое:
 
-ВАЖНО:
-- Используй ключевые слова из вакансии естественным образом
-- Подчеркни наиболее релевантный опыт в начале каждого раздела
-- Добавь метрики и конкретные достижения где возможно
-- Оптимизируй для ATS-систем (используй стандартные заголовки разделов)
-- Длина резюме должна быть 1-2 страницы
+1. СТРУКТУРА:
+   - Обращение к компании/HR
+   - Вступительный абзац с указанием позиции
+   - 2-3 основных абзаца с аргументами
+   - Заключительный абзац с призывом к действию
+   - Подпись
 
-Верни ТОЛЬКО текст адаптированного резюме без дополнительных комментариев.
+2. СОДЕРЖАНИЕ:
+   - Покажи понимание компании и позиции
+   - Выдели 3-4 ключевых навыка/достижения кандидата, релевантных для вакансии
+   - Объясни, почему кандидат подходит именно для этой роли
+   - Продемонстрируй мотивацию и интерес к компании
+   - Используй конкретные примеры из опыта кандидата
+
+3. СТИЛЬ:
+   - Профессиональный, но не формальный тон
+   - Уверенность без высокомерия
+   - Персонализация под компанию и вакансию
+   - Избегай шаблонных фраз
+   - Длина: 250-400 слов
+
+4. КЛЮЧЕВЫЕ ПРИНЦИПЫ:
+   - Покажи ценность, которую кандидат принесет компании
+   - Используй ключевые слова из описания вакансии
+   - Будь конкретным в примерах и достижениях
+   - Заверши сильным призывом к действию
+
+Верни ТОЛЬКО текст сопроводительного письма без дополнительных комментариев.
 `
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -59,20 +129,19 @@ ${additionalInfo || "Не указана"}
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o", // Используем gpt-4o вместо gpt-4.1
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
-            content:
-              "Ты эксперт по созданию резюме и карьерный консультант. Создаешь персонализированные резюме, оптимизированные для конкретных вакансий и ATS-систем.",
+            content: "Ты эксперт по написанию сопроводительных писем. Создаешь персонализированные письма, которые помогают кандидатам получить интервью.",
           },
           {
             role: "user",
             content: prompt,
           },
         ],
-        temperature: 0.3,
-        max_tokens: 3000,
+        temperature: 0.4,
+        max_tokens: 2000,
       }),
     })
 
@@ -83,21 +152,22 @@ ${additionalInfo || "Не указана"}
     }
 
     const result = await response.json()
-    const generatedResume = result.choices[0]?.message?.content
+    const generatedCoverLetter = result.choices[0]?.message?.content
 
-    if (!generatedResume) {
-      throw new Error("No resume generated")
+    if (!generatedCoverLetter) {
+      throw new Error("No cover letter generated")
     }
 
-    console.log("Successfully generated resume, length:", generatedResume.length)
+    console.log("Successfully generated cover letter, length:", generatedCoverLetter.length)
 
     return NextResponse.json({
-      resume: generatedResume,
+      coverLetter: generatedCoverLetter,
+      jobData: jobData,
       generatedAt: new Date().toISOString(),
       model: "gpt-4o",
     })
   } catch (error: any) {
-    console.error("Resume generation error:", error)
-    return NextResponse.json({ error: error.message || "Failed to generate resume" }, { status: 500 })
+    console.error("Cover letter generation error:", error)
+    return NextResponse.json({ error: error.message || "Failed to generate cover letter" }, { status: 500 })
   }
 }
