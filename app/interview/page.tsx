@@ -271,7 +271,10 @@ export default function InterviewPage() {
       console.log("TTS API response status:", response.status)
 
       if (!response.ok) {
-        throw new Error(`TTS API Error: ${response.status}`)
+        console.warn(`TTS API Error: ${response.status}. TTS будет отключен.`)
+        setAudioPlaybackFailed(true)
+        setApiStatus((prev) => ({ ...prev, openai: false }))
+        return
       }
 
       const audioBlob = await response.blob()
@@ -378,7 +381,7 @@ export default function InterviewPage() {
       localStorage.setItem("interview_specialty", specialty)
 
       try {
-        await AuthService.saveInterviewResult({
+        InterviewManager.saveInterviewResult({
           specialty,
           level,
           overall_score: 0, // Будет рассчитан на странице результатов

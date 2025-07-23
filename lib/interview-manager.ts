@@ -172,7 +172,6 @@ export class InterviewManager {
 
 // Глобальные функции для консоли браузера (для отладки)
 if (typeof window !== "undefined") {
-  (window as any).InterviewManager = InterviewManager
   (window as any).resetInterviews = () => {
     InterviewManager.resetAllData()
     window.location.reload()

@@ -75,6 +75,11 @@ export function AudioRecorder({ onRecordingComplete, resetTrigger }: AudioRecord
     try {
       console.log("🎤 Starting recording...")
 
+      // Проверяем поддержку getUserMedia
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Ваш браузер не поддерживает запись аудио")
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
