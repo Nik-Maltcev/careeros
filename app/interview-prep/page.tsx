@@ -196,9 +196,8 @@ function InterviewPrepContent() {
                 className={`flex items-center space-x-2 ${currentStep === "level" ? "text-blue-400" : selectedLevel ? "text-green-400" : "text-gray-400"}`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    currentStep === "level" ? "bg-blue-500" : selectedLevel ? "bg-green-500" : "bg-gray-600"
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "level" ? "bg-blue-500" : selectedLevel ? "bg-green-500" : "bg-gray-600"
+                    }`}
                 >
                   {selectedLevel && currentStep !== "level" ? "✓" : "1"}
                 </div>
@@ -209,9 +208,8 @@ function InterviewPrepContent() {
                 className={`flex items-center space-x-2 ${currentStep === "checklist" ? "text-blue-400" : "text-gray-400"}`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    currentStep === "checklist" ? "bg-blue-500" : "bg-gray-600"
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "checklist" ? "bg-blue-500" : "bg-gray-600"
+                    }`}
                 >
                   2
                 </div>
@@ -354,11 +352,10 @@ function InterviewPrepContent() {
                   size="lg"
                   onClick={handleStartInterview}
                   disabled={!canStart}
-                  className={`px-12 py-4 text-lg font-semibold ${
-                    canStart
-                      ? `bg-gradient-to-r from-${getLevelInfo(selectedLevel).color}-600 to-blue-600 hover:from-${getLevelInfo(selectedLevel).color}-700 hover:to-blue-700 text-white border-0 transition-all duration-300`
-                      : "bg-gray-600 text-gray-400 cursor-not-allowed"
-                  }`}
+                  className={`px-12 py-4 text-lg font-semibold ${canStart
+                    ? `bg-gradient-to-r from-${getLevelInfo(selectedLevel).color}-600 to-blue-600 hover:from-${getLevelInfo(selectedLevel).color}-700 hover:to-blue-700 text-white border-0 transition-all duration-300`
+                    : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    }`}
                 >
                   <Play className="w-5 h-5 mr-2" />
                   {canStart
