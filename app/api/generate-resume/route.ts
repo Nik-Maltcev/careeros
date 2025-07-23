@@ -20,58 +20,83 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "OpenAI API key not configured" }, { status: 500 })
     }
 
+    let jobData: any = {}
+
     if (!firecrawlKey) {
-      console.error("Firecrawl API key not found")
-      return NextResponse.json({ error: "Firecrawl API key not configured" }, { status: 500 })
-    }
+      console.warn("Firecrawl API key not found, using fallback mode")
+      // Fallback: создаем базовую структуру данных из URL
+      jobData = {
+        company_name: "Компания",
+        job_title: "Позиция",
+        job_description: `Вакансия по ссылке: ${jobUrl}`,
+        requirements: "Требования не извлечены",
+        responsibilities: "Обязанности не извлечены",
+        location: "Не указано",
+        employment_type: "Не указано"
+      }
+    } else {
+      try {
+        // Извлекаем данные о вакансии через Firecrawl
+        console.log("Extracting job data with Firecrawl...")
 
-    // Извлекаем данные о вакансии через Firecrawl
-    console.log("Extracting job data with Firecrawl...")
-    
-    const firecrawlResponse = await fetch("https://api.firecrawl.dev/v1/extract", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${firecrawlKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        urls: [jobUrl],
-        prompt: "Extract job details including: company name, job title, job description, requirements, responsibilities, benefits, and any other relevant information about this job posting.",
-        schema: {
-          type: "object",
-          properties: {
-            company_name: { type: "string" },
-            job_title: { type: "string" },
-            job_description: { type: "string" },
-            requirements: { type: "string" },
-            responsibilities: { type: "string" },
-            benefits: { type: "string" },
-            location: { type: "string" },
-            employment_type: { type: "string" }
+        const firecrawlResponse = await fetch("https://api.firecrawl.dev/v1/extract", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${firecrawlKey}`,
+            "Content-Type": "application/json",
           },
-          required: ["company_name", "job_title", "job_description"]
+          body: JSON.stringify({
+            urls: [jobUrl],
+            prompt: "Extract job details including: company name, job title, job description, requirements, responsibilities, benefits, and any other relevant information about this job posting.",
+            schema: {
+              type: "object",
+              properties: {
+                company_name: { type: "string" },
+                job_title: { type: "string" },
+                job_description: { type: "string" },
+                requirements: { type: "string" },
+                responsibilities: { type: "string" },
+                benefits: { type: "string" },
+                location: { type: "string" },
+                employment_type: { type: "string" }
+              },
+              required: ["company_name", "job_title", "job_description"]
+            }
+          }),
+        })
+
+        if (!firecrawlResponse.ok) {
+          const errorData = await firecrawlResponse.json().catch(() => ({}))
+          console.error("Firecrawl API error:", firecrawlResponse.status, errorData)
+          throw new Error(`Failed to extract job data: ${firecrawlResponse.status}`)
         }
-      }),
-    })
 
-    if (!firecrawlResponse.ok) {
-      const errorData = await firecrawlResponse.json().catch(() => ({}))
-      console.error("Firecrawl API error:", firecrawlResponse.status, errorData)
-      throw new Error(`Failed to extract job data: ${firecrawlResponse.status}`)
+        const firecrawlResult = await firecrawlResponse.json()
+
+        if (!firecrawlResult.success || !firecrawlResult.data) {
+          throw new Error("Failed to extract job data from URL")
+        }
+
+        jobData = firecrawlResult.data
+        console.log("Job data extracted:", {
+          company: jobData.company_name,
+          title: jobData.job_title,
+          hasDescription: !!jobData.job_description
+        })
+      } catch (firecrawlError) {
+        console.error("Firecrawl extraction failed, using fallback:", firecrawlError)
+        // Fallback если Firecrawl не работает
+        jobData = {
+          company_name: "Компания",
+          job_title: "Позиция",
+          job_description: `Вакансия по ссылке: ${jobUrl}. Пожалуйста, изучите требования самостоятельно.`,
+          requirements: "Требования не извлечены - изучите вакансию по ссылке",
+          responsibilities: "Обязанности не извлечены - изучите вакансию по ссылке",
+          location: "Не указано",
+          employment_type: "Не указано"
+        }
+      }
     }
-
-    const firecrawlResult = await firecrawlResponse.json()
-    
-    if (!firecrawlResult.success || !firecrawlResult.data) {
-      throw new Error("Failed to extract job data from URL")
-    }
-
-    const jobData = firecrawlResult.data
-    console.log("Job data extracted:", {
-      company: jobData.company_name,
-      title: jobData.job_title,
-      hasDescription: !!jobData.job_description
-    })
 
     // Генерируем сопроводительное письмо через ChatGPT
     const prompt = `
