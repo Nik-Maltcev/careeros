@@ -589,7 +589,9 @@ export default function InterviewPage() {
                 {audioPlaybackFailed || autoplayBlocked ? (
                   <Badge className="bg-orange-500/20 text-orange-300 border-orange-400 text-xs">
                     <VolumeX className="w-3 h-3 mr-1" />
-                    {isMobile ? "Нажмите для воспроизведения" : "Автовоспроизведение недоступно"}
+                    {interviewState.currentQuestionIndex === 0 
+                      ? "Нажмите ▶ для прослушивания вопроса" 
+                      : isMobile ? "Нажмите для воспроизведения" : "Автовоспроизведение недоступно"}
                   </Badge>
                 ) : isAudioLoading ? (
                   <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs">
