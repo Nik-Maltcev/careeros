@@ -26,8 +26,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 import type { InterviewLevel } from "@/types/interview"
-import { SupabaseAuthService as AuthService } from "@/lib/auth-supabase"
-import { AuthDialog } from "@/components/auth-dialog"
+import { InterviewManager } from "@/lib/interview-manager"
 
 function InterviewPrepContent() {
   const searchParams = useSearchParams()
@@ -53,56 +52,35 @@ function InterviewPrepContent() {
 
   const [currentStep, setCurrentStep] = useState<"level" | "checklist">("level")
   const [selectedLevel, setSelectedLevel] = useState<InterviewLevel>()
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false)
   const [limitWarning, setLimitWarning] = useState<string | null>(null)
-  const [user, setUser] = useState<any>(null)
-  const [remainingInterviews, setRemainingInterviews] = useState<number>(0)
+  const [remainingInterviews, setRemainingInterviews] = useState<number>(3)
 
   useEffect(() => {
-    checkLimitsAndUser()
+    checkLimits()
   }, [])
 
-  const checkLimitsAndUser = async () => {
-    try {
-      const currentUser = await AuthService.getCurrentUser()
-      setUser(currentUser)
+  const checkLimits = () => {
+    const { canStart, reason, remainingInterviews: remaining } = InterviewManager.canStartInterview()
 
-      const { canStart, reason, remainingInterviews: remaining } = await AuthService.canStartInterview()
-
-      console.log("Interview check result:", { canStart, reason, remaining })
-
-      if (!canStart) {
-        setLimitWarning(reason || "Достигнут лимит интервью")
-      } else {
-        setLimitWarning(null)
-      }
-
-      setRemainingInterviews(remaining || 0)
-    } catch (error) {
-      console.error("Error checking limits:", error)
+    if (!canStart) {
+      setLimitWarning(reason || "Достигнут лимит интервью")
+    } else {
+      setLimitWarning(null)
     }
+
+    setRemainingInterviews(remaining)
   }
 
-  const handleStartInterview = async () => {
-    try {
-      const { canStart, reason } = await AuthService.canStartInterview()
+  const handleStartInterview = () => {
+    const { canStart, reason } = InterviewManager.canStartInterview()
 
-      console.log("Starting interview check:", { canStart, reason })
-
-      if (canStart) {
-        // Записываем использование интервью
-        await AuthService.recordInterviewUsage()
-        // Navigate to interview page with level
-        window.location.href = `/interview?specialty=${specialtyId}&level=${selectedLevel}`
-      } else {
-        setLimitWarning(reason || "Достигнут лимит интервью")
-        if (!user) {
-          setIsAuthDialogOpen(true)
-        }
-      }
-    } catch (error) {
-      console.error("Error starting interview:", error)
-      setLimitWarning("Произошла ошибка при запуске интервью")
+    if (canStart) {
+      // Записываем использование интервью
+      InterviewManager.recordInterviewUsage()
+      // Navigate to interview page with level
+      window.location.href = `/interview?specialty=${specialtyId}&level=${selectedLevel}`
+    } else {
+      setLimitWarning(reason || "Достигнут лимит интервью")
     }
   }
 
@@ -113,12 +91,6 @@ function InterviewPrepContent() {
 
   const handleBackToLevelSelection = () => {
     setCurrentStep("level")
-  }
-
-  const handleAuthSuccess = () => {
-    setLimitWarning(null)
-    // Обновляем данные пользователя и лимиты
-    checkLimitsAndUser()
   }
 
   const getLevelInfo = (level: InterviewLevel) => {
@@ -192,15 +164,16 @@ function InterviewPrepContent() {
                   <AlertTriangle className="w-5 h-5 text-orange-400" />
                   <div className="text-left">
                     <p className="text-orange-300 text-sm font-medium">{limitWarning}</p>
-                    {!user && (
-                      <Button
-                        size="sm"
-                        onClick={() => setIsAuthDialogOpen(true)}
-                        className="mt-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white border-0"
-                      >
-                        Зарегистрироваться
-                      </Button>
-                    )}
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        InterviewManager.resetAllData()
+                        window.location.reload()
+                      }}
+                      className="mt-2 bg-orange-600 hover:bg-orange-700 text-white text-xs"
+                    >
+                      Сбросить счетчик
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -210,7 +183,7 @@ function InterviewPrepContent() {
             {canStart && remainingInterviews !== undefined && (
               <div className="mt-4">
                 <Badge className="bg-green-500/20 text-green-300 border-green-400">
-                  {user ? `Осталось ${remainingInterviews} интервью` : `${remainingInterviews} бесплатное интервью`}
+                  {remainingInterviews} бесплатных интервью осталось
                 </Badge>
               </div>
             )}
@@ -402,13 +375,7 @@ function InterviewPrepContent() {
         </div>
       </div>
 
-      {/* Auth Dialog */}
-      <AuthDialog
-        isOpen={isAuthDialogOpen}
-        onClose={() => setIsAuthDialogOpen(false)}
-        onAuthSuccess={handleAuthSuccess}
-        mode="register"
-      />
+
     </div>
   )
 }

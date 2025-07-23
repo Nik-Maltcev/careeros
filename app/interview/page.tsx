@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { AudioRecorder } from "@/components/audio-recorder"
-import { SupabaseAuthService } from "@/lib/auth-supabase"
+import { InterviewManager } from "@/lib/interview-manager"
 import {
   Play,
   Pause,
@@ -113,18 +113,13 @@ export default function InterviewPage() {
         setDebugInfo("Проверка лимитов...")
 
         // Проверяем лимиты
-        try {
-          const { canStart, reason } = await SupabaseAuthService.canStartInterview()
-          console.log("Interview limits check:", { canStart, reason })
+        const { canStart, reason } = InterviewManager.canStartInterview()
+        console.log("Interview limits check:", { canStart, reason })
 
-          if (!canStart) {
-            setError(reason || "Достигнут лимит интервью")
-            setIsLoading(false)
-            return
-          }
-        } catch (limitError) {
-          console.warn("Limit check failed, continuing:", limitError)
-          // Продолжаем, если проверка лимитов не удалась
+        if (!canStart) {
+          setError(reason || "Достигнут лимит интервью")
+          setIsLoading(false)
+          return
         }
 
         setDebugInfo("Генерация вопросов через Perplexity API...")
@@ -200,13 +195,8 @@ export default function InterviewPage() {
         setDebugInfo("Запись использования интервью...")
 
         // Записываем использование интервью
-        try {
-          await SupabaseAuthService.recordInterviewUsage()
-          console.log("✅ Interview usage recorded")
-        } catch (usageError) {
-          console.warn("Failed to record interview usage:", usageError)
-          // Не критично, продолжаем
-        }
+        InterviewManager.recordInterviewUsage()
+        console.log("✅ Interview usage recorded")
 
         setDebugInfo("Генерация аудио...")
 
@@ -388,7 +378,7 @@ export default function InterviewPage() {
       localStorage.setItem("interview_specialty", specialty)
 
       try {
-        await SupabaseAuthService.saveInterviewResult({
+        await AuthService.saveInterviewResult({
           specialty,
           level,
           overall_score: 0, // Будет рассчитан на странице результатов
