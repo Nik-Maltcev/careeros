@@ -35,6 +35,7 @@ export default function DashboardPage() {
         // Загружаем пользователя
         const currentUser = await SupabaseAuthService.getCurrentUser()
         if (!currentUser) {
+          // Если Supabase не настроен или пользователь не авторизован, перенаправляем на главную
           router.push("/")
           return
         }
@@ -50,6 +51,8 @@ export default function DashboardPage() {
         setInterviewsRemaining(remainingInterviews || 0)
       } catch (error) {
         console.error("Dashboard loading error:", error)
+        // В случае ошибки перенаправляем на главную
+        router.push("/")
       } finally {
         setIsLoading(false)
       }

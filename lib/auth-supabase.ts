@@ -1,9 +1,24 @@
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Проверяем наличие переменных окружения
+if (!supabaseUrl) {
+  console.warn("NEXT_PUBLIC_SUPABASE_URL is not defined. Supabase features will be disabled.")
+}
+
+if (!supabaseAnonKey) {
+  console.warn("NEXT_PUBLIC_SUPABASE_ANON_KEY is not defined. Supabase features will be disabled.")
+}
+
+// Создаем клиент только если есть все необходимые переменные
+export const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
+
+// Проверка доступности Supabase
+export const isSupabaseConfigured = () => {
+  return !!(supabaseUrl && supabaseAnonKey && supabase)
+}
 
 export interface Profile {
   id: string
@@ -98,6 +113,11 @@ export class SupabaseAuthService {
 
   static async getCurrentUser(): Promise<Profile | null> {
     try {
+      if (!supabase) {
+        this.debugLog("Supabase not configured")
+        return null
+      }
+
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -133,6 +153,10 @@ export class SupabaseAuthService {
 
   static async login(email: string, password: string) {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase не настроен" }
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -150,6 +174,10 @@ export class SupabaseAuthService {
 
   static async register(email: string, password: string, name: string) {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase не настроен" }
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -172,6 +200,11 @@ export class SupabaseAuthService {
 
   static async logout() {
     try {
+      if (!supabase) {
+        console.warn("Supabase not configured, cannot logout")
+        return
+      }
+      
       const { error } = await supabase.auth.signOut()
       if (error) {
         console.error("Error logging out:", error)
@@ -255,6 +288,11 @@ export class SupabaseAuthService {
         return
       }
 
+      if (!supabase) {
+        console.warn("Supabase not configured, cannot record interview usage")
+        return
+      }
+
       // Зарегистрированный пользователь
       const newUsageCount = user.interviews_used + 1
       const { error } = await supabase
@@ -283,6 +321,10 @@ export class SupabaseAuthService {
 
   static async handleAuthCallback() {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase не настроен" }
+      }
+
       const { data, error } = await supabase.auth.getSession()
 
       if (error) {
@@ -302,6 +344,11 @@ export class SupabaseAuthService {
   }
 
   static onAuthStateChange(callback: (user: any) => void) {
+    if (!supabase) {
+      console.warn("Supabase not configured, cannot listen to auth state changes")
+      return { data: { subscription: { unsubscribe: () => {} } } }
+    }
+    
     return supabase.auth.onAuthStateChange((event, session) => {
       this.debugLog("Auth state change:", event, session?.user?.email || "No user")
       callback(session?.user || null)
@@ -319,6 +366,11 @@ export class SupabaseAuthService {
       const user = await this.getCurrentUser()
       if (!user) {
         this.debugLog("No user found, skipping result save")
+        return
+      }
+
+      if (!supabase) {
+        console.warn("Supabase not configured, cannot save interview result")
         return
       }
 
@@ -347,6 +399,11 @@ export class SupabaseAuthService {
     try {
       const user = await this.getCurrentUser()
       if (!user) return []
+
+      if (!supabase) {
+        console.warn("Supabase not configured, cannot get interview history")
+        return []
+      }
 
       const { data, error } = await supabase
         .from("interview_results")
