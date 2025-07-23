@@ -6,7 +6,9 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "railway:install": "pnpm install --no-frozen-lockfile",
+    "railway:build": "pnpm run railway:install && pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
