@@ -296,16 +296,26 @@ export default function InterviewPage() {
 
       // Пытаемся автоматически воспроизвести (может не сработать на мобильных)
       try {
+        // Сначала загружаем аудио
+        await new Promise((resolve, reject) => {
+          audio.addEventListener('canplaythrough', resolve, { once: true })
+          audio.addEventListener('error', reject, { once: true })
+          audio.load()
+        })
+
         const playPromise = audio.play()
         if (playPromise !== undefined) {
           await playPromise
           setInterviewState((prev) => ({ ...prev, isPlaying: true }))
+          setAutoplayBlocked(false)
+          setAudioPlaybackFailed(false)
           console.log("✅ Audio autoplay successful")
         }
       } catch (autoplayError) {
-        console.log("⚠️ Autoplay blocked:", autoplayError)
+        console.log("⚠️ Autoplay blocked or failed:", autoplayError)
         setAutoplayBlocked(true)
         setAudioPlaybackFailed(true)
+        setInterviewState((prev) => ({ ...prev, isPlaying: false }))
       }
     } catch (error) {
       console.error("❌ Speech generation error:", error)
@@ -402,11 +412,11 @@ export default function InterviewPage() {
   }, [interviewState, currentAudio, specialty, level, router])
 
   // Обработка записи ответа
-  const handleRecordingComplete = (audioBlob: Blob) => {
+  const handleRecordingComplete = (audioBlob: Blob, duration: number) => {
     const updatedResponses = [...interviewState.responses]
     updatedResponses[interviewState.currentQuestionIndex] = {
       response: `Аудио ответ (${audioBlob.size} bytes)`,
-      duration: 60, // Примерная длительность
+      duration: duration, // Используем реальную длительность
     }
 
     setInterviewState((prev) => ({

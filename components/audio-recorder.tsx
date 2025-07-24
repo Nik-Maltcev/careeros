@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Mic, MicOff, Play, Pause, RotateCcw, Send } from "lucide-react"
 
 interface AudioRecorderProps {
-  onRecordingComplete: (audioBlob: Blob) => void
+  onRecordingComplete: (audioBlob: Blob, duration: number) => void
   resetTrigger?: number
 }
 
@@ -192,8 +192,8 @@ export function AudioRecorder({ onRecordingComplete, resetTrigger }: AudioRecord
         type: mediaRecorderRef.current?.mimeType || "audio/webm",
       })
 
-      console.log("📤 Calling onRecordingComplete with blob size:", audioBlob.size)
-      await onRecordingComplete(audioBlob)
+      console.log("📤 Calling onRecordingComplete with blob size:", audioBlob.size, "duration:", recordingTime)
+      await onRecordingComplete(audioBlob, recordingTime)
 
       console.log("✅ Recording submitted successfully")
     } catch (error) {
