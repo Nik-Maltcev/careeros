@@ -412,18 +412,78 @@ export default function InterviewPage() {
   }, [interviewState, currentAudio, specialty, level, router])
 
   // Обработка записи ответа
-  const handleRecordingComplete = (audioBlob: Blob, duration: number) => {
+  const handleRecordingComplete = async (audioBlob: Blob, duration: number) => {
+    console.log("🎤 Processing recorded answer...")
+    
+    // Сначала сохраняем временный ответ
     const updatedResponses = [...interviewState.responses]
     updatedResponses[interviewState.currentQuestionIndex] = {
-      response: `Аудио ответ (${audioBlob.size} bytes)`,
-      duration: duration, // Используем реальную длительность
+      response: "Обрабатываем аудио ответ...",
+      duration: duration,
     }
 
     setInterviewState((prev) => ({
       ...prev,
       responses: updatedResponses,
-      hasRecordedCurrentQuestion: true, // Устанавливаем флаг записи
+      hasRecordedCurrentQuestion: true,
     }))
+
+    // Пытаемся транскрибировать аудио в текст
+    try {
+      const formData = new FormData()
+      formData.append("audio", audioBlob, "answer.webm")
+
+      const transcribeResponse = await fetch("/api/transcribe-audio", {
+        method: "POST",
+        body: formData,
+      })
+
+      const transcribeResult = await transcribeResponse.json()
+
+      if (transcribeResult.success && transcribeResult.transcription) {
+        // Обновляем ответ с транскрипцией
+        const finalResponses = [...interviewState.responses]
+        finalResponses[interviewState.currentQuestionIndex] = {
+          response: transcribeResult.transcription,
+          duration: duration,
+        }
+
+        setInterviewState((prev) => ({
+          ...prev,
+          responses: finalResponses,
+        }))
+
+        console.log("✅ Audio transcribed successfully:", transcribeResult.transcription.substring(0, 100))
+      } else {
+        // Fallback если транскрипция не удалась
+        const fallbackResponses = [...interviewState.responses]
+        fallbackResponses[interviewState.currentQuestionIndex] = {
+          response: transcribeResult.fallback || `Аудио ответ (${audioBlob.size} bytes)`,
+          duration: duration,
+        }
+
+        setInterviewState((prev) => ({
+          ...prev,
+          responses: fallbackResponses,
+        }))
+
+        console.warn("⚠️ Transcription failed, using fallback")
+      }
+    } catch (error) {
+      console.error("❌ Transcription error:", error)
+      
+      // Fallback при ошибке
+      const errorResponses = [...interviewState.responses]
+      errorResponses[interviewState.currentQuestionIndex] = {
+        response: `Аудио ответ (${audioBlob.size} bytes)`,
+        duration: duration,
+      }
+
+      setInterviewState((prev) => ({
+        ...prev,
+        responses: errorResponses,
+      }))
+    }
   }
 
   // Форматирование времени
