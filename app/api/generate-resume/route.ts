@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     if (!firecrawlKey) {
       console.warn("Firecrawl API key not found, using simple scraping fallback")
-      
+
       try {
         // Простое извлечение данных без Firecrawl
         const response = await fetch(jobUrl, {
@@ -32,26 +32,26 @@ export async function POST(request: NextRequest) {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
           }
         })
-        
+
         if (response.ok) {
           const html = await response.text()
-          
+
           // Простое извлечение title из HTML
           const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
           const title = titleMatch ? titleMatch[1].trim() : "Позиция"
-          
+
           // Попытка найти название компании в title или meta
-          const companyMatch = html.match(/company["\s]*:[\s]*["']([^"']+)["']/i) || 
-                              html.match(/organization["\s]*:[\s]*["']([^"']+)["']/i) ||
-                              html.match(/<meta[^>]*property=["']og:site_name["'][^>]*content=["']([^"']+)["']/i)
+          const companyMatch = html.match(/company["\s]*:[\s]*["']([^"']+)["']/i) ||
+            html.match(/organization["\s]*:[\s]*["']([^"']+)["']/i) ||
+            html.match(/<meta[^>]*property=["']og:site_name["'][^>]*content=["']([^"']+)["']/i)
           const company = companyMatch ? companyMatch[1].trim() : "Компания"
-          
+
           jobData = {
             company_name: company,
             job_title: title,
             job_description: `Вакансия: ${title} в компании ${company}. Ссылка: ${jobUrl}. Пожалуйста, изучите подробности по ссылке для более точного понимания требований.`,
             requirements: "Требования указаны в оригинальной вакансии по ссылке",
-            responsibilities: "Обязанности указаны в оригинальной вакансии по ссылке", 
+            responsibilities: "Обязанности указаны в оригинальной вакансии по ссылке",
             location: "Уточните в оригинальной вакансии",
             employment_type: "Уточните в оригинальной вакансии"
           }
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         // Базовый fallback
         jobData = {
           company_name: "Компания",
-          job_title: "Позиция", 
+          job_title: "Позиция",
           job_description: `Вакансия по ссылке: ${jobUrl}. Для создания более точного сопроводительного письма рекомендуется настроить Firecrawl API.`,
           requirements: "Требования не извлечены - изучите вакансию по ссылке",
           responsibilities: "Обязанности не извлечены - изучите вакансию по ссылке",
@@ -138,14 +138,35 @@ export async function POST(request: NextRequest) {
     // Если пользователь предоставил описание вакансии, используем его
     if (jobDescription && jobDescription.trim()) {
       console.log("Using user-provided job description")
-      jobData.job_description = jobDescription.trim()
-      // Также попробуем извлечь дополнительную информацию из описания
-      if (jobDescription.toLowerCase().includes('требования') || jobDescription.toLowerCase().includes('requirements')) {
-        jobData.requirements = jobDescription.trim()
+      const userDescription = jobDescription.trim()
+      
+      // Пытаемся извлечь название компании и должности из описания
+      const companyMatches = userDescription.match(/компания[:\s]+([^\n\r.]+)/i) || 
+                            userDescription.match(/организация[:\s]+([^\n\r.]+)/i) ||
+                            userDescription.match(/([А-ЯЁ][а-яё\s]+(?:ООО|ЗАО|ОАО|ИП|Ltd|Inc|Corp))/i)
+      
+      const positionMatches = userDescription.match(/должность[:\s]+([^\n\r.]+)/i) ||
+                             userDescription.match(/вакансия[:\s]+([^\n\r.]+)/i) ||
+                             userDescription.match(/позиция[:\s]+([^\n\r.]+)/i)
+      
+      if (companyMatches) {
+        jobData.company_name = companyMatches[1].trim()
       }
-      if (jobDescription.toLowerCase().includes('обязанности') || jobDescription.toLowerCase().includes('responsibilities')) {
-        jobData.responsibilities = jobDescription.trim()
+      
+      if (positionMatches) {
+        jobData.job_title = positionMatches[1].trim()
       }
+      
+      // Используем полное описание от пользователя
+      jobData.job_description = userDescription
+      jobData.requirements = userDescription
+      jobData.responsibilities = userDescription
+      
+      console.log("Extracted from user description:", {
+        company: jobData.company_name,
+        title: jobData.job_title,
+        hasDescription: true
+      })
     }
 
     // Генерируем сопроводительное письмо через ChatGPT

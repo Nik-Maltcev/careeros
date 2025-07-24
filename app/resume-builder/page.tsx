@@ -246,21 +246,44 @@ export default function CoverLetterBuilderPage() {
                   </p>
                 </div>
 
-                {/* Job Description (Optional) */}
+                {/* Job Description (Recommended) */}
                 <div className="space-y-2">
                   <Label htmlFor="jobDescription" className="text-white flex items-center">
                     <FileText className="w-4 h-4 mr-2" />
-                    Описание вакансии (опционально)
+                    Описание вакансии 
+                    <span className="ml-2 px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded border border-orange-500/30">
+                      Рекомендуется
+                    </span>
                   </Label>
+                  <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 mb-2">
+                    <div className="flex items-start space-x-2">
+                      <AlertCircle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
+                      <div className="text-orange-200 text-sm">
+                        <p className="font-medium mb-1">Для лучшего результата:</p>
+                        <ol className="list-decimal list-inside space-y-1 text-xs">
+                          <li>Откройте ссылку на вакансию</li>
+                          <li>Скопируйте полное описание, требования и обязанности</li>
+                          <li>Вставьте в поле ниже</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
                   <Textarea
                     id="jobDescription"
-                    placeholder="Если автоматическое извлечение не работает, вставьте сюда описание вакансии, требования и обязанности..."
+                    placeholder="Вставьте сюда полное описание вакансии, включая:
+- Название компании и должности
+- Требования к кандидату
+- Обязанности
+- Условия работы
+- Информацию о компании
+
+Чем подробнее описание, тем лучше будет сопроводительное письмо!"
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[100px]"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[120px]"
                   />
                   <p className="text-gray-400 text-xs">
-                    Поможет создать более точное сопроводительное письмо
+                    💡 Без описания вакансии письмо будет общим и менее эффективным
                   </p>
                 </div>
 
