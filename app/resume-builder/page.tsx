@@ -42,7 +42,6 @@ interface JobData {
 }
 
 export default function CoverLetterBuilderPage() {
-  const [jobUrl, setJobUrl] = useState("")
   const [jobDescription, setJobDescription] = useState("")
   const [candidateInfo, setCandidateInfo] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
@@ -72,7 +71,7 @@ export default function CoverLetterBuilderPage() {
   }
 
   const handleGenerate = async () => {
-    if (!jobUrl || !candidateInfo.trim()) {
+    if (!jobDescription.trim() || !candidateInfo.trim()) {
       setError("Пожалуйста, заполните все поля")
       return
     }
@@ -98,7 +97,6 @@ export default function CoverLetterBuilderPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          jobUrl: jobUrl,
           jobDescription: jobDescription,
           candidateInfo: candidateInfo,
         }),
@@ -227,42 +225,23 @@ export default function CoverLetterBuilderPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Job URL */}
-                <div className="space-y-2">
-                  <Label htmlFor="jobUrl" className="text-white flex items-center">
-                    <LinkIcon className="w-4 h-4 mr-2" />
-                    Ссылка на вакансию
-                  </Label>
-                  <Input
-                    id="jobUrl"
-                    type="url"
-                    placeholder="https://hh.ru/vacancy/123456"
-                    value={jobUrl}
-                    onChange={(e) => setJobUrl(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                  />
-                  <p className="text-gray-400 text-xs">
-                    Вставьте ссылку на вакансию с любого сайта (hh.ru, LinkedIn, и др.)
-                  </p>
-                </div>
-
-                {/* Job Description (Recommended) */}
+                {/* Job Description (Required) */}
                 <div className="space-y-2">
                   <Label htmlFor="jobDescription" className="text-white flex items-center">
                     <FileText className="w-4 h-4 mr-2" />
-                    Описание вакансии 
-                    <span className="ml-2 px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded border border-orange-500/30">
-                      Рекомендуется
+                    Описание вакансии
+                    <span className="ml-2 px-2 py-1 bg-red-500/20 text-red-300 text-xs rounded border border-red-500/30">
+                      Обязательно
                     </span>
                   </Label>
-                  <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 mb-2">
+                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-2">
                     <div className="flex items-start space-x-2">
-                      <AlertCircle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
-                      <div className="text-orange-200 text-sm">
-                        <p className="font-medium mb-1">Для лучшего результата:</p>
+                      <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                      <div className="text-blue-200 text-sm">
+                        <p className="font-medium mb-1">Как получить описание вакансии:</p>
                         <ol className="list-decimal list-inside space-y-1 text-xs">
-                          <li>Откройте ссылку на вакансию</li>
-                          <li>Скопируйте полное описание, требования и обязанности</li>
+                          <li>Найдите интересную вакансию на hh.ru, LinkedIn или другом сайте</li>
+                          <li>Скопируйте полное описание вакансии</li>
                           <li>Вставьте в поле ниже</li>
                         </ol>
                       </div>
@@ -270,20 +249,24 @@ export default function CoverLetterBuilderPage() {
                   </div>
                   <Textarea
                     id="jobDescription"
-                    placeholder="Вставьте сюда полное описание вакансии, включая:
-- Название компании и должности
-- Требования к кандидату
-- Обязанности
-- Условия работы
-- Информацию о компании
-
-Чем подробнее описание, тем лучше будет сопроводительное письмо!"
+                    placeholder="Пример: 
+Компания: ООО 'Технологии будущего'
+Должность: Frontend разработчик
+Требования:
+- Опыт работы с React от 2 лет
+- Знание TypeScript, HTML, CSS
+- Опыт работы с REST API
+Обязанности:
+- Разработка пользовательских интерфейсов
+- Оптимизация производительности
+- Работа в команде разработки"
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[120px]"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[150px]"
+                    required
                   />
-                  <p className="text-gray-400 text-xs">
-                    💡 Без описания вакансии письмо будет общим и менее эффективным
+                  <p className="text-blue-400 text-xs">
+                    💡 Скопируйте описание с hh.ru, LinkedIn или любого другого сайта с вакансиями
                   </p>
                 </div>
 
@@ -322,7 +305,7 @@ export default function CoverLetterBuilderPage() {
                 {/* Generate Button */}
                 <Button
                   onClick={handleGenerate}
-                  disabled={isGenerating || !jobUrl || !candidateInfo.trim()}
+                  disabled={isGenerating || !jobDescription.trim() || !candidateInfo.trim()}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
                 >
                   {isGenerating ? (
