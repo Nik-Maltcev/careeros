@@ -227,28 +227,7 @@ export default function InterviewPage() {
     initializeInterview()
   }, [specialty, level])
 
-  // Таймер
-  useEffect(() => {
-    if (!isLoading && !interviewState.isCompleted && interviewState.timeRemaining > 0) {
-      timerRef.current = setInterval(() => {
-        setInterviewState((prev) => {
-          const newTime = prev.timeRemaining - 1
-          if (newTime <= 0) {
-            // Автоматически переходим к следующему вопросу
-            handleNextQuestion()
-            return prev
-          }
-          return { ...prev, timeRemaining: newTime }
-        })
-      }, 1000)
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-      }
-    }
-  }, [isLoading, interviewState.isCompleted, interviewState.timeRemaining])
+  // Убираем таймер - пользователь сам контролирует темп интервью
 
   // Генерация аудио для вопроса
   const generateQuestionAudio = async (questionText: string) => {
@@ -535,10 +514,7 @@ export default function InterviewPage() {
               </Badge>
             )}
 
-            <div className="flex items-center space-x-2 text-white">
-              <Clock className="w-5 h-5" />
-              <span className="font-mono text-lg">{formatTime(interviewState.timeRemaining)}</span>
-            </div>
+
           </div>
         </div>
 
