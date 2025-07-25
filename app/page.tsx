@@ -162,9 +162,6 @@ export default function LandingPage() {
             <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
               Сопроводительное письмо
             </Link>
-            <Link href="/interview-results" className="text-white hover:text-blue-300 transition-colors">
-              Результаты
-            </Link>
           </nav>
 
           <div className="flex items-center space-x-2 md:space-x-4">
@@ -442,9 +439,6 @@ export default function LandingPage() {
               </Link>
               <Link href="/resume-builder" className="hover:text-white transition-colors">
                 Сопроводительное письмо
-              </Link>
-              <Link href="/interview-results" className="hover:text-white transition-colors">
-                Результаты
               </Link>
             </div>
             <div className="mt-6 pt-6 border-t border-white/10">
