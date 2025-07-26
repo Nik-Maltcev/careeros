@@ -75,8 +75,7 @@ function InterviewPrepContent() {
     const { canStart, reason } = await InterviewManager.canStartInterview()
 
     if (canStart) {
-      // Записываем использование интервью
-      await InterviewManager.recordInterviewUsage()
+      // НЕ записываем использование здесь - это будет сделано на странице interview
       // Navigate to interview page with level
       window.location.href = `/interview?specialty=${specialtyId}&level=${selectedLevel}`
     } else {
