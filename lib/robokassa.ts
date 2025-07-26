@@ -110,7 +110,7 @@ export class RobokassaService {
     return encodeURIComponent(JSON.stringify(receipt))
   }
 
-  // Создание данных для платежа (упрощенная версия без Receipt)
+  // Создание данных для платежа (упрощенная версия без shp параметров)
   static createPayment(
     plan: PaymentPlan,
     userEmail?: string,
@@ -118,21 +118,8 @@ export class RobokassaService {
   ): RobokassaPayment {
     const invId = Date.now() // Уникальный номер заказа
     
-    const shpParams = {
-      shp_plan: plan.id,
-      shp_interviews: plan.interviews.toString(),
-      ...(userId && { shp_user_id: userId })
-    }
-    
-    // Простая подпись как в Python примере: merchant_login:cost:number:password1
-    let signatureString = `${ROBOKASSA_CONFIG.merchantLogin}:${plan.price}:${invId}:${ROBOKASSA_CONFIG.password1}`
-    
-    // Добавляем пользовательские параметры в алфавитном порядке
-    const sortedKeys = Object.keys(shpParams).sort()
-    for (const key of sortedKeys) {
-      signatureString += `:${key}=${shpParams[key]}`
-    }
-    
+    // Простая подпись без пользовательских параметров: merchant_login:cost:number:password1
+    const signatureString = `${ROBOKASSA_CONFIG.merchantLogin}:${plan.price}:${invId}:${ROBOKASSA_CONFIG.password1}`
     const signatureValue = crypto.createHash('md5').update(signatureString).digest('hex')
     
     console.log('Payment signature data:', {
@@ -150,9 +137,7 @@ export class RobokassaService {
       description: `Покупка тарифа "${plan.name}" - ${plan.interviews} интервью`,
       signatureValue,
       culture: 'ru',
-      email: userEmail,
-      shp_plan: plan.id,
-      shp_interviews: plan.interviews.toString()
+      email: userEmail
     }
   }
 
