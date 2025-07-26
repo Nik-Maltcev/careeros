@@ -63,7 +63,38 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- Создание таблицы платежей
+CREATE TABLE IF NOT EXISTS payments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  inv_id INTEGER UNIQUE NOT NULL,
+  user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  plan_id TEXT NOT NULL,
+  amount DECIMAL NOT NULL,
+  fee DECIMAL DEFAULT 0,
+  email TEXT,
+  payment_method TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'failed', 'cancelled')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  completed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Включение Row Level Security для payments
+ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+
+-- Политики безопасности для payments
+CREATE POLICY "Users can view own payments" ON payments
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "System can insert payments" ON payments
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "System can update payments" ON payments
+  FOR UPDATE USING (true);
+
 -- Индексы для производительности
 CREATE INDEX IF NOT EXISTS idx_interview_results_user_id ON interview_results(user_id);
 CREATE INDEX IF NOT EXISTS idx_interview_results_completed_at ON interview_results(completed_at);
 CREATE INDEX IF NOT EXISTS idx_interview_results_specialty ON interview_results(specialty);
+CREATE INDEX IF NOT EXISTS idx_payments_user_id ON payments(user_id);
+CREATE INDEX IF NOT EXISTS idx_payments_inv_id ON payments(inv_id);
+CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);

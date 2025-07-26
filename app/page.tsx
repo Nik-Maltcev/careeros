@@ -32,6 +32,7 @@ import Link from "next/link"
 import { InterviewManager } from "@/lib/interview-manager"
 import { SupabaseAuthService } from "@/lib/auth-supabase"
 import { AuthDialog } from "@/components/auth-dialog"
+import { PricingDialog } from "@/components/pricing-dialog"
 import { isSupabaseConfigured, type Profile } from "@/lib/supabase"
 
 const specialties = [
@@ -120,6 +121,7 @@ export default function LandingPage() {
   const [remainingInterviews, setRemainingInterviews] = useState(3)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
+  const [showPricingDialog, setShowPricingDialog] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -251,6 +253,14 @@ export default function LandingPage() {
                 >
                   <LogIn className="w-3 h-3 mr-1" />
                   Войти
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => setShowPricingDialog(true)}
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
+                >
+                  <Crown className="w-3 h-3 mr-1" />
+                  Купить
                 </Button>
               </div>
             ) : null}
@@ -541,6 +551,23 @@ export default function LandingPage() {
         onSuccess={() => {
           setShowAuthDialog(false)
           // Обновляем данные пользователя после успешной аутентификации
+          const updateUser = async () => {
+            const user = await SupabaseAuthService.getCurrentUser()
+            setCurrentUser(user)
+            const remaining = await InterviewManager.getRemainingInterviews()
+            setRemainingInterviews(remaining)
+          }
+          updateUser()
+        }}
+      />
+
+      {/* Pricing Dialog */}
+      <PricingDialog
+        isOpen={showPricingDialog}
+        onClose={() => setShowPricingDialog(false)}
+        onSuccess={() => {
+          setShowPricingDialog(false)
+          // Обновляем данные пользователя после покупки
           const updateUser = async () => {
             const user = await SupabaseAuthService.getCurrentUser()
             setCurrentUser(user)
