@@ -5,7 +5,7 @@ import { SupabaseAuthService } from './auth-supabase'
 
 const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
 const INTERVIEW_HISTORY_KEY = "careeros_interview_history"
-const MAX_FREE_INTERVIEWS = 3
+const MAX_GUEST_INTERVIEWS = 1 // Гостям только 1 интервью
 
 export interface InterviewResult {
   id: string
@@ -50,7 +50,7 @@ export class InterviewManager {
       
       // Гостевой режим
       const used = await this.getUsedInterviewsCount()
-      return Math.max(0, MAX_FREE_INTERVIEWS - used)
+      return Math.max(0, MAX_GUEST_INTERVIEWS - used)
     } catch (error) {
       console.error("Error getting remaining interviews:", error)
       return 0
@@ -81,7 +81,7 @@ export class InterviewManager {
         const currentCount = await this.getUsedInterviewsCount()
         const newCount = currentCount + 1
         localStorage.setItem(INTERVIEWS_COUNT_KEY, newCount.toString())
-        console.log(`Interview recorded (guest). Used: ${newCount}/${MAX_FREE_INTERVIEWS}`)
+        console.log(`Interview recorded (guest). Used: ${newCount}/${MAX_GUEST_INTERVIEWS}`)
       }
     } catch (error) {
       console.error("Error recording interview usage:", error)
@@ -170,7 +170,7 @@ export class InterviewManager {
     return {
       usedInterviews: await this.getUsedInterviewsCount(),
       remainingInterviews: await this.getRemainingInterviews(),
-      maxInterviews: MAX_FREE_INTERVIEWS,
+      maxInterviews: MAX_GUEST_INTERVIEWS,
       historyCount: (await this.getInterviewHistory()).length,
       canStart: await this.canStartInterview()
     }

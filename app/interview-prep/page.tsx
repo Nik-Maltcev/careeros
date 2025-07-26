@@ -183,7 +183,7 @@ function InterviewPrepContent() {
             {canStart && remainingInterviews !== undefined && (
               <div className="mt-4">
                 <Badge className="bg-green-500/20 text-green-300 border-green-400">
-                  {remainingInterviews} бесплатных интервью осталось
+                  {remainingInterviews === 1 ? '1 бесплатное интервью осталось' : `${remainingInterviews} интервью осталось`}
                 </Badge>
               </div>
             )}

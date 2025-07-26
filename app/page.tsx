@@ -243,7 +243,7 @@ export default function LandingPage() {
             ) : isClient ? (
               <div className="flex items-center space-x-2">
                 <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                  {remainingInterviews} бесплатных интервью
+                  {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
                 </Badge>
                 <Button
                   size="sm"
