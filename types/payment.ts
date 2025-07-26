@@ -17,6 +17,7 @@ export interface RobokassaPayment {
   email?: string
   shp_plan?: string
   shp_interviews?: string
+  receipt?: string
 }
 
 export interface PaymentResult {

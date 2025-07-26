@@ -23,13 +23,26 @@ export async function POST(request: NextRequest) {
     if (shpInterviews) shpParams.shp_interviews = shpInterviews
     if (shpUserId) shpParams.shp_user_id = shpUserId
 
-    // Проверяем подпись
-    const isValidSignature = RobokassaService.verifySignature(
-      outSum,
-      invId,
-      signatureValue,
-      shpParams
-    )
+    // Получаем Receipt если есть
+    const receipt = formData.get('Receipt') as string
+    
+    // Проверяем подпись с учетом Receipt
+    let signatureString = `${outSum}:${invId}`
+    if (receipt) {
+      signatureString += `:${receipt}`
+    }
+    signatureString += `:${process.env.ROBOKASSA_PASSWORD_2}`
+    
+    // Добавляем пользовательские параметры в алфавитном порядке
+    if (Object.keys(shpParams).length > 0) {
+      const sortedKeys = Object.keys(shpParams).sort()
+      for (const key of sortedKeys) {
+        signatureString += `:${key}=${shpParams[key]}`
+      }
+    }
+    
+    const expectedSignature = require('crypto').createHash('md5').update(signatureString).digest('hex').toUpperCase()
+    const isValidSignature = expectedSignature === signatureValue.toUpperCase()
 
     if (!isValidSignature) {
       console.error('Invalid signature from Robokassa')

@@ -3,12 +3,19 @@ import type { PaymentPlan, RobokassaPayment } from '@/types/payment'
 
 // Конфигурация Robokassa
 const ROBOKASSA_CONFIG = {
-  merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN || 'demo',
-  password1: process.env.ROBOKASSA_PASSWORD_1 || 'password_1',
-  password2: process.env.ROBOKASSA_PASSWORD_2 || 'password_2',
+  merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN || 'careeros',
+  password1: process.env.ROBOKASSA_PASSWORD_1 || 'fhZJ0oqzmo1258YYbTop',
+  password2: process.env.ROBOKASSA_PASSWORD_2 || 'ZKstGV72xKGTua8NJ2R5',
   testMode: process.env.NODE_ENV !== 'production',
   paymentUrl: 'https://auth.robokassa.ru/Merchant/Index.aspx'
 }
+
+console.log('Robokassa config:', {
+  merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
+  hasPassword1: !!ROBOKASSA_CONFIG.password1,
+  hasPassword2: !!ROBOKASSA_CONFIG.password2,
+  testMode: ROBOKASSA_CONFIG.testMode
+})
 
 // Тарифные планы
 export const PAYMENT_PLANS: PaymentPlan[] = [
@@ -43,9 +50,17 @@ export class RobokassaService {
     outSum: number,
     invId: number,
     password: string,
-    shpParams?: Record<string, string>
+    shpParams?: Record<string, string>,
+    receipt?: string
   ): string {
-    let signatureString = `${merchantLogin}:${outSum}:${invId}:${password}`
+    let signatureString = `${merchantLogin}:${outSum}:${invId}`
+    
+    // Добавляем receipt если есть
+    if (receipt) {
+      signatureString += `:${receipt}`
+    }
+    
+    signatureString += `:${password}`
     
     // Добавляем пользовательские параметры в алфавитном порядке
     if (shpParams) {
@@ -78,6 +93,23 @@ export class RobokassaService {
     return expectedSignature === signatureValue.toUpperCase()
   }
 
+  // Создание чека для фискализации
+  static createReceipt(plan: PaymentPlan): string {
+    const receipt = {
+      items: [
+        {
+          name: `Тариф "${plan.name}" - ${plan.interviews} интервью`,
+          quantity: 1,
+          sum: plan.price,
+          tax: "none",
+          payment_method: "full_payment",
+          payment_object: "service"
+        }
+      ]
+    }
+    return encodeURIComponent(JSON.stringify(receipt))
+  }
+
   // Создание данных для платежа
   static createPayment(
     plan: PaymentPlan,
@@ -85,19 +117,24 @@ export class RobokassaService {
     userId?: string
   ): RobokassaPayment {
     const invId = Date.now() // Уникальный номер заказа
+    const receipt = this.createReceipt(plan)
+    
     const shpParams = {
       shp_plan: plan.id,
       shp_interviews: plan.interviews.toString(),
       ...(userId && { shp_user_id: userId })
     }
     
-    const signatureValue = this.generateSignature(
-      ROBOKASSA_CONFIG.merchantLogin,
-      plan.price,
-      invId,
-      ROBOKASSA_CONFIG.password1,
-      shpParams
-    )
+    // Обновляем формулу подписи с учетом Receipt
+    let signatureString = `${ROBOKASSA_CONFIG.merchantLogin}:${plan.price}:${invId}:${receipt}:${ROBOKASSA_CONFIG.password1}`
+    
+    // Добавляем пользовательские параметры в алфавитном порядке
+    const sortedKeys = Object.keys(shpParams).sort()
+    for (const key of sortedKeys) {
+      signatureString += `:${key}=${shpParams[key]}`
+    }
+    
+    const signatureValue = crypto.createHash('md5').update(signatureString).digest('hex')
 
     return {
       merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
@@ -108,7 +145,8 @@ export class RobokassaService {
       culture: 'ru',
       email: userEmail,
       shp_plan: plan.id,
-      shp_interviews: plan.interviews.toString()
+      shp_interviews: plan.interviews.toString(),
+      receipt
     }
   }
 
@@ -122,6 +160,7 @@ export class RobokassaService {
       SignatureValue: payment.signatureValue,
       Culture: payment.culture || 'ru',
       ...(payment.email && { Email: payment.email }),
+      ...(payment.receipt && { Receipt: payment.receipt }),
       ...(payment.shp_plan && { Shp_plan: payment.shp_plan }),
       ...(payment.shp_interviews && { Shp_interviews: payment.shp_interviews }),
       ...(ROBOKASSA_CONFIG.testMode && { IsTest: '1' })
