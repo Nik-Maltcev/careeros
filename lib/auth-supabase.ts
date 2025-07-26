@@ -1,9 +1,13 @@
-import { supabase } from "./supabase"
+import { supabase, isSupabaseConfigured } from "./supabase"
 import type { Profile } from "./supabase"
 
 export class SupabaseAuthService {
   // Получить текущего пользователя
   static async getCurrentUser(): Promise<Profile | null> {
+    if (!isSupabaseConfigured) {
+      return null
+    }
+
     try {
       const {
         data: { user },
@@ -33,6 +37,10 @@ export class SupabaseAuthService {
 
   // Регистрация
   static async register(email: string, password: string, name: string) {
+    if (!isSupabaseConfigured) {
+      return { success: false, error: "Supabase не настроен" }
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -56,6 +64,10 @@ export class SupabaseAuthService {
 
   // Вход
   static async login(email: string, password: string) {
+    if (!isSupabaseConfigured) {
+      return { success: false, error: "Supabase не настроен" }
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -74,6 +86,10 @@ export class SupabaseAuthService {
 
   // Выход
   static async logout() {
+    if (!isSupabaseConfigured) {
+      return
+    }
+
     try {
       const { error } = await supabase.auth.signOut()
       if (error) {
@@ -87,6 +103,24 @@ export class SupabaseAuthService {
   // Проверка лимитов интервью
   static async canStartInterview(): Promise<{ canStart: boolean; reason?: string; remainingInterviews: number }> {
     try {
+      if (!isSupabaseConfigured) {
+        // Без Supabase - используем localStorage лимиты
+        const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
+        const MAX_FREE_INTERVIEWS = 3
+        const used = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
+        const remaining = Math.max(0, MAX_FREE_INTERVIEWS - used)
+        
+        if (remaining <= 0) {
+          return {
+            canStart: false,
+            reason: `Вы использовали все ${MAX_FREE_INTERVIEWS} бесплатных интервью. Обновите страницу или очистите данные браузера для сброса.`,
+            remainingInterviews: 0,
+          }
+        }
+        
+        return { canStart: true, remainingInterviews: remaining }
+      }
+
       const user = await this.getCurrentUser()
 
       if (!user) {
@@ -118,6 +152,14 @@ export class SupabaseAuthService {
   // Записать использование интервью
   static async recordInterviewUsage(): Promise<void> {
     try {
+      if (!isSupabaseConfigured) {
+        // Без Supabase - используем localStorage
+        const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
+        const currentCount = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
+        localStorage.setItem(INTERVIEWS_COUNT_KEY, (currentCount + 1).toString())
+        return
+      }
+
       const user = await this.getCurrentUser()
 
       if (!user) {
@@ -151,6 +193,18 @@ export class SupabaseAuthService {
     analysis_data: any
   }) {
     try {
+      if (!isSupabaseConfigured) {
+        // Без Supabase - сохраняем в localStorage
+        const guestResults = JSON.parse(localStorage.getItem("guest_interview_results") || "[]")
+        guestResults.push({
+          ...result,
+          id: Date.now().toString(),
+          completed_at: new Date().toISOString(),
+        })
+        localStorage.setItem("guest_interview_results", JSON.stringify(guestResults))
+        return
+      }
+
       const user = await this.getCurrentUser()
       if (!user) {
         // Гостевой режим - сохраняем в localStorage
@@ -186,6 +240,11 @@ export class SupabaseAuthService {
   // Получить историю интервью
   static async getInterviewHistory() {
     try {
+      if (!isSupabaseConfigured) {
+        // Без Supabase - читаем из localStorage
+        return JSON.parse(localStorage.getItem("guest_interview_results") || "[]")
+      }
+
       const user = await this.getCurrentUser()
       if (!user) {
         // Гостевой режим - читаем из localStorage
@@ -212,6 +271,11 @@ export class SupabaseAuthService {
 
   // Подписка на изменения аутентификации
   static onAuthStateChange(callback: (user: any) => void) {
+    if (!isSupabaseConfigured) {
+      // Без Supabase возвращаем пустую подписку
+      return { data: { subscription: { unsubscribe: () => {} } } }
+    }
+
     return supabase.auth.onAuthStateChange((_event, session) => {
       callback(session?.user || null)
     })

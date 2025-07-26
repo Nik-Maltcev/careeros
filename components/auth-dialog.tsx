@@ -14,6 +14,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SupabaseAuthService } from "@/lib/auth-supabase"
+import { isSupabaseConfigured } from "@/lib/supabase"
 import { Brain, Mail, Lock, User, AlertCircle, CheckCircle } from "lucide-react"
 
 interface AuthDialogProps {

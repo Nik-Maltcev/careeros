@@ -32,7 +32,7 @@ import Link from "next/link"
 import { InterviewManager } from "@/lib/interview-manager"
 import { SupabaseAuthService } from "@/lib/auth-supabase"
 import { AuthDialog } from "@/components/auth-dialog"
-import type { Profile } from "@/lib/supabase"
+import { isSupabaseConfigured, type Profile } from "@/lib/supabase"
 
 const specialties = [
   {
@@ -229,15 +229,17 @@ export default function LandingPage() {
                 <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
                   {remainingInterviews} бесплатных интервью
                 </Badge>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowAuthDialog(true)}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
-                >
-                  <LogIn className="w-3 h-3 mr-1" />
-                  Войти
-                </Button>
+                {isSupabaseConfigured && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowAuthDialog(true)}
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
+                  >
+                    <LogIn className="w-3 h-3 mr-1" />
+                    Войти
+                  </Button>
+                )}
               </div>
             ) : null}
           </div>
