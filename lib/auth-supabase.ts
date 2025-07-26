@@ -124,8 +124,21 @@ export class SupabaseAuthService {
       const user = await this.getCurrentUser()
 
       if (!user) {
-        // Гостевой режим - 1 интервью
-        return { canStart: true, remainingInterviews: 1 }
+        // Гостевой режим - проверяем localStorage для 1 бесплатного интервью
+        const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
+        const MAX_GUEST_INTERVIEWS = 1
+        const used = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
+        const remaining = Math.max(0, MAX_GUEST_INTERVIEWS - used)
+        
+        if (remaining <= 0) {
+          return {
+            canStart: false,
+            reason: `Вы использовали бесплатное интервью. Зарегистрируйтесь или купите тариф для продолжения.`,
+            remainingInterviews: 0,
+          }
+        }
+        
+        return { canStart: true, remainingInterviews: remaining }
       }
 
       if (user.plan === "premium") {
@@ -163,7 +176,11 @@ export class SupabaseAuthService {
       const user = await this.getCurrentUser()
 
       if (!user) {
-        // Гостевой режим - ничего не записываем
+        // Гостевой режим - записываем в localStorage
+        const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
+        const currentCount = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
+        localStorage.setItem(INTERVIEWS_COUNT_KEY, (currentCount + 1).toString())
+        console.log(`Guest interview recorded. Used: ${currentCount + 1}`)
         return
       }
 
