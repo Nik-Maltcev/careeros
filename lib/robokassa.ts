@@ -110,14 +110,13 @@ export class RobokassaService {
     return encodeURIComponent(JSON.stringify(receipt))
   }
 
-  // Создание данных для платежа
+  // Создание данных для платежа (упрощенная версия без Receipt)
   static createPayment(
     plan: PaymentPlan,
     userEmail?: string,
     userId?: string
   ): RobokassaPayment {
     const invId = Date.now() // Уникальный номер заказа
-    const receipt = this.createReceipt(plan)
     
     const shpParams = {
       shp_plan: plan.id,
@@ -125,8 +124,8 @@ export class RobokassaService {
       ...(userId && { shp_user_id: userId })
     }
     
-    // Обновляем формулу подписи с учетом Receipt
-    let signatureString = `${ROBOKASSA_CONFIG.merchantLogin}:${plan.price}:${invId}:${receipt}:${ROBOKASSA_CONFIG.password1}`
+    // Простая подпись как в Python примере: merchant_login:cost:number:password1
+    let signatureString = `${ROBOKASSA_CONFIG.merchantLogin}:${plan.price}:${invId}:${ROBOKASSA_CONFIG.password1}`
     
     // Добавляем пользовательские параметры в алфавитном порядке
     const sortedKeys = Object.keys(shpParams).sort()
@@ -135,6 +134,14 @@ export class RobokassaService {
     }
     
     const signatureValue = crypto.createHash('md5').update(signatureString).digest('hex')
+    
+    console.log('Payment signature data:', {
+      merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
+      outSum: plan.price,
+      invId,
+      signatureString,
+      signatureValue
+    })
 
     return {
       merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
@@ -145,8 +152,7 @@ export class RobokassaService {
       culture: 'ru',
       email: userEmail,
       shp_plan: plan.id,
-      shp_interviews: plan.interviews.toString(),
-      receipt
+      shp_interviews: plan.interviews.toString()
     }
   }
 
@@ -160,12 +166,12 @@ export class RobokassaService {
       SignatureValue: payment.signatureValue,
       Culture: payment.culture || 'ru',
       ...(payment.email && { Email: payment.email }),
-      ...(payment.receipt && { Receipt: payment.receipt }),
       ...(payment.shp_plan && { Shp_plan: payment.shp_plan }),
       ...(payment.shp_interviews && { Shp_interviews: payment.shp_interviews }),
       ...(ROBOKASSA_CONFIG.testMode && { IsTest: '1' })
     })
 
+    console.log('Generated payment URL:', `${ROBOKASSA_CONFIG.paymentUrl}?${params.toString()}`)
     return `${ROBOKASSA_CONFIG.paymentUrl}?${params.toString()}`
   }
 
