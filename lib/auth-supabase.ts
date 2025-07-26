@@ -103,32 +103,19 @@ export class SupabaseAuthService {
   // Проверка лимитов интервью
   static async canStartInterview(): Promise<{ canStart: boolean; reason?: string; remainingInterviews: number }> {
     try {
+      console.log('🔍 Checking interview limits...', {
+        isSupabaseConfigured,
+        localStorage: localStorage.getItem("careeros_interviews_count")
+      })
+
       if (!isSupabaseConfigured) {
-        // Без Supabase - используем localStorage лимиты
-        const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
-        const MAX_FREE_INTERVIEWS = 3
-        const used = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
-        const remaining = Math.max(0, MAX_FREE_INTERVIEWS - used)
-        
-        if (remaining <= 0) {
-          return {
-            canStart: false,
-            reason: `Вы использовали все ${MAX_FREE_INTERVIEWS} бесплатных интервью. Обновите страницу или очистите данные браузера для сброса.`,
-            remainingInterviews: 0,
-          }
-        }
-        
-        return { canStart: true, remainingInterviews: remaining }
-      }
-
-      const user = await this.getCurrentUser()
-
-      if (!user) {
-        // Гостевой режим - проверяем localStorage для 1 бесплатного интервью
+        // Без Supabase - используем localStorage лимиты (1 интервью для гостей)
         const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
         const MAX_GUEST_INTERVIEWS = 1
         const used = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
         const remaining = Math.max(0, MAX_GUEST_INTERVIEWS - used)
+        
+        console.log('📊 No Supabase - Guest mode:', { used, remaining, MAX_GUEST_INTERVIEWS })
         
         if (remaining <= 0) {
           return {
@@ -138,6 +125,31 @@ export class SupabaseAuthService {
           }
         }
         
+        return { canStart: true, remainingInterviews: remaining }
+      }
+
+      const user = await this.getCurrentUser()
+      console.log('👤 User check:', { hasUser: !!user, userId: user?.id })
+
+      if (!user) {
+        // Гостевой режим - проверяем localStorage для 1 бесплатного интервью
+        const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
+        const MAX_GUEST_INTERVIEWS = 1
+        const used = parseInt(localStorage.getItem(INTERVIEWS_COUNT_KEY) || "0", 10)
+        const remaining = Math.max(0, MAX_GUEST_INTERVIEWS - used)
+        
+        console.log('📊 Supabase configured but no user - Guest mode:', { used, remaining, MAX_GUEST_INTERVIEWS })
+        
+        if (remaining <= 0) {
+          console.log('❌ Guest limit reached')
+          return {
+            canStart: false,
+            reason: `Вы использовали бесплатное интервью. Зарегистрируйтесь или купите тариф для продолжения.`,
+            remainingInterviews: 0,
+          }
+        }
+        
+        console.log('✅ Guest can start interview')
         return { canStart: true, remainingInterviews: remaining }
       }
 
