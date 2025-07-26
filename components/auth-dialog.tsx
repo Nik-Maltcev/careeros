@@ -120,9 +120,26 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
             <DialogTitle className="text-white">Careeros</DialogTitle>
           </div>
           <DialogDescription className="text-gray-400">
-            Войдите или зарегистрируйтесь для получения неограниченного доступа к интервью
+            {isSupabaseConfigured 
+              ? "Войдите или зарегистрируйтесь для получения неограниченного доступа к интервью"
+              : "Аутентификация временно недоступна. Продолжите как гость."
+            }
           </DialogDescription>
         </DialogHeader>
+
+        {!isSupabaseConfigured && (
+          <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 mb-4">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="w-4 h-4 text-orange-400 flex-shrink-0" />
+              <div>
+                <p className="text-orange-300 text-sm font-medium">Supabase не настроен</p>
+                <p className="text-orange-200 text-xs mt-1">
+                  Добавьте переменные NEXT_PUBLIC_SUPABASE_URL и NEXT_PUBLIC_SUPABASE_ANON_KEY в настройки Railway
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4">
@@ -142,15 +159,16 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
           </div>
         )}
 
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-800">
-            <TabsTrigger value="login" className="text-gray-300 data-[state=active]:text-white">
-              Вход
-            </TabsTrigger>
-            <TabsTrigger value="register" className="text-gray-300 data-[state=active]:text-white">
-              Регистрация
-            </TabsTrigger>
-          </TabsList>
+        {isSupabaseConfigured ? (
+          <Tabs defaultValue="login" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-slate-800">
+              <TabsTrigger value="login" className="text-gray-300 data-[state=active]:text-white">
+                Вход
+              </TabsTrigger>
+              <TabsTrigger value="register" className="text-gray-300 data-[state=active]:text-white">
+                Регистрация
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="login">
             <Card className="bg-slate-800/50 border-slate-700">
@@ -304,6 +322,23 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
             </Card>
           </TabsContent>
         </Tabs>
+        ) : (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-orange-400" />
+            </div>
+            <h3 className="text-white text-lg font-medium mb-2">Аутентификация недоступна</h3>
+            <p className="text-gray-400 text-sm mb-4">
+              Для включения регистрации и входа необходимо настроить Supabase в переменных окружения Railway.
+            </p>
+            <Button
+              onClick={onClose}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              Продолжить как гость
+            </Button>
+          </div>
+        )}
 
         <div className="text-center pt-4">
           <Button
