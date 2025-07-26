@@ -59,8 +59,8 @@ function InterviewPrepContent() {
     checkLimits()
   }, [])
 
-  const checkLimits = () => {
-    const { canStart, reason, remainingInterviews: remaining } = InterviewManager.canStartInterview()
+  const checkLimits = async () => {
+    const { canStart, reason, remainingInterviews: remaining } = await InterviewManager.canStartInterview()
 
     if (!canStart) {
       setLimitWarning(reason || "Достигнут лимит интервью")
@@ -71,12 +71,12 @@ function InterviewPrepContent() {
     setRemainingInterviews(remaining)
   }
 
-  const handleStartInterview = () => {
-    const { canStart, reason } = InterviewManager.canStartInterview()
+  const handleStartInterview = async () => {
+    const { canStart, reason } = await InterviewManager.canStartInterview()
 
     if (canStart) {
       // Записываем использование интервью
-      InterviewManager.recordInterviewUsage()
+      await InterviewManager.recordInterviewUsage()
       // Navigate to interview page with level
       window.location.href = `/interview?specialty=${specialtyId}&level=${selectedLevel}`
     } else {
