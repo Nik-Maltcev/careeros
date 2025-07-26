@@ -124,19 +124,33 @@ export default function LandingPage() {
   useEffect(() => {
     setIsClient(true)
     
+    // Отладочная информация для Railway
+    console.log('Supabase Config Check:', {
+      url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      isConfigured: isSupabaseConfigured
+    })
+    
     // Получаем текущего пользователя и обновляем количество интервью
     const initializeUser = async () => {
-      const user = await SupabaseAuthService.getCurrentUser()
-      setCurrentUser(user)
-      
-      const remaining = await InterviewManager.getRemainingInterviews()
-      setRemainingInterviews(remaining)
+      try {
+        const user = await SupabaseAuthService.getCurrentUser()
+        console.log('Current user:', user)
+        setCurrentUser(user)
+        
+        const remaining = await InterviewManager.getRemainingInterviews()
+        console.log('Remaining interviews:', remaining)
+        setRemainingInterviews(remaining)
+      } catch (error) {
+        console.error('Error initializing user:', error)
+      }
     }
     
     initializeUser()
 
     // Подписываемся на изменения аутентификации
     const { data: { subscription } } = SupabaseAuthService.onAuthStateChange(async (user) => {
+      console.log('Auth state changed:', user)
       if (user) {
         const profile = await SupabaseAuthService.getCurrentUser()
         setCurrentUser(profile)
@@ -229,17 +243,15 @@ export default function LandingPage() {
                 <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
                   {remainingInterviews} бесплатных интервью
                 </Badge>
-                {isSupabaseConfigured && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setShowAuthDialog(true)}
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
-                  >
-                    <LogIn className="w-3 h-3 mr-1" />
-                    Войти
-                  </Button>
-                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowAuthDialog(true)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
+                >
+                  <LogIn className="w-3 h-3 mr-1" />
+                  Войти
+                </Button>
               </div>
             ) : null}
           </div>

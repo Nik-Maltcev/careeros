@@ -276,8 +276,10 @@ export class SupabaseAuthService {
       return { data: { subscription: { unsubscribe: () => {} } } }
     }
 
-    return supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       callback(session?.user || null)
     })
+
+    return { data }
   }
 }
