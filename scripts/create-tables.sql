@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'premium')),
   interviews_used INTEGER DEFAULT 0,
-  max_interviews INTEGER DEFAULT 10
+  max_interviews INTEGER DEFAULT 1
 );
 
 -- Создание таблицы результатов интервью
@@ -47,11 +47,12 @@ CREATE POLICY "Users can insert own interview results" ON interview_results
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, name)
+  INSERT INTO public.profiles (id, email, name, max_interviews)
   VALUES (
     NEW.id,
     NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'name', NEW.email)
+    COALESCE(NEW.raw_user_meta_data->>'name', NEW.email),
+    1
   );
   RETURN NEW;
 END;
