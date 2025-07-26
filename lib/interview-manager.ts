@@ -1,5 +1,7 @@
-// Простая система управления интервью без авторизации
-// Использует localStorage для хранения данных
+// Система управления интервью с интеграцией Supabase
+// Использует Supabase для авторизованных пользователей и localStorage для гостей
+
+import { SupabaseAuthService } from './auth-supabase'
 
 const INTERVIEWS_COUNT_KEY = "careeros_interviews_count"
 const INTERVIEW_HISTORY_KEY = "careeros_interview_history"
@@ -17,10 +19,17 @@ export interface InterviewResult {
 
 export class InterviewManager {
   // Получить количество использованных интервью
-  static getUsedInterviewsCount(): number {
+  static async getUsedInterviewsCount(): Promise<number> {
     if (typeof window === "undefined") return 0
     
     try {
+      const user = await SupabaseAuthService.getCurrentUser()
+      
+      if (user) {
+        return user.interviews_used
+      }
+      
+      // Гостевой режим - используем localStorage
       const count = localStorage.getItem(INTERVIEWS_COUNT_KEY)
       return count ? parseInt(count, 10) : 0
     } catch (error) {
@@ -30,74 +39,72 @@ export class InterviewManager {
   }
 
   // Получить количество оставшихся интервью
-  static getRemainingInterviews(): number {
-    const used = this.getUsedInterviewsCount()
-    return Math.max(0, MAX_FREE_INTERVIEWS - used)
+  static async getRemainingInterviews(): Promise<number> {
+    try {
+      const user = await SupabaseAuthService.getCurrentUser()
+      
+      if (user) {
+        if (user.plan === 'premium') return 999
+        return Math.max(0, user.max_interviews - user.interviews_used)
+      }
+      
+      // Гостевой режим
+      const used = await this.getUsedInterviewsCount()
+      return Math.max(0, MAX_FREE_INTERVIEWS - used)
+    } catch (error) {
+      console.error("Error getting remaining interviews:", error)
+      return 0
+    }
   }
 
   // Проверить, можно ли начать новое интервью
-  static canStartInterview(): { canStart: boolean; reason?: string; remainingInterviews: number } {
-    const remaining = this.getRemainingInterviews()
-    
-    if (remaining <= 0) {
-      return {
-        canStart: false,
-        reason: `Вы использовали все ${MAX_FREE_INTERVIEWS} бесплатных интервью. Обновите страницу или очистите данные браузера для сброса.`,
-        remainingInterviews: 0
-      }
-    }
-
-    return {
-      canStart: true,
-      remainingInterviews: remaining
+  static async canStartInterview(): Promise<{ canStart: boolean; reason?: string; remainingInterviews: number }> {
+    try {
+      return await SupabaseAuthService.canStartInterview()
+    } catch (error) {
+      console.error("Error checking interview availability:", error)
+      return { canStart: false, reason: "Ошибка проверки доступности", remainingInterviews: 0 }
     }
   }
 
   // Записать использование интервью
-  static recordInterviewUsage(): void {
+  static async recordInterviewUsage(): Promise<void> {
     if (typeof window === "undefined") return
 
     try {
-      const currentCount = this.getUsedInterviewsCount()
-      const newCount = currentCount + 1
-      localStorage.setItem(INTERVIEWS_COUNT_KEY, newCount.toString())
-      console.log(`Interview recorded. Used: ${newCount}/${MAX_FREE_INTERVIEWS}`)
+      const user = await SupabaseAuthService.getCurrentUser()
+      
+      if (user) {
+        await SupabaseAuthService.recordInterviewUsage()
+      } else {
+        // Гостевой режим - используем localStorage
+        const currentCount = await this.getUsedInterviewsCount()
+        const newCount = currentCount + 1
+        localStorage.setItem(INTERVIEWS_COUNT_KEY, newCount.toString())
+        console.log(`Interview recorded (guest). Used: ${newCount}/${MAX_FREE_INTERVIEWS}`)
+      }
     } catch (error) {
       console.error("Error recording interview usage:", error)
     }
   }
 
   // Сохранить результат интервью
-  static saveInterviewResult(result: Omit<InterviewResult, "id" | "completed_at">): void {
+  static async saveInterviewResult(result: Omit<InterviewResult, "id" | "completed_at">): Promise<void> {
     if (typeof window === "undefined") return
 
     try {
-      const history = this.getInterviewHistory()
-      const newResult: InterviewResult = {
-        ...result,
-        id: Date.now().toString(),
-        completed_at: new Date().toISOString()
-      }
-
-      history.unshift(newResult) // Добавляем в начало массива
-      
-      // Ограничиваем историю 50 записями
-      const limitedHistory = history.slice(0, 50)
-      
-      localStorage.setItem(INTERVIEW_HISTORY_KEY, JSON.stringify(limitedHistory))
-      console.log("Interview result saved to history")
+      await SupabaseAuthService.saveInterviewResult(result)
     } catch (error) {
       console.error("Error saving interview result:", error)
     }
   }
 
   // Получить историю интервью
-  static getInterviewHistory(): InterviewResult[] {
+  static async getInterviewHistory(): Promise<InterviewResult[]> {
     if (typeof window === "undefined") return []
 
     try {
-      const history = localStorage.getItem(INTERVIEW_HISTORY_KEY)
-      return history ? JSON.parse(history) : []
+      return await SupabaseAuthService.getInterviewHistory()
     } catch (error) {
       console.error("Error reading interview history:", error)
       return []
@@ -105,10 +112,10 @@ export class InterviewManager {
   }
 
   // Получить статистику
-  static getStats() {
-    const history = this.getInterviewHistory()
-    const used = this.getUsedInterviewsCount()
-    const remaining = this.getRemainingInterviews()
+  static async getStats() {
+    const history = await this.getInterviewHistory()
+    const used = await this.getUsedInterviewsCount()
+    const remaining = await this.getRemainingInterviews()
 
     if (history.length === 0) {
       return {
@@ -159,13 +166,13 @@ export class InterviewManager {
   }
 
   // Получить информацию для отладки
-  static getDebugInfo() {
+  static async getDebugInfo() {
     return {
-      usedInterviews: this.getUsedInterviewsCount(),
-      remainingInterviews: this.getRemainingInterviews(),
+      usedInterviews: await this.getUsedInterviewsCount(),
+      remainingInterviews: await this.getRemainingInterviews(),
       maxInterviews: MAX_FREE_INTERVIEWS,
-      historyCount: this.getInterviewHistory().length,
-      canStart: this.canStartInterview()
+      historyCount: (await this.getInterviewHistory()).length,
+      canStart: await this.canStartInterview()
     }
   }
 }
@@ -176,7 +183,7 @@ if (typeof window !== "undefined") {
     InterviewManager.resetAllData()
     window.location.reload()
   }
-  (window as any).debugInterviews = () => {
-    console.log("Interview Debug Info:", InterviewManager.getDebugInfo())
+  (window as any).debugInterviews = async () => {
+    console.log("Interview Debug Info:", await InterviewManager.getDebugInfo())
   }
 }

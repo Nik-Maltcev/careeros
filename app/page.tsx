@@ -23,9 +23,16 @@ import {
   ArrowDown,
   Clock,
   Zap,
+  LogIn,
+  LogOut,
+  User,
+  Crown,
 } from "lucide-react"
 import Link from "next/link"
 import { InterviewManager } from "@/lib/interview-manager"
+import { SupabaseAuthService } from "@/lib/auth-supabase"
+import { AuthDialog } from "@/components/auth-dialog"
+import type { Profile } from "@/lib/supabase"
 
 const specialties = [
   {
@@ -111,18 +118,45 @@ export default function LandingPage() {
   const [limitWarning, setLimitWarning] = useState<string | null>(null)
   const [isClient, setIsClient] = useState(false)
   const [remainingInterviews, setRemainingInterviews] = useState(3)
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+  const [showAuthDialog, setShowAuthDialog] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
-    // Обновляем количество оставшихся интервью
-    const remaining = InterviewManager.getRemainingInterviews()
-    setRemainingInterviews(remaining)
+    
+    // Получаем текущего пользователя и обновляем количество интервью
+    const initializeUser = async () => {
+      const user = await SupabaseAuthService.getCurrentUser()
+      setCurrentUser(user)
+      
+      const remaining = await InterviewManager.getRemainingInterviews()
+      setRemainingInterviews(remaining)
+    }
+    
+    initializeUser()
+
+    // Подписываемся на изменения аутентификации
+    const { data: { subscription } } = SupabaseAuthService.onAuthStateChange(async (user) => {
+      if (user) {
+        const profile = await SupabaseAuthService.getCurrentUser()
+        setCurrentUser(profile)
+      } else {
+        setCurrentUser(null)
+      }
+      
+      const remaining = await InterviewManager.getRemainingInterviews()
+      setRemainingInterviews(remaining)
+    })
+
+    return () => {
+      subscription?.unsubscribe()
+    }
   }, [])
 
-  const handleSpecialtyClick = (specialtyId: string) => {
+  const handleSpecialtyClick = async (specialtyId: string) => {
     if (!isClient) return
 
-    const { canStart, reason } = InterviewManager.canStartInterview()
+    const { canStart, reason } = await InterviewManager.canStartInterview()
 
     if (canStart) {
       window.location.href = `/interview-prep?specialty=${specialtyId}`
@@ -165,11 +199,47 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center space-x-2 md:space-x-4">
-            {isClient && (
-              <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                {remainingInterviews} бесплатных интервью
-              </Badge>
-            )}
+            {isClient && currentUser ? (
+              <div className="flex items-center space-x-2">
+                <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs md:text-sm px-2 py-1">
+                  <User className="w-3 h-3 mr-1" />
+                  {currentUser.name}
+                </Badge>
+                {currentUser.plan === 'premium' ? (
+                  <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs md:text-sm px-2 py-1">
+                    <Crown className="w-3 h-3 mr-1" />
+                    Premium
+                  </Badge>
+                ) : (
+                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                    {remainingInterviews} интервью
+                  </Badge>
+                )}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => SupabaseAuthService.logout()}
+                  className="text-gray-300 hover:text-white p-1"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : isClient ? (
+              <div className="flex items-center space-x-2">
+                <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                  {remainingInterviews} бесплатных интервью
+                </Badge>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowAuthDialog(true)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
+                >
+                  <LogIn className="w-3 h-3 mr-1" />
+                  Войти
+                </Button>
+              </div>
+            ) : null}
           </div>
         </div>
       </header>
@@ -449,6 +519,23 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Auth Dialog */}
+      <AuthDialog
+        isOpen={showAuthDialog}
+        onClose={() => setShowAuthDialog(false)}
+        onSuccess={() => {
+          setShowAuthDialog(false)
+          // Обновляем данные пользователя после успешной аутентификации
+          const updateUser = async () => {
+            const user = await SupabaseAuthService.getCurrentUser()
+            setCurrentUser(user)
+            const remaining = await InterviewManager.getRemainingInterviews()
+            setRemainingInterviews(remaining)
+          }
+          updateUser()
+        }}
+      />
     </div>
   )
 }

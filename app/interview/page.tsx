@@ -113,7 +113,7 @@ export default function InterviewPage() {
         setDebugInfo("Проверка лимитов...")
 
         // Проверяем лимиты
-        const { canStart, reason } = InterviewManager.canStartInterview()
+        const { canStart, reason } = await InterviewManager.canStartInterview()
         console.log("Interview limits check:", { canStart, reason })
 
         if (!canStart) {
@@ -195,7 +195,7 @@ export default function InterviewPage() {
         setDebugInfo("Запись использования интервью...")
 
         // Записываем использование интервью
-        InterviewManager.recordInterviewUsage()
+        await InterviewManager.recordInterviewUsage()
         console.log("✅ Interview usage recorded")
 
         setDebugInfo("Генерация аудио...")
@@ -370,7 +370,7 @@ export default function InterviewPage() {
       localStorage.setItem("interview_specialty", specialty)
 
       try {
-        InterviewManager.saveInterviewResult({
+        await InterviewManager.saveInterviewResult({
           specialty,
           level,
           overall_score: 0, // Будет рассчитан на странице результатов
