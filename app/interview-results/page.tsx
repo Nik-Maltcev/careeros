@@ -266,34 +266,52 @@ export default function InterviewResultsPage() {
     const totalQuestions = responses.length
     const averageDuration = responses.reduce((sum, r) => sum + (r.duration || 0), 0) / totalQuestions
     const shortAnswers = responses.filter((r) => r.duration > 0 && r.duration < 5).length // Снизили порог
+    
+    // Добавляем недостающие переменные
+    const optimalAnswers = responses.filter((r) => r.duration >= 30 && r.duration <= 90).length
+    const longAnswers = responses.filter((r) => r.duration > 90).length
+    const unansweredQuestions = totalQuestions - answeredQuestions
 
-    // БОЛЕЕ МЯГКИЙ расчет оценки - начинаем с 5 баллов (средний уровень)
+    // СПРАВЕДЛИВАЯ система оценки (как в API)
     let baseScore = 5
 
-    // Бонус за отвеченные вопросы (более щедрый)
     const answerRate = answeredQuestions / totalQuestions
-    if (answerRate >= 0.8) baseScore += 2.5  // 80%+ ответов = отличный бонус
-    else if (answerRate >= 0.6) baseScore += 2  // 60%+ ответов = хороший бонус
-    else if (answerRate >= 0.4) baseScore += 1  // 40%+ ответов = небольшой бонус
-    else if (answerRate >= 0.2) baseScore += 0.5  // 20%+ ответов = минимальный бонус
-
-    // Бонус за качество ответов (продолжительность)
-    if (averageDuration > 20) baseScore += 1    // 20+ секунд = хорошо
-    if (averageDuration > 40) baseScore += 1    // 40+ секунд = отлично
-    if (averageDuration > 60) baseScore += 0.5  // 60+ секунд = превосходно
-
-    // Мягкий штраф только за очень короткие ответы
-    if (shortAnswers > answeredQuestions * 0.7) {
-      baseScore -= 0.5  // Небольшой штраф только если большинство ответов очень короткие
+    
+    // Базовая оценка по проценту ответов (точно как в API)
+    if (answerRate === 0) {
+      baseScore = 2 // 0% ответов = 2 балла
+    } else if (answerRate < 0.2) {
+      baseScore = 3 // Менее 20% = 3 балла
+    } else if (answerRate >= 0.2 && answerRate < 0.4) {
+      baseScore = 4 // 20% ответов = 4 балла (средний уровень)
+    } else if (answerRate >= 0.4 && answerRate < 0.6) {
+      baseScore = 5 // 40% ответов = 5 баллов (хорошо!)
+    } else if (answerRate >= 0.6 && answerRate < 0.8) {
+      baseScore = 7 // 60% ответов = 7 баллов (отлично!)
+    } else {
+      baseScore = 9 // 80%+ ответов = 9 баллов (превосходно!)
     }
 
-    // Мягкий штраф только если совсем мало ответов
-    const unansweredQuestions = totalQuestions - answeredQuestions
-    if (unansweredQuestions > totalQuestions * 0.8) {
-      baseScore -= 1  // Штраф только если не ответили на 80%+ вопросов
+    // Бонусы за качество (как в API)
+    if (answeredQuestions > 0) {
+      // Бонус просто за то, что есть ответы
+      baseScore += 0.5
+      
+      if (optimalAnswers > answeredQuestions * 0.2) {
+        baseScore += 1.5
+      }
+      if (longAnswers > 0) {
+        baseScore += 1
+      }
+      if (averageDuration > 20) {
+        baseScore += 1
+      }
+      if (averageDuration > 10) {
+        baseScore += 0.5
+      }
     }
 
-    const overallScore = Math.min(10, Math.max(4, baseScore)) // Минимум 4 балла вместо 1
+    const overallScore = Math.min(10, Math.max(2, baseScore)) // Минимум 2 балла
 
     return {
       overallScore,

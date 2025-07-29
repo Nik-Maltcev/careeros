@@ -18,7 +18,7 @@ async function generateQuestionFeedback(
 ): Promise<QuestionFeedback[]> {
   const feedbackPromises = responses.map(async (response, index) => {
     const answerText = response.response || "Ответ не предоставлен"
-    
+
     const prompt = `Ты эксперт по техническим собеседованиям в IT. Проанализируй ответ кандидата на вопрос собеседования.
 
 ВОПРОС: ${response.question}
@@ -85,7 +85,7 @@ async function generateQuestionFeedback(
       }
     } catch (error) {
       console.error(`Error generating feedback for question ${index + 1}:`, error)
-      
+
       // Fallback обратная связь
       return {
         questionId: index + 1,
@@ -283,7 +283,7 @@ ${responsesSummary}
 
             // Добавляем анализ каждого вопроса
             const questionFeedback = await generateQuestionFeedback(responses, specialty, perplexityKey, model)
-            
+
             return NextResponse.json({
               ...analysis,
               questionFeedback,
@@ -401,26 +401,26 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
       totalQuestions,
     })
 
-    // ОЧЕНЬ ЩЕДРАЯ базовая оценка
+    // СПРАВЕДЛИВАЯ базовая оценка (как вы просили)
     if (answerRate === 0) {
-      overallScore = 4 // Ни одного ответа = 4 балла (еще выше!)
+      overallScore = 2 // 0% ответов = 2 балла
     } else if (answerRate < 0.2) {
-      overallScore = 5 // Менее 20% = 5 баллов (средний уровень)
-    } else if (answerRate < 0.4) {
-      overallScore = 6 // 20-40% = 6 баллов
-    } else if (answerRate < 0.6) {
-      overallScore = 7 // 40-60% = 7 баллов
-    } else if (answerRate < 0.8) {
-      overallScore = 8 // 60-80% = 8 баллов
+      overallScore = 3 // Менее 20% = 3 балла
+    } else if (answerRate >= 0.2 && answerRate < 0.4) {
+      overallScore = 4 // 20% ответов = 4 балла (средний уровень)
+    } else if (answerRate >= 0.4 && answerRate < 0.6) {
+      overallScore = 5 // 40% ответов = 5 баллов (хорошо!)
+    } else if (answerRate >= 0.6 && answerRate < 0.8) {
+      overallScore = 7 // 60% ответов = 7 баллов (отлично!)
     } else {
-      overallScore = 9 // 80%+ = 9 баллов базовых!
+      overallScore = 9 // 80%+ ответов = 9 баллов (превосходно!)
     }
 
     // ОЧЕНЬ ЩЕДРЫЕ бонусы за качество
     if (answeredQuestions > 0) {
       // Бонус просто за то, что есть ответы
       overallScore += 0.5
-      
+
       if (optimalAnswers > answeredQuestions * 0.2) { // Еще больше снизили порог
         overallScore += 1.5 // Увеличили бонус
       }
@@ -549,7 +549,7 @@ function calculateStrictExperienceScore(
   if (longAnswers > 0 && answered > 0) {
     score += (longAnswers / answered) * 2 // Увеличили множитель
   }
-  
+
   // Дополнительный бонус за оптимальные ответы
   if (optimalAnswers > 0 && answered > 0) {
     score += (optimalAnswers / answered) * 1
@@ -595,7 +595,7 @@ function calculateStrictProblemSolvingScore(
   if (longAnswers > 0 && answered > 0) {
     score += (longAnswers / answered) * 1.5 // Увеличили множитель
   }
-  
+
   // Бонус просто за то, что ответил на большинство вопросов
   if (answered / total > 0.6) {
     score += 0.5
