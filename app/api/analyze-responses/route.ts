@@ -340,13 +340,13 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
   // СТРОГИЙ анализ ответов
   const totalQuestions = responses.length
 
-  // Считаем только РЕАЛЬНО отвеченные вопросы
+  // Считаем ЛЮБЫЕ попытки ответить (более мягкие критерии)
   const validAnswers = responses.filter((r) => {
     const hasValidResponse =
       r.response &&
       r.response !== "Не отвечен" &&
       r.response.trim().length > 0 &&
-      r.duration > 5 && // Минимум 5 секунд
+      r.duration > 2 && // СНИЗИЛИ с 5 до 2 секунд - любая попытка засчитывается!
       !r.response.includes("Аудио ответ") // Исключаем технические записи без содержания
 
     console.log(`Question analysis:`, {
@@ -401,38 +401,42 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
       totalQuestions,
     })
 
-    // Более щедрая базовая оценка
+    // ОЧЕНЬ ЩЕДРАЯ базовая оценка
     if (answerRate === 0) {
-      overallScore = 3 // Ни одного ответа = 3 балла (вместо 1)
-    } else if (answerRate < 0.3) {
-      overallScore = 4 // Менее 30% = 4 балла
-    } else if (answerRate < 0.5) {
-      overallScore = 5.5 // 30-50% = 5.5 балла
-    } else if (answerRate < 0.7) {
-      overallScore = 6.5 // 50-70% = 6.5 балла
-    } else if (answerRate < 0.9) {
-      overallScore = 7.5 // 70-90% = 7.5 балла
+      overallScore = 4 // Ни одного ответа = 4 балла (еще выше!)
+    } else if (answerRate < 0.2) {
+      overallScore = 5 // Менее 20% = 5 баллов (средний уровень)
+    } else if (answerRate < 0.4) {
+      overallScore = 6 // 20-40% = 6 баллов
+    } else if (answerRate < 0.6) {
+      overallScore = 7 // 40-60% = 7 баллов
+    } else if (answerRate < 0.8) {
+      overallScore = 8 // 60-80% = 8 баллов
     } else {
-      overallScore = 8.5 // 90%+ = 8.5 балла базовых
+      overallScore = 9 // 80%+ = 9 баллов базовых!
     }
 
-    // Бонусы за качество (более щедрые)
+    // ОЧЕНЬ ЩЕДРЫЕ бонусы за качество
     if (answeredQuestions > 0) {
-      if (optimalAnswers > answeredQuestions * 0.3) { // Снизили порог с 0.5 до 0.3
-        overallScore += 1 // Бонус за оптимальную длину
+      // Бонус просто за то, что есть ответы
+      overallScore += 0.5
+      
+      if (optimalAnswers > answeredQuestions * 0.2) { // Еще больше снизили порог
+        overallScore += 1.5 // Увеличили бонус
       }
       if (longAnswers > 0) {
-        overallScore += 0.5 // Бонус за подробные ответы
+        overallScore += 1 // Увеличили бонус
       }
-      if (averageDuration > 30) { // Снизили порог с 45 до 30
-        overallScore += 0.5 // Бонус за среднюю длительность
+      if (averageDuration > 20) { // Еще больше снизили порог
+        overallScore += 1 // Увеличили бонус
+      }
+      if (averageDuration > 10) { // Бонус даже за короткие ответы
+        overallScore += 0.5
       }
     }
 
-    // Более мягкие штрафы
-    if (veryShortAnswers > answeredQuestions * 0.8) { // Увеличили порог с 0.5 до 0.8
-      overallScore -= 0.5 // Уменьшили штраф с 1 до 0.5
-    }
+    // УБИРАЕМ ШТРАФЫ ПОЛНОСТЬЮ - только позитивная оценка!
+    // Никаких штрафов за короткие ответы
   }
 
   overallScore = Math.min(10, Math.max(3, overallScore)) // Минимум 3 балла вместо 1
