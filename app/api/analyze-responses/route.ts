@@ -387,11 +387,11 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
     averageDuration,
   })
 
-  // СТРОГИЙ расчет оценки
-  let overallScore = 1 // Начинаем с минимума
+  // БОЛЕЕ МЯГКИЙ расчет оценки
+  let overallScore = 5 // Начинаем с среднего уровня
 
   if (totalQuestions === 0) {
-    overallScore = 1 // Нет данных = минимальная оценка
+    overallScore = 5 // Нет данных = средняя оценка
   } else {
     const answerRate = answeredQuestions / totalQuestions
 
@@ -401,41 +401,41 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
       totalQuestions,
     })
 
-    // Базовая оценка ТОЛЬКО за отвеченные вопросы
+    // Более щедрая базовая оценка
     if (answerRate === 0) {
-      overallScore = 1 // Ни одного ответа = 1 балл
-    } else if (answerRate < 0.2) {
-      overallScore = 1.5 // Менее 20% = 1.5 балла
-    } else if (answerRate < 0.4) {
-      overallScore = 2.5 // 20-40% = 2.5 балла
-    } else if (answerRate < 0.6) {
-      overallScore = 4 // 40-60% = 4 балла
-    } else if (answerRate < 0.8) {
-      overallScore = 6 // 60-80% = 6 баллов
+      overallScore = 3 // Ни одного ответа = 3 балла (вместо 1)
+    } else if (answerRate < 0.3) {
+      overallScore = 4 // Менее 30% = 4 балла
+    } else if (answerRate < 0.5) {
+      overallScore = 5.5 // 30-50% = 5.5 балла
+    } else if (answerRate < 0.7) {
+      overallScore = 6.5 // 50-70% = 6.5 балла
+    } else if (answerRate < 0.9) {
+      overallScore = 7.5 // 70-90% = 7.5 балла
     } else {
-      overallScore = 7 // 80%+ = 7 баллов базовых
+      overallScore = 8.5 // 90%+ = 8.5 балла базовых
     }
 
-    // Бонусы за качество (только если есть ответы)
+    // Бонусы за качество (более щедрые)
     if (answeredQuestions > 0) {
-      if (optimalAnswers > answeredQuestions * 0.5) {
+      if (optimalAnswers > answeredQuestions * 0.3) { // Снизили порог с 0.5 до 0.3
         overallScore += 1 // Бонус за оптимальную длину
       }
       if (longAnswers > 0) {
         overallScore += 0.5 // Бонус за подробные ответы
       }
-      if (averageDuration > 45) {
+      if (averageDuration > 30) { // Снизили порог с 45 до 30
         overallScore += 0.5 // Бонус за среднюю длительность
       }
     }
 
-    // Штрафы
-    if (veryShortAnswers > answeredQuestions * 0.5) {
-      overallScore -= 1 // Штраф за слишком короткие ответы
+    // Более мягкие штрафы
+    if (veryShortAnswers > answeredQuestions * 0.8) { // Увеличили порог с 0.5 до 0.8
+      overallScore -= 0.5 // Уменьшили штраф с 1 до 0.5
     }
   }
 
-  overallScore = Math.min(10, Math.max(1, overallScore))
+  overallScore = Math.min(10, Math.max(3, overallScore)) // Минимум 3 балла вместо 1
 
   console.log("Final overall score:", overallScore)
 
@@ -512,23 +512,23 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
   }
 }
 
-// СТРОГИЕ функции расчета оценок
+// БОЛЕЕ МЯГКИЕ функции расчета оценок
 function calculateStrictTechnicalScore(
   answered: number,
   total: number,
   avgDuration: number,
   baseScore: number,
 ): number {
-  if (total === 0 || answered === 0) return 1
+  if (total === 0 || answered === 0) return 3 // Минимум 3 вместо 1
 
-  let score = Math.max(1, baseScore * 0.8) // Технические знания строже
+  let score = Math.max(3, baseScore * 0.9) // Менее строгий коэффициент
 
-  // Только если есть хорошие ответы
-  if (answered / total > 0.7 && avgDuration > 30) {
-    score += 0.5
+  // Более мягкие условия для бонуса
+  if (answered / total > 0.5 && avgDuration > 20) { // Снизили пороги
+    score += 0.8 // Увеличили бонус
   }
 
-  return Math.min(10, Math.max(1, Math.round(score * 10) / 10))
+  return Math.min(10, Math.max(3, Math.round(score * 10) / 10))
 }
 
 function calculateStrictExperienceScore(
@@ -537,16 +537,21 @@ function calculateStrictExperienceScore(
   answered: number,
   baseScore: number,
 ): number {
-  if (answered === 0) return 1
+  if (answered === 0) return 3 // Минимум 3 вместо 1
 
-  let score = Math.max(1, baseScore * 0.7) // Опыт еще строже
+  let score = Math.max(3, baseScore * 0.85) // Менее строгий коэффициент
 
-  // Бонус только за действительно длинные ответы
+  // Более щедрый бонус
   if (longAnswers > 0 && answered > 0) {
-    score += (longAnswers / answered) * 1.5
+    score += (longAnswers / answered) * 2 // Увеличили множитель
+  }
+  
+  // Дополнительный бонус за оптимальные ответы
+  if (optimalAnswers > 0 && answered > 0) {
+    score += (optimalAnswers / answered) * 1
   }
 
-  return Math.min(10, Math.max(1, Math.round(score * 10) / 10))
+  return Math.min(10, Math.max(3, Math.round(score * 10) / 10))
 }
 
 function calculateStrictCommunicationScore(
@@ -555,21 +560,21 @@ function calculateStrictCommunicationScore(
   answered: number,
   baseScore: number,
 ): number {
-  if (answered === 0) return 1
+  if (answered === 0) return 4 // Коммуникация оценивается выше
 
-  let score = Math.max(1, baseScore * 0.9)
+  let score = Math.max(4, baseScore * 1.0) // Без штрафного коэффициента
 
-  // Серьезный штраф за очень короткие ответы
-  if (veryShort > answered * 0.5) {
-    score -= 2
+  // Более мягкий штраф
+  if (veryShort > answered * 0.8) { // Увеличили порог
+    score -= 0.5 // Уменьшили штраф
   }
 
-  // Бонус за оптимальные ответы
-  if (optimal > answered * 0.3) {
-    score += 0.5
+  // Более щедрый бонус
+  if (optimal > answered * 0.2) { // Снизили порог
+    score += 1 // Увеличили бонус
   }
 
-  return Math.min(10, Math.max(1, Math.round(score * 10) / 10))
+  return Math.min(10, Math.max(4, Math.round(score * 10) / 10))
 }
 
 function calculateStrictProblemSolvingScore(
@@ -578,16 +583,21 @@ function calculateStrictProblemSolvingScore(
   total: number,
   baseScore: number,
 ): number {
-  if (total === 0 || answered === 0) return 1
+  if (total === 0 || answered === 0) return 3 // Минимум 3 вместо 1
 
-  let score = Math.max(1, baseScore * 0.85)
+  let score = Math.max(3, baseScore * 0.9) // Менее строгий коэффициент
 
-  // Бонус только за действительно подробные решения
+  // Более щедрый бонус
   if (longAnswers > 0 && answered > 0) {
-    score += (longAnswers / answered) * 1
+    score += (longAnswers / answered) * 1.5 // Увеличили множитель
+  }
+  
+  // Бонус просто за то, что ответил на большинство вопросов
+  if (answered / total > 0.6) {
+    score += 0.5
   }
 
-  return Math.min(10, Math.max(1, Math.round(score * 10) / 10))
+  return Math.min(10, Math.max(3, Math.round(score * 10) / 10))
 }
 
 // ЧЕСТНЫЕ функции описаний
@@ -598,18 +608,18 @@ function generateHonestTechnicalDescription(
   specialty: string,
 ): string {
   if (total === 0) return "Интервью не было проведено"
-  if (answered === 0) return `Не продемонстрированы знания ${specialty}. Необходимо изучение основ с нуля`
+  if (answered === 0) return `Начальный уровень в ${specialty}. Отличная возможность для изучения основ`
 
   const answerRate = answered / total
 
   if (answerRate < 0.3) {
-    return `Критические пробелы в знаниях ${specialty}. Ответы даны менее чем на треть вопросов`
+    return `Базовый уровень знаний ${specialty}. Есть хорошая основа для развития`
   } else if (answerRate < 0.6) {
-    return `Серьезные пробелы в знаниях ${specialty}. Требуется фундаментальное изучение`
+    return `Развивающиеся знания ${specialty}. Показаны базовые концепции, есть потенциал`
   } else if (answerRate < 0.8 || avgDuration < 25) {
-    return `Базовые знания ${specialty} присутствуют, но есть значительные пробелы`
+    return `Хорошие базовые знания ${specialty}. Демонстрирует понимание ключевых концепций`
   } else {
-    return `Хорошие базовые знания ${specialty}, подробные ответы на большинство вопросов`
+    return `Отличные знания ${specialty}. Подробные и структурированные ответы`
   }
 }
 
@@ -619,16 +629,16 @@ function generateHonestExperienceDescription(
   answered: number,
   avgDuration: number,
 ): string {
-  if (answered === 0) return "Практический опыт не продемонстрирован"
+  if (answered === 0) return "Начальный этап карьеры. Отличная возможность для получения практического опыта"
 
   if (longAnswers === 0 && avgDuration < 20) {
-    return "Недостаточно практического опыта. Ответы слишком краткие для демонстрации опыта"
+    return "Развивающийся практический опыт. Есть базовое понимание, можно углублять"
   } else if (longAnswers > answered * 0.3) {
-    return "Хороший практический опыт, приводит развернутые примеры"
+    return "Отличный практический опыт! Приводит конкретные примеры и детали"
   } else if (avgDuration > 30) {
-    return "Есть некоторый практический опыт, но нужно больше конкретных примеров"
+    return "Хороший практический опыт. Демонстрирует понимание реальных задач"
   } else {
-    return "Ограниченный практический опыт, больше теоретических знаний"
+    return "Базовый практический опыт. Хорошая основа для дальнейшего развития"
   }
 }
 
@@ -638,32 +648,32 @@ function generateHonestCommunicationDescription(
   answered: number,
   avgDuration: number,
 ): string {
-  if (answered === 0) return "Коммуникативные навыки не оценены - нет ответов"
+  if (answered === 0) return "Развивающиеся коммуникативные навыки. Хорошая возможность для практики"
 
-  if (veryShort > answered * 0.7) {
-    return "Серьезные проблемы с коммуникацией. Большинство ответов слишком краткие"
-  } else if (optimal > answered * 0.5) {
-    return "Хорошие коммуникативные навыки, структурированные ответы"
-  } else if (avgDuration > 25) {
-    return "Средние коммуникативные навыки, есть потенциал для улучшения"
+  if (veryShort > answered * 0.8) { // Увеличили порог
+    return "Базовые коммуникативные навыки. Рекомендуется развивать навык развернутых объяснений"
+  } else if (optimal > answered * 0.3) { // Снизили порог
+    return "Отличные коммуникативные навыки! Четкие и структурированные ответы"
+  } else if (avgDuration > 20) { // Снизили порог
+    return "Хорошие коммуникативные навыки. Способен выражать технические мысли"
   } else {
-    return "Трудности с выражением мыслей, нужно развивать навыки объяснения"
+    return "Развивающиеся навыки коммуникации. Есть потенциал для улучшения"
   }
 }
 
 function generateHonestProblemSolvingDescription(answered: number, longAnswers: number, total: number): string {
-  if (total === 0 || answered === 0) return "Навыки решения проблем не продемонстрированы"
+  if (total === 0 || answered === 0) return "Развивающиеся навыки решения проблем. Хорошая основа для роста"
 
   const answerRate = answered / total
 
   if (answerRate < 0.4) {
-    return "Слабые навыки решения проблем. Большинство задач остались нерешенными"
-  } else if (answerRate > 0.7 && longAnswers > 0) {
-    return "Хорошие навыки решения проблем, системный подход"
-  } else if (answerRate > 0.5) {
-    return "Базовые навыки решения проблем, справляется со стандартными задачами"
+    return "Базовые навыки решения проблем. Есть потенциал для развития аналитического мышления"
+  } else if (answerRate > 0.6 && longAnswers > 0) {
+    return "Отличные навыки решения проблем! Демонстрирует системный подход"
+  } else if (answerRate > 0.4) {
+    return "Хорошие навыки решения проблем. Справляется с техническими задачами"
   } else {
-    return "Ограниченные навыки решения проблем, нужна практика"
+    return "Развивающиеся навыки решения проблем. Хорошая основа для дальнейшего роста"
   }
 }
 

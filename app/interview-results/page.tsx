@@ -261,81 +261,89 @@ export default function InterviewResultsPage() {
 
   // Генерация демо результатов на основе реальных данных
   const generateDemoResults = (responses: any[], specialty: string): AnalysisResult => {
-    // Базовая оценка на основе количества и длительности ответов
-    const answeredQuestions = responses.filter((r) => r.response && r.duration > 10).length
+    // Более мягкий анализ ответов
+    const answeredQuestions = responses.filter((r) => r.response && r.duration > 5).length // Снизили порог с 10 до 5 секунд
     const totalQuestions = responses.length
     const averageDuration = responses.reduce((sum, r) => sum + (r.duration || 0), 0) / totalQuestions
-    const shortAnswers = responses.filter((r) => r.duration > 0 && r.duration < 10).length
+    const shortAnswers = responses.filter((r) => r.duration > 0 && r.duration < 5).length // Снизили порог
 
-    // Более строгий расчет оценки
-    let baseScore = 1
+    // БОЛЕЕ МЯГКИЙ расчет оценки - начинаем с 5 баллов (средний уровень)
+    let baseScore = 5
 
-    // Бонус за отвеченные вопросы (только если ответ содержательный)
-    baseScore += (answeredQuestions / totalQuestions) * 6
+    // Бонус за отвеченные вопросы (более щедрый)
+    const answerRate = answeredQuestions / totalQuestions
+    if (answerRate >= 0.8) baseScore += 2.5  // 80%+ ответов = отличный бонус
+    else if (answerRate >= 0.6) baseScore += 2  // 60%+ ответов = хороший бонус
+    else if (answerRate >= 0.4) baseScore += 1  // 40%+ ответов = небольшой бонус
+    else if (answerRate >= 0.2) baseScore += 0.5  // 20%+ ответов = минимальный бонус
 
-    // Штраф за короткие ответы
-    baseScore -= (shortAnswers / totalQuestions) * 2
+    // Бонус за качество ответов (продолжительность)
+    if (averageDuration > 20) baseScore += 1    // 20+ секунд = хорошо
+    if (averageDuration > 40) baseScore += 1    // 40+ секунд = отлично
+    if (averageDuration > 60) baseScore += 0.5  // 60+ секунд = превосходно
 
-    // Бонус за продолжительность ответов
-    if (averageDuration > 30) baseScore += 1
-    if (averageDuration > 60) baseScore += 1.5
-    if (averageDuration > 90) baseScore += 0.5
-
-    // Штраф если слишком много неотвеченных вопросов
-    const unansweredQuestions = totalQuestions - answeredQuestions
-    if (unansweredQuestions > totalQuestions * 0.5) {
-      baseScore -= 2
+    // Мягкий штраф только за очень короткие ответы
+    if (shortAnswers > answeredQuestions * 0.7) {
+      baseScore -= 0.5  // Небольшой штраф только если большинство ответов очень короткие
     }
 
-    const overallScore = Math.min(10, Math.max(1, baseScore))
+    // Мягкий штраф только если совсем мало ответов
+    const unansweredQuestions = totalQuestions - answeredQuestions
+    if (unansweredQuestions > totalQuestions * 0.8) {
+      baseScore -= 1  // Штраф только если не ответили на 80%+ вопросов
+    }
+
+    const overallScore = Math.min(10, Math.max(4, baseScore)) // Минимум 4 балла вместо 1
 
     return {
       overallScore,
       criteriaScores: [
         {
           name: "Технические знания",
-          score: Math.max(1, overallScore - 1 + Math.random() * 0.5),
+          score: Math.max(4, overallScore - 0.5 + Math.random() * 1), // Минимум 4, ближе к общей оценке
           maxScore: 10,
           description:
-            answeredQuestions > totalQuestions * 0.7
-              ? "Хорошие базовые знания"
-              : answeredQuestions > totalQuestions * 0.4
-                ? "Частичные знания, есть пробелы"
-                : "Серьезные пробелы в знаниях",
+            answeredQuestions > totalQuestions * 0.6
+              ? "Хорошие базовые знания, демонстрирует понимание концепций"
+              : answeredQuestions > totalQuestions * 0.3
+                ? "Базовые знания присутствуют, есть области для развития"
+                : "Начальный уровень, требуется изучение основ",
           icon: Code,
         },
         {
           name: "Практический опыт",
-          score: Math.max(1, overallScore - 0.5 + Math.random() * 0.5),
+          score: Math.max(4, overallScore - 0.3 + Math.random() * 1), // Более щедрая оценка
           maxScore: 10,
           description:
-            averageDuration > 60
-              ? "Есть практический опыт"
-              : averageDuration > 20
-                ? "Ограниченный опыт"
-                : "Недостаточно практического опыта",
+            averageDuration > 40
+              ? "Хороший практический опыт, приводит примеры"
+              : averageDuration > 15
+                ? "Есть практический опыт, можно развивать дальше"
+                : "Начальный практический опыт",
           icon: Target,
         },
         {
           name: "Коммуникативные навыки",
-          score: Math.max(1, overallScore + 0.5 + Math.random() * 0.5),
+          score: Math.max(5, overallScore + 0.5 + Math.random() * 1), // Самая высокая оценка
           maxScore: 10,
           description:
-            answeredQuestions > totalQuestions * 0.7
-              ? "Способен выражать мысли"
+            answeredQuestions > totalQuestions * 0.5
+              ? "Хорошие коммуникативные навыки, четко выражает мысли"
               : answeredQuestions > 0
-                ? "Ограниченная коммуникация"
-                : "Трудности с выражением мыслей",
+                ? "Базовые коммуникативные навыки, есть потенциал"
+                : "Развивающиеся коммуникативные навыки",
           icon: MessageSquare,
         },
         {
           name: "Решение проблем",
-          score: Math.max(1, overallScore + Math.random() * 0.5),
+          score: Math.max(4, overallScore + Math.random() * 1), // Более мягкая оценка
           maxScore: 10,
           description:
-            answeredQuestions > totalQuestions * 0.6
-              ? "Базовые навыки решения задач"
-              : "Требует развития навыков решения проблем",
+            answeredQuestions > totalQuestions * 0.5
+              ? "Хорошие навыки решения задач, логический подход"
+              : answeredQuestions > totalQuestions * 0.2
+                ? "Базовые навыки решения проблем, есть потенциал"
+                : "Развивающиеся навыки решения проблем",
           icon: Lightbulb,
         },
       ],
@@ -379,18 +387,26 @@ export default function InterviewResultsPage() {
       questionFeedback: responses.map((response, index) => ({
         questionId: index + 1,
         questionText: response.question || `Вопрос ${index + 1}`,
-        feedback: answeredQuestions < totalQuestions * 0.5 
-          ? "Демо-режим: вопрос не был отвечен или ответ был слишком кратким. Рекомендуется изучить тему и дать более развернутый ответ."
-          : "Демо-режим: детальный анализ недоступен. Попробуйте позже для получения персональной обратной связи по этому вопросу.",
-        score: response.response && response.duration > 10 
-          ? Math.floor(Math.random() * 3) + 6  // 6-8 для отвеченных
-          : Math.floor(Math.random() * 3) + 2, // 2-4 для неотвеченных
-        strengths: response.response && response.duration > 10 
-          ? ["Ответ предоставлен", "Показано понимание темы"]
-          : ["Участие в интервью"],
-        improvements: response.response && response.duration > 10
-          ? ["Можно дать более развернутый ответ", "Добавить больше технических деталей"]
-          : ["Необходимо изучить тему", "Дать развернутый ответ на вопрос"],
+        feedback: response.response && response.duration > 5 
+          ? "Демо-режим: хороший ответ! Детальный анализ с персональными рекомендациями будет доступен в полной версии."
+          : response.response && response.duration > 0
+          ? "Демо-режим: ответ получен, но можно развить тему подробнее. Полный анализ доступен в расширенной версии."
+          : "Демо-режим: вопрос пропущен. Рекомендуется изучить тему и попробовать ответить.",
+        score: response.response && response.duration > 5 
+          ? Math.floor(Math.random() * 2) + 7  // 7-8 для хороших ответов
+          : response.response && response.duration > 0
+          ? Math.floor(Math.random() * 2) + 5  // 5-6 для коротких ответов
+          : Math.floor(Math.random() * 2) + 3, // 3-4 для пропущенных
+        strengths: response.response && response.duration > 5 
+          ? ["Развернутый ответ", "Демонстрирует понимание концепций", "Хорошая структура изложения"]
+          : response.response && response.duration > 0
+          ? ["Ответ предоставлен", "Показано базовое понимание"]
+          : ["Участие в интервью", "Готовность к обучению"],
+        improvements: response.response && response.duration > 5
+          ? ["Можно добавить больше практических примеров", "Углубить технические детали"]
+          : response.response && response.duration > 0
+          ? ["Дать более развернутый ответ", "Добавить конкретные примеры"]
+          : ["Изучить основы темы", "Подготовить развернутый ответ"],
       })),
     }
   }
