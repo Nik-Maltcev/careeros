@@ -261,8 +261,8 @@ export default function InterviewResultsPage() {
 
   // Генерация демо результатов на основе реальных данных
   const generateDemoResults = (responses: any[], specialty: string): AnalysisResult => {
-    // Более мягкий анализ ответов
-    const answeredQuestions = responses.filter((r) => r.response && r.duration > 5).length // Снизили порог с 10 до 5 секунд
+    // Очень мягкий анализ ответов
+    const answeredQuestions = responses.filter((r) => r.response && r.duration > 1).length // СНИЗИЛИ до 1 секунды - как в API
     const totalQuestions = responses.length
     const averageDuration = responses.reduce((sum, r) => sum + (r.duration || 0), 0) / totalQuestions
     const shortAnswers = responses.filter((r) => r.duration > 0 && r.duration < 5).length // Снизили порог
@@ -292,22 +292,22 @@ export default function InterviewResultsPage() {
       baseScore = 9 // 80%+ ответов = 9 баллов (превосходно!)
     }
 
-    // Бонусы за качество (как в API)
+    // МАКСИМАЛЬНО ЩЕДРЫЕ бонусы за качество (как в API)
     if (answeredQuestions > 0) {
-      // Бонус просто за то, что есть ответы
-      baseScore += 0.5
+      // Большой бонус просто за то, что есть ответы
+      baseScore += 1
       
-      if (optimalAnswers > answeredQuestions * 0.2) {
-        baseScore += 1.5
+      if (optimalAnswers > answeredQuestions * 0.1) { // Очень низкий порог - 10%
+        baseScore += 2 // Большой бонус
       }
       if (longAnswers > 0) {
-        baseScore += 1
+        baseScore += 1.5 // Еще больший бонус
       }
-      if (averageDuration > 20) {
-        baseScore += 1
+      if (averageDuration > 15) { // Очень низкий порог
+        baseScore += 1.5 // Большой бонус
       }
-      if (averageDuration > 10) {
-        baseScore += 0.5
+      if (averageDuration > 5) { // Бонус даже за очень короткие ответы
+        baseScore += 1
       }
     }
 

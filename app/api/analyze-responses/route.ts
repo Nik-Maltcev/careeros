@@ -340,13 +340,13 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
   // СТРОГИЙ анализ ответов
   const totalQuestions = responses.length
 
-  // Считаем ЛЮБЫЕ попытки ответить (более мягкие критерии)
+  // Считаем ПРАКТИЧЕСКИ ЛЮБЫЕ попытки ответить (очень мягкие критерии)
   const validAnswers = responses.filter((r) => {
     const hasValidResponse =
       r.response &&
       r.response !== "Не отвечен" &&
       r.response.trim().length > 0 &&
-      r.duration > 2 && // СНИЗИЛИ с 5 до 2 секунд - любая попытка засчитывается!
+      r.duration > 1 && // СНИЗИЛИ до 1 секунды - засчитываем почти любую попытку!
       !r.response.includes("Аудио ответ") // Исключаем технические записи без содержания
 
     console.log(`Question analysis:`, {
@@ -416,22 +416,22 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
       overallScore = 9 // 80%+ ответов = 9 баллов (превосходно!)
     }
 
-    // ОЧЕНЬ ЩЕДРЫЕ бонусы за качество
+    // МАКСИМАЛЬНО ЩЕДРЫЕ бонусы за качество
     if (answeredQuestions > 0) {
-      // Бонус просто за то, что есть ответы
-      overallScore += 0.5
+      // Большой бонус просто за то, что есть ответы
+      overallScore += 1
 
-      if (optimalAnswers > answeredQuestions * 0.2) { // Еще больше снизили порог
-        overallScore += 1.5 // Увеличили бонус
+      if (optimalAnswers > answeredQuestions * 0.1) { // Очень низкий порог - 10%
+        overallScore += 2 // Большой бонус
       }
       if (longAnswers > 0) {
-        overallScore += 1 // Увеличили бонус
+        overallScore += 1.5 // Еще больший бонус
       }
-      if (averageDuration > 20) { // Еще больше снизили порог
-        overallScore += 1 // Увеличили бонус
+      if (averageDuration > 15) { // Очень низкий порог
+        overallScore += 1.5 // Большой бонус
       }
-      if (averageDuration > 10) { // Бонус даже за короткие ответы
-        overallScore += 0.5
+      if (averageDuration > 5) { // Бонус даже за очень короткие ответы
+        overallScore += 1
       }
     }
 
