@@ -1,5 +1,106 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+interface QuestionFeedback {
+  questionId: number
+  questionText: string
+  feedback: string
+  score: number
+  strengths: string[]
+  improvements: string[]
+}
+
+// Функция для генерации обратной связи по каждому вопросу
+async function generateQuestionFeedback(
+  responses: any[],
+  specialty: string,
+  apiKey: string,
+  model: string
+): Promise<QuestionFeedback[]> {
+  const feedbackPromises = responses.map(async (response, index) => {
+    const answerText = response.response || "Ответ не предоставлен"
+    
+    const prompt = `Ты эксперт по техническим собеседованиям в IT. Проанализируй ответ кандидата на вопрос собеседования.
+
+ВОПРОС: ${response.question}
+ОТВЕТ КАНДИДАТА: ${answerText}
+СПЕЦИАЛЬНОСТЬ: ${specialty}
+
+Дай детальную обратную связь по этому конкретному ответу:
+
+1. Оцени ответ по шкале от 1 до 10
+2. Укажи сильные стороны ответа (что хорошо)
+3. Укажи области для улучшения (что можно улучшить)
+4. Дай конкретные рекомендации
+
+Верни ТОЛЬКО JSON в формате:
+{
+  "score": число от 1 до 10,
+  "feedback": "Подробная обратная связь на русском языке",
+  "strengths": ["сильная сторона 1", "сильная сторона 2"],
+  "improvements": ["что улучшить 1", "что улучшить 2"]
+}`
+
+    try {
+      const response = await fetch("https://api.perplexity.ai/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          max_tokens: 1000,
+          temperature: 0.3,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      const content = data.choices[0]?.message?.content
+
+      if (!content) {
+        throw new Error("No content in response")
+      }
+
+      // Парсим JSON ответ
+      const cleanContent = content.replace(/```json\n?|```\n?/g, "").trim()
+      const feedbackData = JSON.parse(cleanContent)
+
+      return {
+        questionId: index + 1,
+        questionText: response.question,
+        feedback: feedbackData.feedback,
+        score: feedbackData.score,
+        strengths: feedbackData.strengths || [],
+        improvements: feedbackData.improvements || [],
+      }
+    } catch (error) {
+      console.error(`Error generating feedback for question ${index + 1}:`, error)
+      
+      // Fallback обратная связь
+      return {
+        questionId: index + 1,
+        questionText: response.question,
+        feedback: "Не удалось сгенерировать детальную обратную связь для этого вопроса.",
+        score: 5,
+        strengths: ["Ответ предоставлен"],
+        improvements: ["Попробуйте дать более развернутый ответ"],
+      }
+    }
+  })
+
+  return Promise.all(feedbackPromises)
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { responses, specialty } = await request.json()
@@ -180,8 +281,12 @@ ${responsesSummary}
               criteriaCount: analysis.criteriaScores.length,
             })
 
+            // Добавляем анализ каждого вопроса
+            const questionFeedback = await generateQuestionFeedback(responses, specialty, perplexityKey, model)
+            
             return NextResponse.json({
               ...analysis,
+              questionFeedback,
               modelUsed: model,
               isDemoMode: false,
               source: "perplexity",
@@ -387,12 +492,23 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
     overallScore,
   )
 
+  // Генерируем fallback обратную связь по вопросам
+  const questionFeedback: QuestionFeedback[] = responses.map((response, index) => ({
+    questionId: index + 1,
+    questionText: response.question,
+    feedback: "Демо-режим: детальный анализ недоступен. Попробуйте позже для получения персональной обратной связи.",
+    score: Math.floor(Math.random() * 3) + 6, // 6-8
+    strengths: ["Ответ предоставлен", "Показано понимание темы"],
+    improvements: ["Можно дать более развернутый ответ", "Добавить больше технических деталей"],
+  }))
+
   return {
     overallScore: Math.round(overallScore * 10) / 10, // Округляем до 1 знака
     criteriaScores,
     strengths,
     improvements,
     roadmap,
+    questionFeedback,
   }
 }
 

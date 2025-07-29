@@ -45,11 +45,21 @@ interface RoadmapGoal {
   resources: string[]
 }
 
+interface QuestionFeedback {
+  questionId: number
+  questionText: string
+  feedback: string
+  score: number
+  strengths: string[]
+  improvements: string[]
+}
+
 interface AnalysisResult {
   overallScore: number
   criteriaScores: CriteriaScore[]
   feedback: FeedbackItem[]
   roadmapGoals: RoadmapGoal[]
+  questionFeedback?: QuestionFeedback[]
 }
 
 const CircularProgress = ({
@@ -227,6 +237,7 @@ export default function InterviewResultsPage() {
           timeframe: goal.timeframe || "1-3 месяца",
           resources: Array.isArray(goal.resources) ? goal.resources : ["Онлайн ресурсы", "Практика"],
         })),
+        questionFeedback: analysis.questionFeedback || [],
       }
 
       console.log("analyzeInterviewResponses: Final result object:", result)
@@ -365,6 +376,22 @@ export default function InterviewResultsPage() {
           resources: ["Практика презентаций", "Участие в митапах", "Технические интервью с друзьями"],
         },
       ],
+      questionFeedback: responses.map((response, index) => ({
+        questionId: index + 1,
+        questionText: response.question || `Вопрос ${index + 1}`,
+        feedback: answeredQuestions < totalQuestions * 0.5 
+          ? "Демо-режим: вопрос не был отвечен или ответ был слишком кратким. Рекомендуется изучить тему и дать более развернутый ответ."
+          : "Демо-режим: детальный анализ недоступен. Попробуйте позже для получения персональной обратной связи по этому вопросу.",
+        score: response.response && response.duration > 10 
+          ? Math.floor(Math.random() * 3) + 6  // 6-8 для отвеченных
+          : Math.floor(Math.random() * 3) + 2, // 2-4 для неотвеченных
+        strengths: response.response && response.duration > 10 
+          ? ["Ответ предоставлен", "Показано понимание темы"]
+          : ["Участие в интервью"],
+        improvements: response.response && response.duration > 10
+          ? ["Можно дать более развернутый ответ", "Добавить больше технических деталей"]
+          : ["Необходимо изучить тему", "Дать развернутый ответ на вопрос"],
+      })),
     }
   }
 
@@ -565,6 +592,83 @@ export default function InterviewResultsPage() {
               ))}
             </CardContent>
           </Card>
+
+          {/* Question Feedback */}
+          {analysisResult.questionFeedback && analysisResult.questionFeedback.length > 0 && (
+            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-purple-400 flex items-center">
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Обратная связь по вопросам
+                </CardTitle>
+                <CardDescription className="text-gray-300">
+                  Детальный анализ ваших ответов на каждый вопрос
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {analysisResult.questionFeedback.map((feedback, index) => (
+                  <div key={feedback.questionId} className="border-l-2 border-purple-500/30 pl-4 space-y-3">
+                    {/* Вопрос и оценка */}
+                    <div className="flex items-start justify-between">
+                      <h4 className="text-white font-medium text-sm leading-relaxed pr-4">
+                        {index + 1}. {feedback.questionText}
+                      </h4>
+                      <div className="flex items-center space-x-1 bg-purple-500/20 px-2 py-1 rounded-full flex-shrink-0">
+                        <Star className="w-3 h-3 text-purple-400" />
+                        <span className="text-purple-300 text-xs font-medium">
+                          {feedback.score}/10
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Обратная связь */}
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      {feedback.feedback}
+                    </p>
+
+                    {/* Сильные стороны и улучшения */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Сильные стороны */}
+                      {feedback.strengths && feedback.strengths.length > 0 && (
+                        <div>
+                          <h5 className="text-green-400 text-xs font-medium mb-2 flex items-center space-x-1">
+                            <CheckCircle className="w-3 h-3" />
+                            <span>Сильные стороны</span>
+                          </h5>
+                          <ul className="space-y-1">
+                            {feedback.strengths.map((strength, idx) => (
+                              <li key={idx} className="text-gray-400 text-xs flex items-start space-x-1">
+                                <span className="text-green-400 mt-1">•</span>
+                                <span>{strength}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Области для улучшения */}
+                      {feedback.improvements && feedback.improvements.length > 0 && (
+                        <div>
+                          <h5 className="text-orange-400 text-xs font-medium mb-2 flex items-center space-x-1">
+                            <AlertCircle className="w-3 h-3" />
+                            <span>Можно улучшить</span>
+                          </h5>
+                          <ul className="space-y-1">
+                            {feedback.improvements.map((improvement, idx) => (
+                              <li key={idx} className="text-gray-400 text-xs flex items-start space-x-1">
+                                <span className="text-orange-400 mt-1">•</span>
+                                <span>{improvement}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
