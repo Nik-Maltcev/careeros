@@ -584,16 +584,24 @@ function analyzeAnswerContent(answer: string, question: string, specialty: strin
   const hasDetails = /потому что|так как|поскольку|дело в том|объясн|причин|механизм|принцип/i.test(answer)
   const hasComparison = /отличие|разница|сравнен|лучше|хуже|преимущество|недостаток/i.test(answer)
   
-  // Определяем качество ответа
-  const isDetailed = techTermCount >= 3 && (hasExamples || hasDetails) && answer.length > 100
-  const isGood = techTermCount >= 2 || hasExamples || hasDetails || hasComparison
-  const isBasic = techTermCount >= 1 || answer.length > 30
+  // Определяем качество ответа (БОЛЕЕ МЯГКИЕ критерии)
+  const isDetailed = (techTermCount >= 2 && (hasExamples || hasDetails)) || (techTermCount >= 3) || (answer.length > 200 && hasDetails)
+  const isGood = techTermCount >= 1 || hasExamples || hasDetails || hasComparison || answer.length > 80
+  const isBasic = answer.length > 10 // Любой ответ длиннее 10 символов считается базовым
   
   return { isDetailed, isGood, isBasic, techTermCount, hasExamples, hasDetails }
 }
 
+  // Рассчитываем общую оценку на основе оценок по вопросам
+  const avgQuestionScore = questionFeedback.length > 0 
+    ? questionFeedback.reduce((sum, q) => sum + q.score, 0) / questionFeedback.length
+    : overallScore
+  
+  // Используем среднее между расчетной оценкой и оценками по вопросам
+  const finalOverallScore = Math.round(((overallScore + avgQuestionScore) / 2) * 10) / 10
+
   return {
-    overallScore: Math.round(overallScore * 10) / 10, // Округляем до 1 знака
+    overallScore: finalOverallScore,
     criteriaScores,
     strengths,
     improvements,
