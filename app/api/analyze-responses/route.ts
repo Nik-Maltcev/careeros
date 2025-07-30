@@ -500,47 +500,52 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
     overallScore,
   )
 
-  // Генерируем fallback обратную связь по вопросам с анализом качества
+  // Генерируем fallback обратную связь по вопросам с анализом СОДЕРЖАНИЯ
   const questionFeedback: QuestionFeedback[] = responses.map((response, index) => {
     const answerText = response.response || ""
-    const duration = response.duration || 0
+    const question = response.question || ""
     
-    // Анализируем качество ответа
+    // Анализируем качество ответа по СОДЕРЖАНИЮ, а не по длине
     let score = 5 // По умолчанию 5/10 для поверхностных ответов
     let feedback = ""
     let strengths: string[] = []
     let improvements: string[] = []
     
-    if (!answerText || answerText === "Не отвечен" || duration < 1) {
+    if (!answerText || answerText === "Не отвечен" || answerText.trim().length === 0) {
       // Нет ответа
       score = 2
-      feedback = "Демо-режим: Вопрос не был отвечен. Рекомендуется изучить тему и подготовить развернутый ответ."
+      feedback = "Демо-режим: Вопрос не был отвечен. Рекомендуется изучить тему и подготовить ответ."
       strengths = ["Участие в интервью"]
-      improvements = ["Изучить основы темы", "Подготовить развернутый ответ"]
-    } else if (duration < 10 || answerText.length < 50) {
-      // Очень короткий ответ
-      score = 3
-      feedback = "Демо-режим: Ответ слишком краткий. Необходимо дать более развернутое объяснение с примерами."
-      strengths = ["Попытка ответить на вопрос"]
-      improvements = ["Дать более развернутый ответ", "Добавить конкретные примеры"]
-    } else if (duration < 30 || answerText.length < 150) {
-      // Поверхностный ответ - ставим 5/10 как просили
-      score = 5
-      feedback = "Демо-режим: ПОВЕРХНОСТНЫЙ ответ - показано базовое понимание, но отсутствуют детали, примеры и практический опыт. Необходимо углубить знания."
-      strengths = ["Базовое понимание темы", "Структурированный ответ"]
-      improvements = ["Добавить конкретные примеры из практики", "Углубить технические детали", "Показать практический опыт"]
-    } else if (duration < 60) {
-      // Хороший ответ
-      score = 7
-      feedback = "Демо-режим: Хороший ответ с пониманием темы. Можно добавить больше практических примеров для улучшения."
-      strengths = ["Хорошее понимание концепций", "Развернутое объяснение", "Логичная структура"]
-      improvements = ["Добавить больше практических примеров", "Углубить некоторые аспекты"]
+      improvements = ["Изучить основы темы", "Подготовить ответ на вопрос"]
     } else {
-      // Отличный ответ
-      score = 8
-      feedback = "Демо-режим: Отличный развернутый ответ! Демонстрирует глубокое понимание и практический опыт."
-      strengths = ["Глубокое понимание темы", "Конкретные примеры", "Практический опыт", "Детальное объяснение"]
-      improvements = ["Можно добавить еще больше технических деталей"]
+      // Анализируем содержание ответа
+      const hasKeywords = analyzeAnswerContent(answerText, question, specialty)
+      
+      if (hasKeywords.isDetailed) {
+        // Детальный ответ с техническими терминами и примерами
+        score = Math.floor(Math.random() * 2) + 8 // 8-9
+        feedback = "Демо-режим: Отличный ответ! Демонстрирует глубокое понимание темы с техническими деталями."
+        strengths = ["Глубокое понимание темы", "Использование технических терминов", "Конкретные примеры"]
+        improvements = ["Продолжать развивать экспертизу в данной области"]
+      } else if (hasKeywords.isGood) {
+        // Хороший ответ с пониманием темы
+        score = Math.floor(Math.random() * 2) + 6 // 6-7
+        feedback = "Демо-режим: Хороший ответ, показывает понимание темы. Можно добавить больше деталей."
+        strengths = ["Понимание основных концепций", "Правильное направление мышления"]
+        improvements = ["Добавить больше технических деталей", "Привести конкретные примеры"]
+      } else if (hasKeywords.isBasic) {
+        // Базовый ответ - поверхностный (5/10 как просили)
+        score = 5
+        feedback = "Демо-режим: ПОВЕРХНОСТНЫЙ ответ - показано базовое понимание, но недостаточно деталей и глубины."
+        strengths = ["Базовое понимание темы", "Попытка ответить на вопрос"]
+        improvements = ["Углубить знания по теме", "Добавить технические детали", "Привести практические примеры"]
+      } else {
+        // Слабый ответ
+        score = Math.floor(Math.random() * 2) + 3 // 3-4
+        feedback = "Демо-режим: Ответ требует улучшения. Необходимо лучше изучить тему."
+        strengths = ["Попытка ответить на вопрос"]
+        improvements = ["Изучить основы темы", "Подготовить более структурированный ответ"]
+      }
     }
     
     return {
@@ -552,6 +557,40 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
       improvements,
     }
   })
+
+// Функция анализа содержания ответа
+function analyzeAnswerContent(answer: string, question: string, specialty: string) {
+  const answerLower = answer.toLowerCase()
+  const questionLower = question.toLowerCase()
+  
+  // Технические термины для разных специальностей
+  const technicalTerms = {
+    frontend: ['react', 'vue', 'angular', 'javascript', 'typescript', 'css', 'html', 'dom', 'api', 'component', 'state', 'props', 'hook', 'redux', 'webpack', 'babel'],
+    backend: ['api', 'database', 'sql', 'server', 'microservice', 'rest', 'graphql', 'authentication', 'authorization', 'cache', 'queue', 'docker', 'kubernetes'],
+    fullstack: ['frontend', 'backend', 'database', 'api', 'server', 'client', 'architecture', 'deployment', 'scaling'],
+    mobile: ['android', 'ios', 'react native', 'flutter', 'swift', 'kotlin', 'mobile', 'app', 'native'],
+    devops: ['docker', 'kubernetes', 'ci/cd', 'deployment', 'infrastructure', 'monitoring', 'logging', 'scaling', 'cloud'],
+    qa: ['testing', 'automation', 'selenium', 'cypress', 'unit test', 'integration', 'bug', 'quality'],
+    default: ['код', 'программ', 'разработ', 'технолог', 'алгоритм', 'структур', 'паттерн', 'архитектур']
+  }
+  
+  const relevantTerms = technicalTerms[specialty as keyof typeof technicalTerms] || technicalTerms.default
+  
+  // Подсчитываем технические термины
+  const techTermCount = relevantTerms.filter(term => answerLower.includes(term)).length
+  
+  // Ищем примеры и конкретику
+  const hasExamples = /например|пример|использовал|делал|работал|проект|опыт|практик/i.test(answer)
+  const hasDetails = /потому что|так как|поскольку|дело в том|объясн|причин|механизм|принцип/i.test(answer)
+  const hasComparison = /отличие|разница|сравнен|лучше|хуже|преимущество|недостаток/i.test(answer)
+  
+  // Определяем качество ответа
+  const isDetailed = techTermCount >= 3 && (hasExamples || hasDetails) && answer.length > 100
+  const isGood = techTermCount >= 2 || hasExamples || hasDetails || hasComparison
+  const isBasic = techTermCount >= 1 || answer.length > 30
+  
+  return { isDetailed, isGood, isBasic, techTermCount, hasExamples, hasDetails }
+}
 
   return {
     overallScore: Math.round(overallScore * 10) / 10, // Округляем до 1 знака
