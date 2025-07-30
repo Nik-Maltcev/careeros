@@ -402,30 +402,57 @@ export default function InterviewResultsPage() {
           resources: ["Практика презентаций", "Участие в митапах", "Технические интервью с друзьями"],
         },
       ],
-      questionFeedback: responses.map((response, index) => ({
-        questionId: index + 1,
-        questionText: response.question || `Вопрос ${index + 1}`,
-        feedback: response.response && response.duration > 5 
-          ? "Демо-режим: хороший ответ! Детальный анализ с персональными рекомендациями будет доступен в полной версии."
-          : response.response && response.duration > 0
-          ? "Демо-режим: ответ получен, но можно развить тему подробнее. Полный анализ доступен в расширенной версии."
-          : "Демо-режим: вопрос пропущен. Рекомендуется изучить тему и попробовать ответить.",
-        score: response.response && response.duration > 5 
-          ? Math.floor(Math.random() * 2) + 7  // 7-8 для хороших ответов
-          : response.response && response.duration > 0
-          ? Math.floor(Math.random() * 2) + 5  // 5-6 для коротких ответов
-          : Math.floor(Math.random() * 2) + 3, // 3-4 для пропущенных
-        strengths: response.response && response.duration > 5 
-          ? ["Развернутый ответ", "Демонстрирует понимание концепций", "Хорошая структура изложения"]
-          : response.response && response.duration > 0
-          ? ["Ответ предоставлен", "Показано базовое понимание"]
-          : ["Участие в интервью", "Готовность к обучению"],
-        improvements: response.response && response.duration > 5
-          ? ["Можно добавить больше практических примеров", "Углубить технические детали"]
-          : response.response && response.duration > 0
-          ? ["Дать более развернутый ответ", "Добавить конкретные примеры"]
-          : ["Изучить основы темы", "Подготовить развернутый ответ"],
-      })),
+      questionFeedback: responses.map((response, index) => {
+        const answerText = response.response || ""
+        const duration = response.duration || 0
+        
+        // Анализируем качество ответа (как в API)
+        let score = 5 // По умолчанию 5/10 для поверхностных ответов
+        let feedback = ""
+        let strengths: string[] = []
+        let improvements: string[] = []
+        
+        if (!answerText || answerText === "Не отвечен" || duration < 1) {
+          // Нет ответа
+          score = 2
+          feedback = "Демо-режим: Вопрос не был отвечен. Рекомендуется изучить тему и подготовить развернутый ответ."
+          strengths = ["Участие в интервью"]
+          improvements = ["Изучить основы темы", "Подготовить развернутый ответ"]
+        } else if (duration < 10 || answerText.length < 50) {
+          // Очень короткий ответ
+          score = 3
+          feedback = "Демо-режим: Ответ слишком краткий. Необходимо дать более развернутое объяснение с примерами."
+          strengths = ["Попытка ответить на вопрос"]
+          improvements = ["Дать более развернутый ответ", "Добавить конкретные примеры"]
+        } else if (duration < 30 || answerText.length < 150) {
+          // Поверхностный ответ - ставим 5/10 как просили
+          score = 5
+          feedback = "Демо-режим: ПОВЕРХНОСТНЫЙ ответ - показано базовое понимание, но отсутствуют детали, примеры и практический опыт. Необходимо углубить знания."
+          strengths = ["Базовое понимание темы", "Структурированный ответ"]
+          improvements = ["Добавить конкретные примеры из практики", "Углубить технические детали", "Показать практический опыт"]
+        } else if (duration < 60) {
+          // Хороший ответ
+          score = 7
+          feedback = "Демо-режим: Хороший ответ с пониманием темы. Можно добавить больше практических примеров для улучшения."
+          strengths = ["Хорошее понимание концепций", "Развернутое объяснение", "Логичная структура"]
+          improvements = ["Добавить больше практических примеров", "Углубить некоторые аспекты"]
+        } else {
+          // Отличный ответ
+          score = 8
+          feedback = "Демо-режим: Отличный развернутый ответ! Демонстрирует глубокое понимание и практический опыт."
+          strengths = ["Глубокое понимание темы", "Конкретные примеры", "Практический опыт", "Детальное объяснение"]
+          improvements = ["Можно добавить еще больше технических деталей"]
+        }
+        
+        return {
+          questionId: index + 1,
+          questionText: response.question || `Вопрос ${index + 1}`,
+          feedback,
+          score,
+          strengths,
+          improvements,
+        }
+      }),
     }
   }
 
