@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -21,39 +20,10 @@ import {
   Clock,
   TrendingUp,
   Brain,
-  LogIn,
-  LogOut,
-  User,
-  Crown,
 } from "lucide-react"
 import Link from "next/link"
-import { SupabaseAuthService } from "@/lib/auth-supabase"
-import { AuthDialog } from "@/components/auth-dialog"
-import { PricingDialog } from "@/components/pricing-dialog"
-import { isSupabaseConfigured, type Profile } from "@/lib/supabase"
 
 export default function JobsPage() {
-  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
-  const [showAuthDialog, setShowAuthDialog] = useState(false)
-  const [showPricingDialog, setShowPricingDialog] = useState(false)
-  const [remainingInterviews, setRemainingInterviews] = useState(3)
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-    
-    if (isSupabaseConfigured) {
-      // Загружаем данные пользователя
-      SupabaseAuthService.getCurrentUser().then(setCurrentUser)
-      
-      // Подписываемся на изменения авторизации
-      const unsubscribe = SupabaseAuthService.onAuthStateChange((user) => {
-        setCurrentUser(user)
-      })
-      
-      return unsubscribe
-    }
-  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -81,55 +51,10 @@ export default function JobsPage() {
           </nav>
 
           <div className="flex items-center space-x-2 md:space-x-4">
-            {isClient && currentUser ? (
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs md:text-sm px-2 py-1">
-                  <User className="w-3 h-3 mr-1" />
-                  {currentUser.name}
-                </Badge>
-                {currentUser.plan === 'premium' ? (
-                  <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs md:text-sm px-2 py-1">
-                    <Crown className="w-3 h-3 mr-1" />
-                    Premium
-                  </Badge>
-                ) : (
-                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                    {remainingInterviews} интервью
-                  </Badge>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => SupabaseAuthService.logout()}
-                  className="text-gray-300 hover:text-white p-1"
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            ) : isClient ? (
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                  {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
-                </Badge>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowAuthDialog(true)}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
-                >
-                  <LogIn className="w-3 h-3 mr-1" />
-                  Войти
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => setShowPricingDialog(true)}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
-                >
-                  <Crown className="w-3 h-3 mr-1" />
-                  Купить
-                </Button>
-              </div>
-            ) : null}
+            {/* Упрощенная версия без авторизации для избежания ошибок */}
+            <div className="text-sm text-gray-300">
+              Телеграм-бот для поиска вакансий
+            </div>
           </div>
         </div>
       </header>
@@ -423,16 +348,6 @@ export default function JobsPage() {
         </div>
       </div>
 
-      {/* Диалоги */}
-      <AuthDialog 
-        open={showAuthDialog} 
-        onOpenChange={setShowAuthDialog}
-      />
-      
-      <PricingDialog 
-        open={showPricingDialog} 
-        onOpenChange={setShowPricingDialog}
-      />
     </div>
   )
 }
