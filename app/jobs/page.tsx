@@ -31,6 +31,7 @@ import { SupabaseAuthService } from "@/lib/auth-supabase"
 import { AuthDialog } from "@/components/auth-dialog"
 import { PricingDialog } from "@/components/pricing-dialog"
 import { isSupabaseConfigured, type Profile } from "@/lib/supabase"
+import { InterviewManager } from "@/lib/interview-manager"
 
 export default function JobsPage() {
   // Состояние для авторизации
@@ -43,19 +44,35 @@ export default function JobsPage() {
   useEffect(() => {
     setIsClient(true)
     
+    const initializeUser = async () => {
+      try {
+        if (isSupabaseConfigured) {
+          const user = await SupabaseAuthService.getCurrentUser()
+          setCurrentUser(user)
+        }
+        
+        // Загружаем реальное количество интервью
+        const remaining = await InterviewManager.getRemainingInterviews()
+        console.log('Remaining interviews:', remaining)
+        setRemainingInterviews(remaining)
+        
+      } catch (error) {
+        console.error('Error initializing user:', error)
+        setCurrentUser(null)
+      }
+    }
+
+    initializeUser()
+    
     if (isSupabaseConfigured) {
-      // Загружаем данные пользователя с обработкой ошибок
-      SupabaseAuthService.getCurrentUser()
-        .then(setCurrentUser)
-        .catch((error) => {
-          console.error('Error loading user:', error)
-          setCurrentUser(null)
-        })
-      
       // Подписываемся на изменения авторизации
       try {
-        const unsubscribe = SupabaseAuthService.onAuthStateChange((user) => {
+        const unsubscribe = SupabaseAuthService.onAuthStateChange(async (user) => {
           setCurrentUser(user)
+          
+          // Обновляем количество интервью при изменении пользователя
+          const remaining = await InterviewManager.getRemainingInterviews()
+          setRemainingInterviews(remaining)
         })
         
         return unsubscribe
