@@ -213,6 +213,9 @@ export default function LandingPage() {
             <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
               Сопроводительное письмо
             </Link>
+            <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+              Найти вакансии
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-2 md:space-x-4">
