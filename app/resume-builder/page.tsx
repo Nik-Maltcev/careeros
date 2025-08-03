@@ -24,6 +24,7 @@ import {
   Mail,
   Building,
   User,
+  Search,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -146,23 +147,61 @@ export default function CoverLetterBuilderPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Назад
-              </Button>
-            </Link>
+        <div className="container mx-auto px-4 py-3">
+          {/* Мобильная версия */}
+          <div className="flex md:hidden items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-bold text-white">Careeros</span>
+            </div>
+            <div className="text-xs text-gray-300">
+              Письмо
+            </div>
+          </div>
+
+          {/* Десктопная версия */}
+          <div className="hidden md:flex items-center justify-between py-1">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">AI Cover Letter Builder</span>
+              <span className="text-xl font-bold text-white">Careeros</span>
+            </div>
+
+            {/* Навигационное меню */}
+            <nav className="flex items-center space-x-6">
+              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+                Интервью
+              </Link>
+              <Link href="/resume-builder" className="text-blue-300 font-medium">
+                Сопроводительное письмо
+              </Link>
+              <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+                Найти вакансии
+              </Link>
+            </nav>
+
+            <div className="text-sm text-gray-300">
+              AI Cover Letter Builder
             </div>
           </div>
         </div>
       </header>
+
+      {/* Page Title Section */}
+      <div className="bg-white/5 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-4 py-6 md:py-8 text-center">
+          <div className="flex items-center justify-center mb-3 md:mb-4">
+            <FileText className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mr-2 md:mr-3" />
+            <h1 className="text-2xl md:text-3xl font-bold text-white">Сопроводительное письмо</h1>
+          </div>
+          <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+            ИИ проанализирует вакансию и создаст персонализированное сопроводительное письмо
+          </p>
+        </div>
+      </div>
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
