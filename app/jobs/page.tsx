@@ -29,29 +29,42 @@ export default function JobsPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+        <div className="container mx-auto px-4 py-3">
+          {/* Мобильная версия */}
+          <div className="flex md:hidden items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-bold text-white">Careeros</span>
             </div>
-            <span className="text-xl font-bold text-white">Careeros</span>
+            <div className="text-xs text-gray-300">
+              Вакансии
+            </div>
           </div>
 
-          {/* Навигационное меню */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-white hover:text-blue-300 transition-colors">
-              Интервью
-            </Link>
-            <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
-              Сопроводительное письмо
-            </Link>
-            <Link href="/jobs" className="text-blue-300 font-medium">
-              Найти вакансии
-            </Link>
-          </nav>
+          {/* Десктопная версия */}
+          <div className="hidden md:flex items-center justify-between py-1">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-bold text-white">Careeros</span>
+            </div>
 
-          <div className="flex items-center space-x-2 md:space-x-4">
-            {/* Упрощенная версия без авторизации для избежания ошибок */}
+            {/* Навигационное меню */}
+            <nav className="flex items-center space-x-6">
+              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+                Интервью
+              </Link>
+              <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
+                Сопроводительное письмо
+              </Link>
+              <Link href="/jobs" className="text-blue-300 font-medium">
+                Найти вакансии
+              </Link>
+            </nav>
+
             <div className="text-sm text-gray-300">
               Телеграм-бот для поиска вакансий
             </div>
@@ -61,39 +74,39 @@ export default function JobsPage() {
 
       {/* Page Title Section */}
       <div className="bg-white/5 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-4 py-8 text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Search className="w-8 h-8 text-blue-400 mr-3" />
-            <h1 className="text-3xl font-bold text-white">Найти вакансии</h1>
+        <div className="container mx-auto px-4 py-6 md:py-8 text-center">
+          <div className="flex items-center justify-center mb-3 md:mb-4">
+            <Search className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mr-2 md:mr-3" />
+            <h1 className="text-2xl md:text-3xl font-bold text-white">Найти вакансии</h1>
           </div>
-          <p className="text-gray-300 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             Откройте для себя лучшие IT-вакансии с помощью нашего умного телеграм-бота
           </p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-6xl mx-auto space-y-12">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-6xl mx-auto space-y-8 md:space-y-12">
           {/* Telegram Bot Hero Section */}
-          <div className="text-center space-y-6">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500/20 rounded-full mb-6">
-              <Bot className="w-10 h-10 text-blue-400" />
+          <div className="text-center space-y-4 md:space-y-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-blue-500/20 rounded-full mb-4 md:mb-6">
+              <Bot className="w-8 h-8 md:w-10 md:h-10 text-blue-400" />
             </div>
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4 px-4">
               Телеграм-бот для поиска вакансий
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
               Умный помощник, который найдет идеальную работу в IT специально для вас. 
               Персонализированный поиск, мгновенные уведомления и экспертные рекомендации.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
-                <MessageCircle className="w-5 h-5 mr-2" />
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mt-6 md:mt-8 px-4">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-2.5 md:py-3 text-base md:text-lg">
+                <MessageCircle className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 Открыть бота
-                <ExternalLink className="w-4 h-4 ml-2" />
+                <ExternalLink className="w-3 h-3 md:w-4 md:h-4 ml-2" />
               </Button>
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-8 py-3 text-lg">
-                <Bell className="w-5 h-5 mr-2" />
+              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 md:px-8 py-2.5 md:py-3 text-base md:text-lg">
+                <Bell className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 Настроить уведомления
               </Button>
             </div>
