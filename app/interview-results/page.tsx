@@ -786,7 +786,7 @@ export default function InterviewResultsPage() {
   )
 }
 
-// Функция анализа содержания ответа для результатов (дублируем из API)
+// Функция анализа содержания ответа с процентной системой (синхронизировано с API)
 function analyzeAnswerContentInResults(answer: string, question: string, specialty: string) {
   const answerLower = answer.toLowerCase()
   const questionLower = question.toLowerCase()
@@ -811,11 +811,50 @@ function analyzeAnswerContentInResults(answer: string, question: string, special
   const hasExamples = /например|пример|использовал|делал|работал|проект|опыт|практик/i.test(answer)
   const hasDetails = /потому что|так как|поскольку|дело в том|объясн|причин|механизм|принцип/i.test(answer)
   const hasComparison = /отличие|разница|сравнен|лучше|хуже|преимущество|недостаток/i.test(answer)
+  const hasStructure = answer.split(/[.!?]/).length > 2 // Структурированный ответ
   
-  // Определяем качество ответа (БОЛЕЕ МЯГКИЕ критерии)
-  const isDetailed = (techTermCount >= 2 && (hasExamples || hasDetails)) || (techTermCount >= 3) || (answer.length > 200 && hasDetails)
-  const isGood = techTermCount >= 1 || hasExamples || hasDetails || hasComparison || answer.length > 80
-  const isBasic = answer.length > 10 // Любой ответ длиннее 10 символов считается базовым
+  // Рассчитываем процентную оценку
+  let percentage = 0
   
-  return { isDetailed, isGood, isBasic, techTermCount, hasExamples, hasDetails }
+  // Базовые баллы за наличие ответа
+  if (answer.length > 10) percentage += 30
+  if (answer.length > 50) percentage += 10
+  if (answer.length > 100) percentage += 10
+  
+  // Баллы за технические термины
+  percentage += Math.min(techTermCount * 8, 25) // До 25% за термины
+  
+  // Баллы за примеры и детали
+  if (hasExamples) percentage += 15
+  if (hasDetails) percentage += 10
+  if (hasComparison) percentage += 8
+  if (hasStructure) percentage += 7
+  
+  // Округляем до мотивирующих порогов
+  if (percentage >= 85) percentage = 90
+  else if (percentage >= 75) percentage = 80
+  else if (percentage >= 65) percentage = 70
+  else if (percentage >= 55) percentage = 60
+  else if (percentage >= 45) percentage = 50
+  else if (percentage >= 35) percentage = 40
+  else if (percentage >= 25) percentage = 30
+  else if (percentage >= 15) percentage = 20
+  else if (percentage >= 5) percentage = 10
+  
+  // Определяем уровни для обратной совместимости
+  const isDetailed = percentage >= 80
+  const isGood = percentage >= 60
+  const isBasic = percentage >= 30
+  
+  return { 
+    isDetailed, 
+    isGood, 
+    isBasic, 
+    percentage,
+    techTermCount, 
+    hasExamples, 
+    hasDetails,
+    hasComparison,
+    hasStructure
+  }
 }
