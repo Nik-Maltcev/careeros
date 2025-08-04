@@ -97,40 +97,32 @@ export default function JobsPage() {
             </div>
             
             {/* Мобильные кнопки - только самое важное */}
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center">
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-1">
                   {currentUser.plan === 'premium' ? (
-                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs px-1.5 py-0.5">
-                      <Crown className="w-3 h-3" />
+                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs px-2 py-1">
+                      <Crown className="w-3 h-3 mr-1" />
+                      Premium
                     </Badge>
                   ) : (
-                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-1.5 py-0.5">
-                      {remainingInterviews}
+                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                      {remainingInterviews} интервью
                     </Badge>
                   )}
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => SupabaseAuthService.logout()}
-                    className="text-gray-300 hover:text-white p-1 h-7 w-7"
+                    className="text-gray-300 hover:text-white p-1 h-7 w-7 ml-1"
                   >
                     <LogOut className="w-3 h-3" />
                   </Button>
                 </div>
               ) : isClient ? (
-                <div className="flex items-center space-x-1">
-                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-1.5 py-0.5">
-                    {remainingInterviews}
-                  </Badge>
-                  <Button
-                    size="sm"
-                    onClick={() => setShowPricingDialog(true)}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs px-2 py-1 h-7"
-                  >
-                    <Crown className="w-3 h-3" />
-                  </Button>
-                </div>
+                <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                  {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
+                </Badge>
               ) : null}
             </div>
           </div>
