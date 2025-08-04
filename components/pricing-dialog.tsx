@@ -26,12 +26,20 @@ import {
 } from "lucide-react"
 
 interface PricingDialogProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen?: boolean
+  open?: boolean
+  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
   onSuccess?: () => void
 }
 
-export function PricingDialog({ isOpen, onClose, onSuccess }: PricingDialogProps) {
+export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }: PricingDialogProps) {
+  // Поддерживаем оба интерфейса
+  const dialogOpen = isOpen ?? open ?? false
+  const handleClose = () => {
+    onClose?.()
+    onOpenChange?.(false)
+  }
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState("")
@@ -83,7 +91,7 @@ export function PricingDialog({ isOpen, onClose, onSuccess }: PricingDialogProps
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={dialogOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-4xl bg-slate-900 border-slate-700 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center space-x-2 mb-2">
@@ -226,7 +234,7 @@ export function PricingDialog({ isOpen, onClose, onSuccess }: PricingDialogProps
         <div className="text-center pt-4">
           <Button
             variant="ghost"
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-400 hover:text-white"
           >
             Отмена
