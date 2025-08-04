@@ -84,7 +84,7 @@ export function PricingDialog({ isOpen, onClose, onSuccess }: PricingDialogProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl bg-slate-900 border-slate-700">
+      <DialogContent className="sm:max-w-4xl bg-slate-900 border-slate-700 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center space-x-2 mb-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -121,7 +121,7 @@ export function PricingDialog({ isOpen, onClose, onSuccess }: PricingDialogProps
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
           {PAYMENT_PLANS.map((plan) => (
             <Card 
               key={plan.id} 
@@ -138,23 +138,23 @@ export function PricingDialog({ isOpen, onClose, onSuccess }: PricingDialogProps
                 </div>
               )}
               
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-white text-xl">{plan.name}</CardTitle>
-                <CardDescription className="text-gray-400">
+              <CardHeader className="text-center pb-3 md:pb-4 p-4 md:p-6">
+                <CardTitle className="text-white text-lg md:text-xl">{plan.name}</CardTitle>
+                <CardDescription className="text-gray-400 text-sm">
                   {plan.description}
                 </CardDescription>
-                <div className="mt-4">
-                  <div className="text-3xl font-bold text-white">
+                <div className="mt-3 md:mt-4">
+                  <div className="text-2xl md:text-3xl font-bold text-white">
                     {plan.price}₽
                   </div>
-                  <div className="text-gray-400 text-sm">
+                  <div className="text-gray-400 text-xs md:text-sm">
                     {Math.round(plan.price / plan.interviews)}₽ за интервью
                   </div>
                 </div>
               </CardHeader>
               
-              <CardContent className="pt-0">
-                <div className="space-y-3 mb-6">
+              <CardContent className="pt-0 p-4 md:p-6">
+                <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-green-400" />
                     <span className="text-gray-300 text-sm">
