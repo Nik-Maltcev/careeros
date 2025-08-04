@@ -95,8 +95,43 @@ export default function JobsPage() {
               </div>
               <span className="text-lg font-bold text-white">Careeros</span>
             </div>
-            <div className="text-xs text-gray-300">
-              Вакансии
+            
+            {/* Мобильные кнопки - только самое важное */}
+            <div className="flex items-center space-x-1">
+              {isClient && currentUser ? (
+                <div className="flex items-center space-x-1">
+                  {currentUser.plan === 'premium' ? (
+                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs px-1.5 py-0.5">
+                      <Crown className="w-3 h-3" />
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-1.5 py-0.5">
+                      {remainingInterviews}
+                    </Badge>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => SupabaseAuthService.logout()}
+                    className="text-gray-300 hover:text-white p-1 h-7 w-7"
+                  >
+                    <LogOut className="w-3 h-3" />
+                  </Button>
+                </div>
+              ) : isClient ? (
+                <div className="flex items-center space-x-1">
+                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-1.5 py-0.5">
+                    {remainingInterviews}
+                  </Badge>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowPricingDialog(true)}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs px-2 py-1 h-7"
+                  >
+                    <Crown className="w-3 h-3" />
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
 

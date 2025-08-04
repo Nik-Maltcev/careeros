@@ -197,77 +197,128 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+        <div className="container mx-auto px-4 py-3">
+          {/* Мобильная версия */}
+          <div className="flex md:hidden items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-bold text-white">Careeros</span>
             </div>
-            <span className="text-xl font-bold text-white">Careeros</span>
+            
+            {/* Мобильные кнопки - только самое важное */}
+            <div className="flex items-center space-x-1">
+              {isClient && currentUser ? (
+                <div className="flex items-center space-x-1">
+                  {currentUser.plan === 'premium' ? (
+                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs px-1.5 py-0.5">
+                      <Crown className="w-3 h-3" />
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-1.5 py-0.5">
+                      {remainingInterviews}
+                    </Badge>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => SupabaseAuthService.logout()}
+                    className="text-gray-300 hover:text-white p-1 h-7 w-7"
+                  >
+                    <LogOut className="w-3 h-3" />
+                  </Button>
+                </div>
+              ) : isClient ? (
+                <div className="flex items-center space-x-1">
+                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-1.5 py-0.5">
+                    {remainingInterviews}
+                  </Badge>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowPricingDialog(true)}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs px-2 py-1 h-7"
+                  >
+                    <Crown className="w-3 h-3" />
+                  </Button>
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          {/* Навигационное меню */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-white hover:text-blue-300 transition-colors">
-              Интервью
-            </Link>
-            <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
-              Сопроводительное письмо
-            </Link>
-            <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
-              Найти вакансии
-            </Link>
-          </nav>
+          {/* Десктопная версия */}
+          <div className="hidden md:flex items-center justify-between py-1">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-bold text-white">Careeros</span>
+            </div>
 
-          <div className="flex items-center space-x-2 md:space-x-4">
-            {isClient && currentUser ? (
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs md:text-sm px-2 py-1">
-                  <User className="w-3 h-3 mr-1" />
-                  {currentUser.name}
-                </Badge>
-                {currentUser.plan === 'premium' ? (
-                  <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs md:text-sm px-2 py-1">
-                    <Crown className="w-3 h-3 mr-1" />
-                    Premium
+            {/* Навигационное меню */}
+            <nav className="flex items-center space-x-6">
+              <Link href="/" className="text-blue-300 font-medium">
+                Интервью
+              </Link>
+              <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
+                Сопроводительное письмо
+              </Link>
+              <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+                Найти вакансии
+              </Link>
+            </nav>
+
+            <div className="flex items-center space-x-2 md:space-x-4">
+              {isClient && currentUser ? (
+                <div className="flex items-center space-x-2">
+                  <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs md:text-sm px-2 py-1">
+                    <User className="w-3 h-3 mr-1" />
+                    {currentUser.name}
                   </Badge>
-                ) : (
+                  {currentUser.plan === 'premium' ? (
+                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs md:text-sm px-2 py-1">
+                      <Crown className="w-3 h-3 mr-1" />
+                      Premium
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                      {remainingInterviews} интервью
+                    </Badge>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => SupabaseAuthService.logout()}
+                    className="text-gray-300 hover:text-white p-1"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : isClient ? (
+                <div className="flex items-center space-x-2">
                   <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                    {remainingInterviews} интервью
+                    {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
                   </Badge>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => SupabaseAuthService.logout()}
-                  className="text-gray-300 hover:text-white p-1"
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            ) : isClient ? (
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                  {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
-                </Badge>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowAuthDialog(true)}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
-                >
-                  <LogIn className="w-3 h-3 mr-1" />
-                  Войти
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => setShowPricingDialog(true)}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
-                >
-                  <Crown className="w-3 h-3 mr-1" />
-                  Купить
-                </Button>
-              </div>
-            ) : null}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowAuthDialog(true)}
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
+                  >
+                    <LogIn className="w-3 h-3 mr-1" />
+                    Войти
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowPricingDialog(true)}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
+                  >
+                    <Crown className="w-3 h-3 mr-1" />
+                    Купить
+                  </Button>
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       </header>
