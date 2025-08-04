@@ -94,15 +94,24 @@ export default function CoverLetterBuilderPage() {
     if (isSupabaseConfigured) {
       // Подписываемся на изменения авторизации
       try {
-        const unsubscribe = SupabaseAuthService.onAuthStateChange(async (user) => {
-          setCurrentUser(user)
+        const { data: { subscription } } = SupabaseAuthService.onAuthStateChange(async (user) => {
+          console.log('Auth state changed on resume builder:', user)
+          if (user) {
+            const profile = await SupabaseAuthService.getCurrentUser()
+            setCurrentUser(profile)
+          } else {
+            setCurrentUser(null)
+          }
           
           // Обновляем количество интервью при изменении пользователя
           const remaining = await InterviewManager.getRemainingInterviews()
+          console.log('Updated remaining interviews:', remaining)
           setRemainingInterviews(remaining)
         })
         
-        return unsubscribe
+        return () => {
+          subscription?.unsubscribe()
+        }
       } catch (error) {
         console.error('Error setting up auth listener:', error)
       }
