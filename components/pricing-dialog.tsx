@@ -52,15 +52,19 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
 
     try {
       // Проверяем авторизацию - покупка только для авторизованных пользователей
+      console.log('🔍 Checking user auth for purchase...')
       const currentUser = await SupabaseAuthService.getCurrentUser()
+      console.log('👤 Current user:', { hasUser: !!currentUser, email: currentUser?.email, id: currentUser?.id })
       
       if (!currentUser) {
+        console.log('❌ No user found for purchase')
         setError("Для покупки необходимо войти в аккаунт")
         setIsLoading(false)
         return
       }
 
       const userEmail = currentUser.email
+      console.log('✅ User authenticated for purchase:', { userEmail })
 
       // Создаем платеж
       const response = await fetch('/api/payment/create', {

@@ -16,8 +16,12 @@ export async function POST(request: NextRequest) {
     }
 
     // ОБЯЗАТЕЛЬНАЯ проверка авторизации
+    console.log('🔍 API: Checking user auth for payment...')
     const currentUser = await SupabaseAuthService.getCurrentUser()
+    console.log('👤 API: Current user:', { hasUser: !!currentUser, email: currentUser?.email, id: currentUser?.id })
+    
     if (!currentUser || !currentUser.email) {
+      console.log('❌ API: No user found for payment')
       return NextResponse.json(
         { error: 'Для покупки необходимо войти в аккаунт' },
         { status: 401 }

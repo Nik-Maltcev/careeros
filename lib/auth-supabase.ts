@@ -9,13 +9,19 @@ export class SupabaseAuthService {
     }
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (!user) {
+      // Сначала проверяем сессию
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      
+      if (sessionError) {
+        console.error("Error getting session:", sessionError)
         return null
       }
+
+      if (!session?.user) {
+        return null
+      }
+
+      const user = session.user
 
       const { data: profile, error } = await supabase
         .from("profiles")
