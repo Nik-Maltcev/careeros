@@ -19,29 +19,42 @@ async function generateQuestionFeedback(
   const feedbackPromises = responses.map(async (response, index) => {
     const answerText = response.response || "Ответ не предоставлен"
 
-    const prompt = `Ты эксперт по техническим собеседованиям в IT. Проанализируй ответ кандидата на вопрос собеседования.
+    const prompt = `Ты мотивирующий эксперт по техническим собеседованиям в IT. Твоя цель - сохранить высокую мотивацию кандидата без потери объективности.
 
 ВОПРОС: ${response.question}
 ОТВЕТ КАНДИДАТА: ${answerText}
 СПЕЦИАЛЬНОСТЬ: ${specialty}
 
-КРИТЕРИИ ОЦЕНКИ:
-- 8-10 баллов: Глубокий, детальный ответ с примерами и техническими подробностями
-- 6-7 баллов: Хороший ответ, показывает понимание, но можно углубить
-- 5 баллов: ПОВЕРХНОСТНЫЙ ответ - базовое понимание, но без деталей и примеров
-- 3-4 балла: Слабый ответ с ошибками или неточностями
-- 1-2 балла: Неправильный или отсутствующий ответ
+ПРИНЦИПЫ ОЦЕНКИ:
+1. Оценивай НЕ по букве, а по смыслу и структуре мышления
+2. При частично-верном ответе анализируй:
+   - Техническую точность: 0-100% (честно, но не карай за стиль)
+   - Потенциал: 0-100% (структура, логика, soft-skills)
+3. Итоговую оценку округляй ВВЕРХ до мотивирующих порогов: 60, 70, 80, 90%
+4. НИКОГДА не используй фразы "неправильно", "ошибка", "провал"
+   Заменяй на: "можно усилить", "стоит добавить", "следующий шаг..."
 
-ВАЖНО: Если ответ поверхностный (без конкретных примеров, деталей, практического опыта) - ставь 5/10!
+ШКАЛА ОЦЕНКИ (в процентах, показывай как X/10):
+- 90-100%: Экспертный уровень с глубокими знаниями
+- 80-89%: Сильный ответ с хорошим пониманием  
+- 70-79%: Хороший ответ, показывает потенциал
+- 60-69%: Базовое понимание, есть что развивать
+- 40-59%: Начальный уровень, хорошая основа для роста
+- 20-39%: Требует изучения основ
+- 0-19%: Не увидел рабочего подхода
 
-Дай детальную обратную связь по этому конкретному ответу:
+СТРУКТУРА ОБРАТНОЙ СВЯЗИ (конструктивный сэндвич):
+1) Что хорошо (конкретный фрагмент ответа)
+2) Что можно усилить (1-2 пункта)  
+3) Как улучшить (короткий actionable совет)
 
 Верни ТОЛЬКО JSON в формате:
 {
-  "score": число от 1 до 10,
-  "feedback": "Подробная обратная связь на русском языке",
-  "strengths": ["сильная сторона 1", "сильная сторона 2"],
-  "improvements": ["что улучшить 1", "что улучшить 2"]
+  "percentage": число от 0 до 100,
+  "score": число от 1 до 10 (percentage/10),
+  "feedback": "Мотивирующая обратная связь в формате сэндвича",
+  "strengths": ["что конкретно хорошо 1", "что конкретно хорошо 2"],
+  "improvements": ["что можно усилить 1", "следующий шаг для роста 2"]
 }`
 
     try {
@@ -504,13 +517,13 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
   const questionFeedback: QuestionFeedback[] = responses.map((response, index) => {
     const answerText = response.response || ""
     const question = response.question || ""
-    
+
     // Анализируем качество ответа по СОДЕРЖАНИЮ, а не по длине
     let score = 5 // По умолчанию 5/10 для поверхностных ответов
     let feedback = ""
     let strengths: string[] = []
     let improvements: string[] = []
-    
+
     if (!answerText || answerText === "Не отвечен" || answerText.trim().length === 0) {
       // Нет ответа
       score = 2
@@ -520,7 +533,7 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
     } else {
       // Анализируем содержание ответа
       const hasKeywords = analyzeAnswerContent(answerText, question, specialty)
-      
+
       if (hasKeywords.isDetailed) {
         // Детальный ответ с техническими терминами и примерами
         score = Math.floor(Math.random() * 2) + 8 // 8-9
@@ -547,7 +560,7 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
         improvements = ["Изучить основы темы", "Подготовить более структурированный ответ"]
       }
     }
-    
+
     return {
       questionId: index + 1,
       questionText: response.question,
@@ -558,45 +571,84 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
     }
   })
 
-// Функция анализа содержания ответа
-function analyzeAnswerContent(answer: string, question: string, specialty: string) {
-  const answerLower = answer.toLowerCase()
-  const questionLower = question.toLowerCase()
-  
-  // Технические термины для разных специальностей
-  const technicalTerms = {
-    frontend: ['react', 'vue', 'angular', 'javascript', 'typescript', 'css', 'html', 'dom', 'api', 'component', 'state', 'props', 'hook', 'redux', 'webpack', 'babel'],
-    backend: ['api', 'database', 'sql', 'server', 'microservice', 'rest', 'graphql', 'authentication', 'authorization', 'cache', 'queue', 'docker', 'kubernetes'],
-    fullstack: ['frontend', 'backend', 'database', 'api', 'server', 'client', 'architecture', 'deployment', 'scaling'],
-    mobile: ['android', 'ios', 'react native', 'flutter', 'swift', 'kotlin', 'mobile', 'app', 'native'],
-    devops: ['docker', 'kubernetes', 'ci/cd', 'deployment', 'infrastructure', 'monitoring', 'logging', 'scaling', 'cloud'],
-    qa: ['testing', 'automation', 'selenium', 'cypress', 'unit test', 'integration', 'bug', 'quality'],
-    default: ['код', 'программ', 'разработ', 'технолог', 'алгоритм', 'структур', 'паттерн', 'архитектур']
+  // Функция анализа содержания ответа с процентной системой
+  function analyzeAnswerContent(answer: string, question: string, specialty: string) {
+    const answerLower = answer.toLowerCase()
+    const questionLower = question.toLowerCase()
+
+    // Технические термины для разных специальностей
+    const technicalTerms = {
+      frontend: ['react', 'vue', 'angular', 'javascript', 'typescript', 'css', 'html', 'dom', 'api', 'component', 'state', 'props', 'hook', 'redux', 'webpack', 'babel'],
+      backend: ['api', 'database', 'sql', 'server', 'microservice', 'rest', 'graphql', 'authentication', 'authorization', 'cache', 'queue', 'docker', 'kubernetes'],
+      fullstack: ['frontend', 'backend', 'database', 'api', 'server', 'client', 'architecture', 'deployment', 'scaling'],
+      mobile: ['android', 'ios', 'react native', 'flutter', 'swift', 'kotlin', 'mobile', 'app', 'native'],
+      devops: ['docker', 'kubernetes', 'ci/cd', 'deployment', 'infrastructure', 'monitoring', 'logging', 'scaling', 'cloud'],
+      qa: ['testing', 'automation', 'selenium', 'cypress', 'unit test', 'integration', 'bug', 'quality'],
+      default: ['код', 'программ', 'разработ', 'технолог', 'алгоритм', 'структур', 'паттерн', 'архитектур']
+    }
+
+    const relevantTerms = technicalTerms[specialty as keyof typeof technicalTerms] || technicalTerms.default
+
+    // Подсчитываем технические термины
+    const techTermCount = relevantTerms.filter(term => answerLower.includes(term)).length
+
+    // Ищем примеры и конкретику
+    const hasExamples = /например|пример|использовал|делал|работал|проект|опыт|практик/i.test(answer)
+    const hasDetails = /потому что|так как|поскольку|дело в том|объясн|причин|механизм|принцип/i.test(answer)
+    const hasComparison = /отличие|разница|сравнен|лучше|хуже|преимущество|недостаток/i.test(answer)
+    const hasStructure = answer.split(/[.!?]/).length > 2 // Структурированный ответ
+
+    // Рассчитываем процентную оценку
+    let percentage = 0
+
+    // Базовые баллы за наличие ответа
+    if (answer.length > 10) percentage += 30
+    if (answer.length > 50) percentage += 10
+    if (answer.length > 100) percentage += 10
+
+    // Баллы за технические термины
+    percentage += Math.min(techTermCount * 8, 25) // До 25% за термины
+
+    // Баллы за примеры и детали
+    if (hasExamples) percentage += 15
+    if (hasDetails) percentage += 10
+    if (hasComparison) percentage += 8
+    if (hasStructure) percentage += 7
+
+    // Округляем до мотивирующих порогов
+    if (percentage >= 85) percentage = 90
+    else if (percentage >= 75) percentage = 80
+    else if (percentage >= 65) percentage = 70
+    else if (percentage >= 55) percentage = 60
+    else if (percentage >= 45) percentage = 50
+    else if (percentage >= 35) percentage = 40
+    else if (percentage >= 25) percentage = 30
+    else if (percentage >= 15) percentage = 20
+    else if (percentage >= 5) percentage = 10
+
+    // Определяем уровни для обратной совместимости
+    const isDetailed = percentage >= 80
+    const isGood = percentage >= 60
+    const isBasic = percentage >= 30
+
+    return { 
+      isDetailed, 
+      isGood, 
+      isBasic, 
+      percentage,
+      techTermCount, 
+      hasExamples, 
+      hasDetails,
+      hasComparison,
+      hasStructure
+    }
   }
-  
-  const relevantTerms = technicalTerms[specialty as keyof typeof technicalTerms] || technicalTerms.default
-  
-  // Подсчитываем технические термины
-  const techTermCount = relevantTerms.filter(term => answerLower.includes(term)).length
-  
-  // Ищем примеры и конкретику
-  const hasExamples = /например|пример|использовал|делал|работал|проект|опыт|практик/i.test(answer)
-  const hasDetails = /потому что|так как|поскольку|дело в том|объясн|причин|механизм|принцип/i.test(answer)
-  const hasComparison = /отличие|разница|сравнен|лучше|хуже|преимущество|недостаток/i.test(answer)
-  
-  // Определяем качество ответа (БОЛЕЕ МЯГКИЕ критерии)
-  const isDetailed = (techTermCount >= 2 && (hasExamples || hasDetails)) || (techTermCount >= 3) || (answer.length > 200 && hasDetails)
-  const isGood = techTermCount >= 1 || hasExamples || hasDetails || hasComparison || answer.length > 80
-  const isBasic = answer.length > 10 // Любой ответ длиннее 10 символов считается базовым
-  
-  return { isDetailed, isGood, isBasic, techTermCount, hasExamples, hasDetails }
-}
 
   // Рассчитываем общую оценку на основе оценок по вопросам
-  const avgQuestionScore = questionFeedback.length > 0 
+  const avgQuestionScore = questionFeedback.length > 0
     ? questionFeedback.reduce((sum, q) => sum + q.score, 0) / questionFeedback.length
     : overallScore
-  
+
   // Используем среднее между расчетной оценкой и оценками по вопросам
   const finalOverallScore = Math.round(((overallScore + avgQuestionScore) / 2) * 10) / 10
 
