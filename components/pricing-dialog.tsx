@@ -51,15 +51,16 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
     setSelectedPlan(planId)
 
     try {
-      // Получаем текущего пользователя
+      // Проверяем авторизацию - покупка только для авторизованных пользователей
       const currentUser = await SupabaseAuthService.getCurrentUser()
-      const userEmail = currentUser?.email || email
-
-      if (!userEmail && !currentUser) {
-        setError("Введите email для продолжения")
+      
+      if (!currentUser) {
+        setError("Для покупки необходимо войти в аккаунт")
         setIsLoading(false)
         return
       }
+
+      const userEmail = currentUser.email
 
       // Создаем платеж
       const response = await fetch('/api/payment/create', {
@@ -114,20 +115,7 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
           </div>
         )}
 
-        {/* Email input для неавторизованных пользователей */}
-        <div className="mb-6">
-          <Label htmlFor="email" className="text-gray-300 mb-2 block">
-            Email для получения доступа (если не авторизованы)
-          </Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-slate-700 border-slate-600 text-white placeholder:text-gray-400"
-          />
-        </div>
+
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
           {PAYMENT_PLANS.map((plan) => (

@@ -85,7 +85,8 @@ function InterviewPrepContent() {
       // Navigate to interview page with level
       window.location.href = `/interview?specialty=${specialtyId}&level=${selectedLevel}`
     } else {
-      setLimitWarning(reason || "Достигнут лимит интервью")
+      // Показываем popup с предложением авторизации
+      setShowAuthDialog(true)
     }
   }
 
@@ -163,34 +164,7 @@ function InterviewPrepContent() {
             )}
 
             {/* Limit Warning */}
-            {limitWarning && (
-              <div className="mt-6 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 max-w-md mx-auto">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Crown className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                  <p className="text-blue-300 text-sm font-medium">Бесплатное интервью использовано</p>
-                </div>
-                <p className="text-gray-300 text-sm mb-4">
-                  Зарегистрируйтесь или войдите в аккаунт для продолжения прохождения интервью
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Button
-                    onClick={() => setShowAuthDialog(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-sm flex-1"
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Войти / Регистрация
-                  </Button>
-                  <Button
-                    onClick={() => setShowPricingDialog(true)}
-                    variant="outline"
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-sm flex-1"
-                  >
-                    <Crown className="w-4 h-4 mr-2" />
-                    Тарифы
-                  </Button>
-                </div>
-              </div>
-            )}
+
 
             {/* Remaining Interviews Info */}
             {canStart && remainingInterviews !== undefined && (
@@ -386,7 +360,11 @@ function InterviewPrepContent() {
       </div>
 
       {/* Auth Dialog */}
-      <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
+      <AuthDialog 
+        open={showAuthDialog} 
+        onOpenChange={setShowAuthDialog} 
+        showLimitMessage={true}
+      />
 
       {/* Pricing Dialog */}
       <PricingDialog open={showPricingDialog} onOpenChange={setShowPricingDialog} />

@@ -178,7 +178,8 @@ export default function LandingPage() {
     if (canStart) {
       window.location.href = `/interview-prep?specialty=${specialtyId}`
     } else {
-      setLimitWarning(reason || "Достигнут лимит интервью")
+      // Показываем popup с предложением авторизации
+      setShowAuthDialog(true)
     }
   }
 
@@ -340,34 +341,7 @@ export default function LandingPage() {
               ответов и рекомендации по улучшению.
             </p>
 
-            {limitWarning && (
-              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-6 max-w-md mx-auto">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Crown className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                  <p className="text-blue-300 text-sm font-medium">Бесплатное интервью использовано</p>
-                </div>
-                <p className="text-gray-300 text-sm mb-4">
-                  Зарегистрируйтесь или войдите в аккаунт для продолжения прохождения интервью
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Button
-                    onClick={() => setShowAuthDialog(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-sm flex-1"
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Войти / Регистрация
-                  </Button>
-                  <Button
-                    onClick={() => setShowPricingDialog(true)}
-                    variant="outline"
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-sm flex-1"
-                  >
-                    <Crown className="w-4 h-4 mr-2" />
-                    Тарифы
-                  </Button>
-                </div>
-              </div>
-            )}
+
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
               <Button
@@ -776,8 +750,9 @@ export default function LandingPage() {
 
       {/* Auth Dialog */}
       <AuthDialog
-        isOpen={showAuthDialog}
-        onClose={() => setShowAuthDialog(false)}
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        showLimitMessage={true}
         onSuccess={() => {
           setShowAuthDialog(false)
           // Обновляем данные пользователя после успешной аутентификации

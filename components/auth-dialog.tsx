@@ -18,12 +18,13 @@ import { isSupabaseConfigured } from "@/lib/supabase"
 import { Brain, Mail, Lock, User, AlertCircle, CheckCircle } from "lucide-react"
 
 interface AuthDialogProps {
-  isOpen: boolean
-  onClose: () => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSuccess?: () => void
+  showLimitMessage?: boolean
 }
 
-export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
+export function AuthDialog({ open, onOpenChange, onSuccess, showLimitMessage = false }: AuthDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -55,7 +56,7 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
         setSuccess("Успешный вход в систему!")
         setTimeout(() => {
           onSuccess?.()
-          onClose()
+          onOpenChange(false)
         }, 1000)
       } else {
         setError(result.error || "Ошибка входа")
@@ -97,7 +98,7 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
         setSuccess("Регистрация успешна! Проверьте email для подтверждения.")
         setTimeout(() => {
           onSuccess?.()
-          onClose()
+          onOpenChange(false)
         }, 2000)
       } else {
         setError(result.error || "Ошибка регистрации")
@@ -110,7 +111,7 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-slate-900 border-slate-700">
         <DialogHeader>
           <div className="flex items-center space-x-2 mb-2">
@@ -120,9 +121,11 @@ export function AuthDialog({ isOpen, onClose, onSuccess }: AuthDialogProps) {
             <DialogTitle className="text-white">Careeros</DialogTitle>
           </div>
           <DialogDescription className="text-gray-400">
-            {isSupabaseConfigured 
-              ? "Войдите или зарегистрируйтесь для получения неограниченного доступа к интервью"
-              : "Аутентификация временно недоступна. Продолжите как гость."
+            {showLimitMessage 
+              ? "Вы использовали бесплатное интервью. Войдите или зарегистрируйтесь для продолжения."
+              : isSupabaseConfigured 
+                ? "Войдите или зарегистрируйтесь для получения неограниченного доступа к интервью"
+                : "Аутентификация временно недоступна. Продолжите как гость."
             }
           </DialogDescription>
         </DialogHeader>
