@@ -69,8 +69,7 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          planId,
-          userEmail
+          planId
         }),
       })
 

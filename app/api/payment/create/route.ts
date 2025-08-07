@@ -4,14 +4,23 @@ import { SupabaseAuthService } from '@/lib/auth-supabase'
 
 export async function POST(request: NextRequest) {
   try {
-    const { planId, userEmail } = await request.json()
+    const { planId } = await request.json()
     
-    console.log('Payment creation request:', { planId, userEmail })
+    console.log('Payment creation request:', { planId })
 
     if (!planId) {
       return NextResponse.json(
         { error: 'Plan ID is required' },
         { status: 400 }
+      )
+    }
+
+    // ОБЯЗАТЕЛЬНАЯ проверка авторизации
+    const currentUser = await SupabaseAuthService.getCurrentUser()
+    if (!currentUser || !currentUser.email) {
+      return NextResponse.json(
+        { error: 'Для покупки необходимо войти в аккаунт' },
+        { status: 401 }
       )
     }
 
@@ -23,11 +32,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Получаем текущего пользователя (если авторизован)
-    const currentUser = await SupabaseAuthService.getCurrentUser()
-    const userId = currentUser?.id
+    const userId = currentUser.id
+    const userEmail = currentUser.email
     
-    console.log('User info:', { userId, userEmail: currentUser?.email })
+    console.log('Authorized user info:', { userId, userEmail })
 
     // Создаем данные для платежа
     const payment = RobokassaService.createPayment(plan, userEmail, userId)
