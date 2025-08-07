@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { RobokassaService } from '@/lib/robokassa'
-import { SupabaseAuthService } from '@/lib/auth-supabase'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { isSupabaseConfigured } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,13 +17,29 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // ОБЯЗАТЕЛЬНАЯ проверка авторизации
+    // ОБЯЗАТЕЛЬНАЯ проверка авторизации для серверной стороны
     console.log('🔍 API: Checking user auth for payment...')
-    const currentUser = await SupabaseAuthService.getCurrentUser()
-    console.log('👤 API: Current user:', { hasUser: !!currentUser, email: currentUser?.email, id: currentUser?.id })
     
-    if (!currentUser || !currentUser.email) {
-      console.log('❌ API: No user found for payment')
+    if (!isSupabaseConfigured) {
+      console.log('❌ API: Supabase not configured')
+      return NextResponse.json(
+        { error: 'Для покупки необходимо войти в аккаунт' },
+        { status: 401 }
+      )
+    }
+
+    const supabase = createRouteHandlerClient({ cookies })
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    
+    console.log('👤 API: Session check:', { 
+      hasSession: !!session, 
+      hasUser: !!session?.user,
+      email: session?.user?.email,
+      sessionError: sessionError?.message 
+    })
+    
+    if (sessionError || !session?.user) {
+      console.log('❌ API: No valid session found for payment')
       return NextResponse.json(
         { error: 'Для покупки необходимо войти в аккаунт' },
         { status: 401 }
@@ -36,8 +54,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const userId = currentUser.id
-    const userEmail = currentUser.email
+    const userId = session.user.id
+    const userEmail = session.user.email
     
     console.log('Authorized user info:', { userId, userEmail })
 
