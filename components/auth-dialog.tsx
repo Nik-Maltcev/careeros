@@ -335,7 +335,7 @@ export function AuthDialog({ open, onOpenChange, onSuccess, showLimitMessage = f
               Для включения регистрации и входа необходимо настроить Supabase в переменных окружения Railway.
             </p>
             <Button
-              onClick={onClose}
+              onClick={() => onOpenChange(false)}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             >
               Продолжить как гость
@@ -346,7 +346,7 @@ export function AuthDialog({ open, onOpenChange, onSuccess, showLimitMessage = f
         <div className="text-center pt-4">
           <Button
             variant="ghost"
-            onClick={onClose}
+            onClick={() => onOpenChange(false)}
             className="text-gray-400 hover:text-white"
           >
             Продолжить как гость

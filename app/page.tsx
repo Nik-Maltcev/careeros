@@ -768,8 +768,8 @@ export default function LandingPage() {
 
       {/* Pricing Dialog */}
       <PricingDialog
-        isOpen={showPricingDialog}
-        onClose={() => setShowPricingDialog(false)}
+        open={showPricingDialog}
+        onOpenChange={setShowPricingDialog}
         onSuccess={() => {
           setShowPricingDialog(false)
           // Обновляем данные пользователя после покупки
