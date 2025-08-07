@@ -178,8 +178,16 @@ export default function LandingPage() {
     if (canStart) {
       window.location.href = `/interview-prep?specialty=${specialtyId}`
     } else {
-      // Показываем popup с предложением авторизации
-      setShowAuthDialog(true)
+      // Проверяем, авторизован ли пользователь
+      const user = await SupabaseAuthService.getCurrentUser()
+      
+      if (user) {
+        // Пользователь авторизован, но интервью закончились - показываем тарифы
+        setShowPricingDialog(true)
+      } else {
+        // Пользователь не авторизован - показываем авторизацию
+        setShowAuthDialog(true)
+      }
     }
   }
 

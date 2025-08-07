@@ -29,6 +29,7 @@ import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 import type { InterviewLevel } from "@/types/interview"
 import { InterviewManager } from "@/lib/interview-manager"
+import { SupabaseAuthService } from "@/lib/auth-supabase"
 import { AuthDialog } from "@/components/auth-dialog"
 import { PricingDialog } from "@/components/pricing-dialog"
 
@@ -85,8 +86,16 @@ function InterviewPrepContent() {
       // Navigate to interview page with level
       window.location.href = `/interview?specialty=${specialtyId}&level=${selectedLevel}`
     } else {
-      // Показываем popup с предложением авторизации
-      setShowAuthDialog(true)
+      // Проверяем, авторизован ли пользователь
+      const user = await SupabaseAuthService.getCurrentUser()
+      
+      if (user) {
+        // Пользователь авторизован, но интервью закончились - показываем тарифы
+        setShowPricingDialog(true)
+      } else {
+        // Пользователь не авторизован - показываем авторизацию
+        setShowAuthDialog(true)
+      }
     }
   }
 
