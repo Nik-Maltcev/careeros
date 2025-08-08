@@ -37,6 +37,26 @@ interface InterviewResult {
   analysis_data: any
 }
 
+// Маппинг ID специальностей на читаемые названия
+const specialtyNames: Record<string, string> = {
+  'frontend': 'Frontend Developer',
+  'backend': 'Backend Developer', 
+  'devops': 'DevOps Engineer',
+  'data-scientist': 'Data Scientist',
+  'product-manager': 'Product Manager',
+  'ux-ui-designer': 'UX/UI Designer',
+  'marketing': 'Маркетинг',
+  'project-manager': 'Project Manager',
+  'business-analyst': 'Бизнес-аналитик',
+  'system-analyst': 'Системный аналитик',
+  'tech-support': 'Техническая поддержка'
+}
+
+// Функция для получения читаемого названия специальности
+const getSpecialtyName = (specialtyId: string): string => {
+  return specialtyNames[specialtyId] || specialtyId
+}
+
 export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [interviewHistory, setInterviewHistory] = useState<InterviewResult[]>([])
@@ -154,18 +174,11 @@ export default function ProfilePage() {
                     <CardTitle className="text-white text-2xl">{currentUser.name}</CardTitle>
                     <CardDescription className="text-gray-300">{currentUser.email}</CardDescription>
                     <div className="flex items-center space-x-2 mt-2">
-                      {currentUser.plan === 'premium' ? (
-                        <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400">
-                          <Crown className="w-3 h-3 mr-1" />
-                          Premium
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
-                          Free
-                        </Badge>
-                      )}
                       <Badge className="bg-green-500/20 text-green-300 border-green-400">
                         {remainingInterviews} интервью доступно
+                      </Badge>
+                      <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
+                        {currentUser.interviews_used} использовано
                       </Badge>
                     </div>
                   </div>
@@ -275,7 +288,7 @@ export default function ProfilePage() {
                             <Brain className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-white font-medium">{interview.specialty}</h3>
+                            <h3 className="text-white font-medium">{getSpecialtyName(interview.specialty)}</h3>
                             <p className="text-gray-400 text-sm">
                               {interview.level} • {interview.questions_count} вопросов
                             </p>
@@ -330,7 +343,7 @@ export default function ProfilePage() {
                             <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
                               {index + 1}
                             </div>
-                            <span className="text-white">{item.specialty}</span>
+                            <span className="text-white">{getSpecialtyName(item.specialty)}</span>
                           </div>
                           <div className="text-right">
                             <div className="text-white font-medium">{item.averageScore}/10</div>
@@ -418,9 +431,9 @@ export default function ProfilePage() {
 
                 <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                   <div>
-                    <h3 className="text-white font-medium">Тариф</h3>
+                    <h3 className="text-white font-medium">Интервью</h3>
                     <p className="text-gray-400 text-sm">
-                      {currentUser.plan === 'premium' ? 'Premium' : 'Free'} • {remainingInterviews} интервью доступно
+                      {remainingInterviews} доступно • {currentUser.interviews_used} использовано
                     </p>
                   </div>
                   <Link href="/#pricing-section">
