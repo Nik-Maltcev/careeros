@@ -636,7 +636,7 @@ export default function LandingPage() {
             <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105">
               <CardHeader className="text-center pb-4">
                 <CardTitle className="text-white text-xl mb-2">Попробовать</CardTitle>
-                <div className="text-3xl font-bold text-white mb-2">10₽</div>
+                <div className="text-3xl font-bold text-white mb-2">50₽</div>
                 <CardDescription className="text-gray-400">
                   1 интервью с ИИ
                 </CardDescription>
@@ -664,7 +664,7 @@ export default function LandingPage() {
                   onClick={() => handleDirectPurchase('single')}
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"
                 >
-                  Купить за 10₽
+                  Купить за 50₽
                 </Button>
               </CardContent>
             </Card>

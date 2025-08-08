@@ -6,7 +6,7 @@ const ROBOKASSA_CONFIG = {
   merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN || 'careeros',
   password1: process.env.ROBOKASSA_PASSWORD_1 || 'fhZJ0oqzmo1258YYbTop',
   password2: process.env.ROBOKASSA_PASSWORD_2 || 'ZKstGV72xKGTua8NJ2R5',
-  testMode: process.env.NODE_ENV !== 'production',
+  testMode: false, // ОТКЛЮЧАЕМ тестовый режим для продакшена
   paymentUrl: 'https://auth.robokassa.ru/Merchant/Index.aspx'
 }
 
@@ -23,7 +23,7 @@ export const PAYMENT_PLANS: PaymentPlan[] = [
     id: 'single',
     name: '1 интервью',
     interviews: 1,
-    price: 10,
+    price: 50,
     description: 'Попробуйте наш сервис (тест)',
     popular: true
   },
