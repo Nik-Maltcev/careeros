@@ -122,7 +122,8 @@ export class RobokassaService {
     userEmail?: string,
     userId?: string
   ): RobokassaPayment {
-    const invId = Date.now() // Уникальный номер заказа
+    // Генерируем более короткий inv_id (последние 9 цифр timestamp + случайное число)
+    const invId = Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000)
     
     // Генерируем подпись БЕЗ пользовательских параметров для избежания ошибки 29
     const signatureValue = this.generateSignature(
