@@ -53,24 +53,27 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
     try {
       // Проверяем авторизацию - покупка только для авторизованных пользователей
       console.log('🔍 Checking user auth for purchase...')
-      const currentUser = await SupabaseAuthService.getCurrentUser()
-      console.log('👤 Current user:', { hasUser: !!currentUser, email: currentUser?.email, id: currentUser?.id })
       
-      if (!currentUser) {
-        console.log('❌ No user found for purchase')
+      // Сначала проверяем сессию напрямую
+      const { data: { session }, error: sessionError } = await SupabaseAuthService.getSession()
+      console.log('🔑 Session check:', { 
+        hasSession: !!session, 
+        hasUser: !!session?.user, 
+        email: session?.user?.email,
+        sessionError: sessionError?.message 
+      })
+      
+      if (!session?.user) {
+        console.log('❌ No session found for purchase')
         setError("Для покупки необходимо войти в аккаунт")
         setIsLoading(false)
         return
       }
 
-      const userEmail = currentUser.email
-      console.log('✅ User authenticated for purchase:', { userEmail })
-
-      // Получаем токен для передачи на сервер
-      const { data: { session } } = await SupabaseAuthService.getSession()
-      const accessToken = session?.access_token
+      const userEmail = session.user.email
+      const accessToken = session.access_token
       
-      console.log('🔑 Sending request with token:', { hasToken: !!accessToken })
+      console.log('✅ User authenticated for purchase:', { userEmail, hasToken: !!accessToken })
 
       // Создаем платеж
       const response = await fetch('/api/payment/create', {
