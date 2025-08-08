@@ -69,6 +69,8 @@ async function processPaymentNotification(data: {
     // Обновляем баланс интервью пользователя
     if (existingPayment.user_id) {
       try {
+        console.log('🔍 Looking for user profile:', existingPayment.user_id)
+        
         // Получаем текущий профиль пользователя
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
@@ -76,26 +78,42 @@ async function processPaymentNotification(data: {
           .eq('id', existingPayment.user_id)
           .single()
 
+        console.log('👤 Profile query result:', { profile, profileError })
+
         if (profileError) {
           console.error('❌ Error fetching user profile:', profileError)
         } else if (profile) {
+          const newMaxInterviews = profile.max_interviews + plan.interviews
+          console.log('📊 Updating interviews:', { 
+            current: profile.max_interviews, 
+            adding: plan.interviews, 
+            new: newMaxInterviews 
+          })
+          
           // Обновляем количество доступных интервью
-          const { error: updateError } = await supabase
+          const { data: updateData, error: updateError } = await supabase
             .from('profiles')
             .update({
-              max_interviews: profile.max_interviews + plan.interviews
+              max_interviews: newMaxInterviews
             })
             .eq('id', existingPayment.user_id)
+            .select()
+
+          console.log('💾 Update result:', { updateData, updateError })
 
           if (updateError) {
             console.error('❌ Error updating user interviews:', updateError)
           } else {
-            console.log(`✅ Added ${plan.interviews} interviews to user ${existingPayment.user_id}`)
+            console.log(`✅ Added ${plan.interviews} interviews to user ${existingPayment.user_id}. New total: ${newMaxInterviews}`)
           }
+        } else {
+          console.error('❌ Profile not found for user:', existingPayment.user_id)
         }
       } catch (error) {
         console.error('❌ Error processing user payment:', error)
       }
+    } else {
+      console.error('❌ No user_id in payment:', existingPayment)
     }
 
     // Обновляем статус платежа на завершенный
