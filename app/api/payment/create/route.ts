@@ -74,9 +74,17 @@ export async function POST(request: NextRequest) {
     // Создаем данные для платежа
     const payment = RobokassaService.createPayment(plan, userEmail, userId)
     
-    // Временно сохраняем информацию о платеже в обычную таблицу payments
+    // Сохраняем информацию о платеже в таблицу payments
+    console.log('💾 Saving payment to database:', {
+      inv_id: payment.invId,
+      user_id: userId,
+      plan_id: plan.id,
+      amount: payment.outSum,
+      email: userEmail
+    })
+    
     try {
-      const { error: paymentError } = await supabase
+      const { data, error: paymentError } = await supabase
         .from('payments')
         .insert({
           inv_id: payment.invId,
@@ -87,18 +95,27 @@ export async function POST(request: NextRequest) {
           status: 'pending',
           created_at: new Date().toISOString()
         })
+        .select()
 
       if (paymentError) {
-        console.error('Error saving payment:', paymentError)
+        console.error('❌ Supabase error saving payment:', {
+          error: paymentError,
+          code: paymentError.code,
+          message: paymentError.message,
+          details: paymentError.details,
+          hint: paymentError.hint
+        })
         return NextResponse.json(
-          { error: 'Failed to create payment record' },
+          { error: `Failed to create payment record: ${paymentError.message}` },
           { status: 500 }
         )
       }
+
+      console.log('✅ Payment saved successfully:', data)
     } catch (error) {
-      console.error('Error creating payment:', error)
+      console.error('❌ Exception creating payment:', error)
       return NextResponse.json(
-        { error: 'Failed to create payment record' },
+        { error: `Failed to create payment record: ${error}` },
         { status: 500 }
       )
     }
