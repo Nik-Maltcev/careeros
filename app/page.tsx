@@ -127,36 +127,7 @@ export default function LandingPage() {
   useEffect(() => {
     setIsClient(true)
     
-    // Проверяем, вернулся ли пользователь после успешной оплаты
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('payment_success') === 'true') {
-      console.log('🎉 User returned after successful payment, syncing...')
-      // Синхронизируем платежи через несколько секунд после загрузки
-      setTimeout(async () => {
-        try {
-          const { data: { session } } = await SupabaseAuthService.getSession()
-          if (session?.access_token) {
-            const response = await fetch('/api/sync-payments', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${session.access_token}`
-              }
-            })
-            const result = await response.json()
-            if (result.success && result.processedCount > 0) {
-              console.log('✅ Payment synced successfully:', result)
-              // Обновляем количество интервью
-              const remaining = await InterviewManager.getRemainingInterviews()
-              setRemainingInterviews(remaining)
-              // Убираем параметр из URL
-              window.history.replaceState({}, document.title, window.location.pathname)
-            }
-          }
-        } catch (error) {
-          console.error('Auto-sync error:', error)
-        }
-      }, 2000)
-    }
+
     
     // Отладочная информация для Railway
     console.log('Supabase Config Check:', {
