@@ -382,7 +382,15 @@ export default function LandingPage() {
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => setShowPricingDialog(true)}
+                    onClick={() => {
+                      const pricingSection = document.getElementById("pricing-section")
+                      if (pricingSection) {
+                        pricingSection.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        })
+                      }
+                    }}
                     className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
                   >
                     <Crown className="w-3 h-3 mr-1" />
@@ -625,7 +633,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-12 md:py-16 px-4">
+      <section id="pricing-section" className="py-12 md:py-16 px-4 scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Тарифы</h2>
