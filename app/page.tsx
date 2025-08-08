@@ -337,6 +337,11 @@ export default function LandingPage() {
               <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
                 Найти вакансии
               </Link>
+              {isClient && currentUser && (
+                <Link href="/profile" className="text-white hover:text-blue-300 transition-colors">
+                  Личный кабинет
+                </Link>
+              )}
             </nav>
 
             <div className="flex items-center space-x-2 md:space-x-4">
