@@ -2,7 +2,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
-  const userId = '9ea770b7-942c-4f78-b65b-001707d60550'
+  const { searchParams } = new URL(request.url)
+  const userId = searchParams.get('user_id') || '9ea770b7-942c-4f78-b65b-001707d60550'
+  
+  // Если параметр list=true, показываем все профили
+  if (searchParams.get('list') === 'true') {
+    try {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .limit(10)
+      
+      return NextResponse.json({
+        message: 'All profiles',
+        profiles: profiles,
+        error: error
+      })
+    } catch (error) {
+      return NextResponse.json({ error: 'Failed to fetch profiles', details: error })
+    }
+  }
   
   try {
     console.log('🔍 Looking for user profile:', userId)
