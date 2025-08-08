@@ -2,11 +2,173 @@ import { NextRequest, NextResponse } from 'next/server'
 import { RobokassaService } from '@/lib/robokassa'
 import { supabase } from '@/lib/supabase'
 
-// GET обработчик для тестирования
+// Общая функция для обработки уведомлений от Robokassa
+async function processPaymentNotification(data: {
+  outSum: number
+  invId: number
+  signatureValue: string
+  email: string
+  paymentMethod: string
+  fee: number
+}) {
+  const { outSum, invId, signatureValue, email, paymentMethod, fee } = data
+  
+  console.log('🔔 Processing payment notification:', { outSum, invId, signatureValue })
+  
+  // Проверяем подпись БЕЗ пользовательских параметров (минимальная версия)
+  // Пропускаем проверку подписи для ручной обработки
+  if (signatureValue !== 'manual') {
+    let signatureString = `${outSum}:${invId}:${process.env.ROBOKASSA_PASSWORD_2}`
+    
+    const expectedSignature = require('crypto').createHash('md5').update(signatureString).digest('hex').toUpperCase()
+    const isValidSignature = expectedSignature === signatureValue.toUpperCase()
+    
+    console.log('🔐 Signature verification:', {
+      outSum,
+      invId,
+      signatureString,
+      expectedSignature,
+      receivedSignature: signatureValue,
+      isValid: isValidSignature
+    })
+
+    if (!isValidSignature) {
+      console.error('❌ Invalid signature from Robokassa')
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+    }
+  } else {
+    console.log('🔧 Manual processing - skipping signature verification')
+  }
+
+  // Ищем информацию о платеже по invId в таблице payments
+  try {
+    const { data: existingPayment, error: paymentError } = await supabase
+      .from('payments')
+      .select('*')
+      .eq('inv_id', invId)
+      .single()
+
+    if (paymentError || !existingPayment) {
+      console.error('❌ Payment not found:', paymentError)
+      // Все равно возвращаем OK, чтобы Robokassa не повторяла запрос
+      return new NextResponse(`OK${invId}`, { status: 200 })
+    }
+
+    // Проверяем, что платеж еще не обработан
+    if (existingPayment.status === 'completed') {
+      console.log('✅ Payment already processed:', invId)
+      return new NextResponse(`OK${invId}`, { status: 200 })
+    }
+
+    const plan = RobokassaService.getPlanById(existingPayment.plan_id)
+    if (!plan) {
+      console.error('❌ Plan not found:', existingPayment.plan_id)
+      return new NextResponse(`OK${invId}`, { status: 200 })
+    }
+
+    // Обновляем баланс интервью пользователя
+    if (existingPayment.user_id) {
+      try {
+        // Получаем текущий профиль пользователя
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', existingPayment.user_id)
+          .single()
+
+        if (profileError) {
+          console.error('❌ Error fetching user profile:', profileError)
+        } else if (profile) {
+          // Обновляем количество доступных интервью
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({
+              max_interviews: profile.max_interviews + plan.interviews
+            })
+            .eq('id', existingPayment.user_id)
+
+          if (updateError) {
+            console.error('❌ Error updating user interviews:', updateError)
+          } else {
+            console.log(`✅ Added ${plan.interviews} interviews to user ${existingPayment.user_id}`)
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error processing user payment:', error)
+      }
+    }
+
+    // Обновляем статус платежа на завершенный
+    const { error: updateError } = await supabase
+      .from('payments')
+      .update({
+        status: 'completed',
+        fee: fee,
+        payment_method: paymentMethod,
+        completed_at: new Date().toISOString()
+      })
+      .eq('inv_id', invId)
+
+    if (updateError) {
+      console.error('❌ Error updating payment status:', updateError)
+    } else {
+      console.log('✅ Payment completed successfully:', invId)
+    }
+
+  } catch (error) {
+    console.error('❌ Error processing payment result:', error)
+  }
+
+  // Возвращаем подтверждение для Robokassa
+  return new NextResponse(`OK${invId}`, { status: 200 })
+}
+
+// GET обработчик - может использоваться Robokassa для уведомлений
 export async function GET(request: NextRequest) {
   console.log('🔍 GET request to payment result endpoint')
   
-  // Проверим последние платежи
+  const { searchParams } = new URL(request.url)
+  
+  // Если есть параметры платежа, обрабатываем как уведомление от Robokassa
+  if (searchParams.has('OutSum') && searchParams.has('InvId')) {
+    console.log('📨 Processing Robokassa notification via GET')
+    
+    const outSum = parseFloat(searchParams.get('OutSum') || '0')
+    const invId = parseInt(searchParams.get('InvId') || '0')
+    const signatureValue = searchParams.get('SignatureValue') || ''
+    const email = searchParams.get('EMail') || ''
+    const paymentMethod = searchParams.get('PaymentMethod') || ''
+    const fee = parseFloat(searchParams.get('Fee') || '0')
+    
+    console.log('📋 GET notification data:', {
+      outSum, invId, signatureValue, email, paymentMethod, fee
+    })
+    
+    // Используем ту же логику обработки, что и для POST
+    return await processPaymentNotification({
+      outSum, invId, signatureValue, email, paymentMethod, fee
+    })
+  }
+  
+  // Проверяем, есть ли параметр для ручной обработки платежа
+  if (searchParams.has('manual_process')) {
+    const invId = parseInt(searchParams.get('manual_process') || '0')
+    console.log('🔧 Manual payment processing requested for inv_id:', invId)
+    
+    if (invId) {
+      // Имитируем успешное уведомление от Robokassa для ручной обработки
+      return await processPaymentNotification({
+        outSum: 0, // Будет взято из базы данных
+        invId: invId,
+        signatureValue: 'manual', // Пропускаем проверку подписи для ручной обработки
+        email: '',
+        paymentMethod: 'manual',
+        fee: 0
+      })
+    }
+  }
+  
+  // Иначе это тестовый запрос - показываем статус платежей
   try {
     const { data: payments, error } = await supabase
       .from('payments')
@@ -20,7 +182,8 @@ export async function GET(request: NextRequest) {
       message: 'Payment result endpoint is working',
       timestamp: new Date().toISOString(),
       recentPayments: payments,
-      error: error?.message
+      error: error?.message,
+      manualProcessingHelp: 'To manually process a payment, add ?manual_process=INV_ID to the URL'
     })
   } catch (error) {
     console.error('Error fetching payments:', error)
