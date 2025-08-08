@@ -156,8 +156,9 @@ export async function GET(request: NextRequest) {
     console.log('🔧 Manual payment processing requested for inv_id:', invId)
     
     if (invId) {
+      console.log('🔧 Starting manual processing for inv_id:', invId)
       // Имитируем успешное уведомление от Robokassa для ручной обработки
-      return await processPaymentNotification({
+      const result = await processPaymentNotification({
         outSum: 0, // Будет взято из базы данных
         invId: invId,
         signatureValue: 'manual', // Пропускаем проверку подписи для ручной обработки
@@ -165,6 +166,11 @@ export async function GET(request: NextRequest) {
         paymentMethod: 'manual',
         fee: 0
       })
+      console.log('🔧 Manual processing result:', result)
+      return result
+    } else {
+      console.log('❌ Invalid inv_id for manual processing:', invId)
+      return NextResponse.json({ error: 'Invalid inv_id' }, { status: 400 })
     }
   }
   
