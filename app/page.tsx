@@ -202,6 +202,63 @@ export default function LandingPage() {
     }
   }
 
+  // Функция для прямой покупки тарифа
+  const handleDirectPurchase = async (planId: string) => {
+    try {
+      // Проверяем авторизацию
+      const currentUser = await SupabaseAuthService.getCurrentUser()
+      
+      if (!currentUser) {
+        // Если не авторизован - показываем диалог авторизации
+        setShowAuthDialog(true)
+        return
+      }
+
+      // Получаем токен для передачи на сервер
+      const { data: { session } } = await SupabaseAuthService.getSession()
+      const accessToken = session?.access_token
+      
+      if (!accessToken) {
+        setShowAuthDialog(true)
+        return
+      }
+
+      console.log('🔑 Direct purchase with token:', { hasToken: !!accessToken, planId })
+
+      // Создаем платеж
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          planId
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.log('❌ Payment API error:', { status: response.status, error: errorData })
+        alert(`Ошибка создания платежа: ${errorData.error || response.status}`)
+        return
+      }
+
+      const data = await response.json()
+      console.log('✅ Payment API success:', data)
+
+      if (data.success) {
+        // Перенаправляем на страницу оплаты Robokassa
+        window.location.href = data.paymentUrl
+      } else {
+        alert(`Ошибка: ${data.error || 'Не удалось создать платеж'}`)
+      }
+    } catch (error) {
+      console.error('Direct purchase error:', error)
+      alert('Произошла ошибка при создании платежа')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
@@ -579,7 +636,7 @@ export default function LandingPage() {
             <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105">
               <CardHeader className="text-center pb-4">
                 <CardTitle className="text-white text-xl mb-2">Попробовать</CardTitle>
-                <div className="text-3xl font-bold text-white mb-2">99₽</div>
+                <div className="text-3xl font-bold text-white mb-2">10₽</div>
                 <CardDescription className="text-gray-400">
                   1 интервью с ИИ
                 </CardDescription>
@@ -604,10 +661,10 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => setShowPricingDialog(true)}
+                  onClick={() => handleDirectPurchase('single')}
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"
                 >
-                  Выбрать
+                  Купить за 10₽
                 </Button>
               </CardContent>
             </Card>
@@ -652,10 +709,10 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => setShowPricingDialog(true)}
+                  onClick={() => handleDirectPurchase('basic')}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
                 >
-                  Выбрать
+                  Купить за 350₽
                 </Button>
               </CardContent>
             </Card>
@@ -694,10 +751,10 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => setShowPricingDialog(true)}
+                  onClick={() => handleDirectPurchase('pro')}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                 >
-                  Выбрать
+                  Купить за 649₽
                 </Button>
               </CardContent>
             </Card>
