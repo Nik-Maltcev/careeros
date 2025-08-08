@@ -110,7 +110,7 @@ export class RobokassaService {
     return encodeURIComponent(JSON.stringify(receipt))
   }
 
-  // Создание данных для платежа (упрощенная версия без shp параметров)
+  // Создание данных для платежа с пользовательскими параметрами
   static createPayment(
     plan: PaymentPlan,
     userEmail?: string,
@@ -118,15 +118,30 @@ export class RobokassaService {
   ): RobokassaPayment {
     const invId = Date.now() // Уникальный номер заказа
     
-    // Простая подпись без пользовательских параметров: merchant_login:cost:number:password1
-    const signatureString = `${ROBOKASSA_CONFIG.merchantLogin}:${plan.price}:${invId}:${ROBOKASSA_CONFIG.password1}`
-    const signatureValue = crypto.createHash('md5').update(signatureString).digest('hex')
+    // Создаем пользовательские параметры для передачи данных о покупке
+    const shpParams: Record<string, string> = {
+      shp_plan: plan.id,
+      shp_interviews: plan.interviews.toString()
+    }
+    
+    if (userId) {
+      shpParams.shp_user_id = userId
+    }
+    
+    // Генерируем подпись с пользовательскими параметрами
+    const signatureValue = this.generateSignature(
+      ROBOKASSA_CONFIG.merchantLogin,
+      plan.price,
+      invId,
+      ROBOKASSA_CONFIG.password1,
+      shpParams
+    )
     
     console.log('Payment signature data:', {
       merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
       outSum: plan.price,
       invId,
-      signatureString,
+      shpParams,
       signatureValue
     })
 
@@ -137,12 +152,19 @@ export class RobokassaService {
       description: `Покупка тарифа "${plan.name}" - ${plan.interviews} интервью`,
       signatureValue,
       culture: 'ru',
-      email: userEmail
+      email: userEmail,
+      shp_plan: plan.id,
+      shp_interviews: plan.interviews.toString(),
+      shp_user_id: userId
     }
   }
 
   // Генерация URL для оплаты
   static generatePaymentUrl(payment: RobokassaPayment): string {
+    // Определяем базовый URL для результата
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://careeros-production.up.railway.app'
+    const resultUrl = `${baseUrl}/api/payment/result`
+    
     const params = new URLSearchParams({
       MerchantLogin: payment.merchantLogin,
       OutSum: payment.outSum.toString(),
@@ -150,9 +172,11 @@ export class RobokassaService {
       Description: payment.description,
       SignatureValue: payment.signatureValue,
       Culture: payment.culture || 'ru',
+      ResultURL: resultUrl, // Добавляем Result URL
       ...(payment.email && { Email: payment.email }),
       ...(payment.shp_plan && { Shp_plan: payment.shp_plan }),
       ...(payment.shp_interviews && { Shp_interviews: payment.shp_interviews }),
+      ...(payment.shp_user_id && { Shp_user_id: payment.shp_user_id }),
       ...(ROBOKASSA_CONFIG.testMode && { IsTest: '1' })
     })
 

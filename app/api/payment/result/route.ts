@@ -2,9 +2,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { RobokassaService } from '@/lib/robokassa'
 import { supabase } from '@/lib/supabase'
 
+// GET обработчик для тестирования
+export async function GET(request: NextRequest) {
+  return NextResponse.json({ 
+    message: 'Payment result endpoint is working',
+    timestamp: new Date().toISOString()
+  })
+}
+
 export async function POST(request: NextRequest) {
+  console.log('🔔 Payment result callback received!')
+  
   try {
     const formData = await request.formData()
+    
+    // Логируем все полученные данные
+    const allData: Record<string, any> = {}
+    for (const [key, value] of formData.entries()) {
+      allData[key] = value
+    }
+    console.log('📋 All form data received:', allData)
     
     const outSum = parseFloat(formData.get('OutSum') as string)
     const invId = parseInt(formData.get('InvId') as string)
