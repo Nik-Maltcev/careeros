@@ -77,7 +77,16 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
         }),
       })
 
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.log('❌ Payment API error:', { status: response.status, error: errorData })
+        setError(errorData.error || `Ошибка сервера: ${response.status}`)
+        setIsLoading(false)
+        return
+      }
+
       const data = await response.json()
+      console.log('✅ Payment API success:', data)
 
       if (data.success) {
         // Перенаправляем на страницу оплаты Robokassa
