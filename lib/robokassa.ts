@@ -23,7 +23,7 @@ export const PAYMENT_PLANS: PaymentPlan[] = [
     id: 'single',
     name: '1 интервью',
     interviews: 1,
-    price: 50,
+    price: 10,
     description: 'Попробуйте наш сервис (тест)',
     popular: true
   },
