@@ -6,7 +6,7 @@ const ROBOKASSA_CONFIG = {
   merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN || 'careeros',
   password1: process.env.ROBOKASSA_PASSWORD_1 || 'fhZJ0oqzmo1258YYbTop',
   password2: process.env.ROBOKASSA_PASSWORD_2 || 'ZKstGV72xKGTua8NJ2R5',
-  testMode: false, // ОТКЛЮЧАЕМ тестовый режим для продакшена
+  testMode: false, // Продакшн режим как было час назад
   paymentUrl: 'https://auth.robokassa.ru/Merchant/Index.aspx'
 }
 
@@ -161,10 +161,6 @@ export class RobokassaService {
 
   // Генерация URL для оплаты
   static generatePaymentUrl(payment: RobokassaPayment): string {
-    // Определяем базовый URL для результата
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://careeros-production.up.railway.app'
-    const resultUrl = `${baseUrl}/api/payment/result`
-    
     const params = new URLSearchParams({
       MerchantLogin: payment.merchantLogin,
       OutSum: payment.outSum.toString(),
@@ -172,7 +168,6 @@ export class RobokassaService {
       Description: payment.description,
       SignatureValue: payment.signatureValue,
       Culture: payment.culture || 'ru',
-      ResultURL: resultUrl, // Добавляем Result URL
       ...(payment.email && { Email: payment.email }),
       ...(payment.shp_plan && { Shp_plan: payment.shp_plan }),
       ...(payment.shp_interviews && { Shp_interviews: payment.shp_interviews }),
@@ -180,8 +175,10 @@ export class RobokassaService {
       ...(ROBOKASSA_CONFIG.testMode && { IsTest: '1' })
     })
 
-    console.log('Generated payment URL:', `${ROBOKASSA_CONFIG.paymentUrl}?${params.toString()}`)
-    return `${ROBOKASSA_CONFIG.paymentUrl}?${params.toString()}`
+    const fullUrl = `${ROBOKASSA_CONFIG.paymentUrl}?${params.toString()}`
+    console.log('Generated payment URL:', fullUrl)
+    console.log('Payment URL params:', Object.fromEntries(params.entries()))
+    return fullUrl
   }
 
   // Получение плана по ID
