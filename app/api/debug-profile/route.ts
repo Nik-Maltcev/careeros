@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
       const { data: profiles, error } = await supabase
         .from('profiles')
         .select('*')
+        .order('created_at', { ascending: false })
         .limit(10)
       
       return NextResponse.json({
@@ -25,15 +26,18 @@ export async function GET(request: NextRequest) {
   
   // Если параметр create=true, создаем профиль
   if (searchParams.get('create') === 'true') {
+    const email = searchParams.get('email') || 'test@example.com'
+    const name = searchParams.get('name') || 'Test User'
+    
     try {
       const { data: newProfile, error: createError } = await supabase
         .from('profiles')
         .insert({
           id: userId,
-          email: 'nikmaltcev98@gmail.com',
-          name: 'Ник',
+          email: email,
+          name: name,
           max_interviews: 1,
-          interviews_used: 10,
+          interviews_used: 0,
           plan: 'free',
           created_at: new Date().toISOString()
         })
