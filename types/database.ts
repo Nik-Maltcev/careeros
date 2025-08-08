@@ -62,6 +62,47 @@ export interface Database {
           completed_at?: string | null
         }
       }
+      payments: {
+        Row: {
+          id: string
+          inv_id: number
+          user_id: string | null
+          plan_id: string
+          amount: number
+          fee: number
+          email: string | null
+          payment_method: string | null
+          status: string
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          inv_id: number
+          user_id?: string | null
+          plan_id: string
+          amount: number
+          fee?: number
+          email?: string | null
+          payment_method?: string | null
+          status?: string
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          inv_id?: number
+          user_id?: string | null
+          plan_id?: string
+          amount?: number
+          fee?: number
+          email?: string | null
+          payment_method?: string | null
+          status?: string
+          created_at?: string
+          completed_at?: string | null
+        }
+      }
     }
   }
 }
