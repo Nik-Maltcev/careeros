@@ -347,10 +347,16 @@ export default function LandingPage() {
             <div className="flex items-center space-x-2 md:space-x-4">
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-2">
-                  <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs md:text-sm px-2 py-1">
-                    <User className="w-3 h-3 mr-1" />
-                    {currentUser.name}
-                  </Badge>
+                  <Link href="/profile">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="bg-blue-500/20 border-blue-400 text-blue-300 hover:bg-blue-500/30 text-xs md:text-sm px-2 py-1"
+                    >
+                      <User className="w-3 h-3 mr-1" />
+                      Личный кабинет
+                    </Button>
+                  </Link>
                   {currentUser.plan === 'premium' ? (
                     <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs md:text-sm px-2 py-1">
                       <Crown className="w-3 h-3 mr-1" />
