@@ -21,10 +21,10 @@ console.log('Robokassa config:', {
 export const PAYMENT_PLANS: PaymentPlan[] = [
   {
     id: 'test',
-    name: '🧪 ТЕСТ - 5 интервью',
-    interviews: 5,
-    price: 10,
-    description: 'Тестовый тариф для проверки',
+    name: '🧪 ТЕСТ - 10 интервью',
+    interviews: 10,
+    price: 1,
+    description: 'Тестовый тариф за 1 рубль',
     popular: true
   },
   {
