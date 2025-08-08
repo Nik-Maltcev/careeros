@@ -356,6 +356,37 @@ export default function LandingPage() {
                   )}
                   <Button
                     size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      try {
+                        const { data: { session } } = await SupabaseAuthService.getSession()
+                        const response = await fetch('/api/sync-payments', {
+                          method: 'POST',
+                          headers: {
+                            'Authorization': `Bearer ${session?.access_token}`
+                          }
+                        })
+                        const result = await response.json()
+                        if (result.success) {
+                          alert(`Синхронизация завершена! Обработано платежей: ${result.processedCount}`)
+                          // Обновляем количество интервью
+                          const remaining = await InterviewManager.getRemainingInterviews()
+                          setRemainingInterviews(remaining)
+                        } else {
+                          alert(result.message || 'Ошибка синхронизации')
+                        }
+                      } catch (error) {
+                        console.error('Sync error:', error)
+                        alert('Ошибка синхронизации платежей')
+                      }
+                    }}
+                    className="bg-orange-500/20 border-orange-400 text-orange-300 hover:bg-orange-500/30 text-xs px-2 py-1"
+                  >
+                    <Zap className="w-3 h-3 mr-1" />
+                    Синхронизировать
+                  </Button>
+                  <Button
+                    size="sm"
                     variant="ghost"
                     onClick={() => SupabaseAuthService.logout()}
                     className="text-gray-300 hover:text-white p-1"
