@@ -23,6 +23,32 @@ export async function GET(request: NextRequest) {
     }
   }
   
+  // Если параметр create=true, создаем профиль
+  if (searchParams.get('create') === 'true') {
+    try {
+      const { data: newProfile, error: createError } = await supabase
+        .from('profiles')
+        .insert({
+          id: userId,
+          email: 'nikmaltcev98@gmail.com',
+          name: 'Ник',
+          max_interviews: 1,
+          interviews_used: 10,
+          plan: 'free',
+          created_at: new Date().toISOString()
+        })
+        .select()
+      
+      return NextResponse.json({
+        message: 'Profile created',
+        profile: newProfile,
+        error: createError
+      })
+    } catch (error) {
+      return NextResponse.json({ error: 'Failed to create profile', details: error })
+    }
+  }
+  
   try {
     console.log('🔍 Looking for user profile:', userId)
     
