@@ -53,13 +53,15 @@ export class RobokassaService {
     shpParams?: Record<string, string>,
     receipt?: string
   ): string {
+    // Базовая строка для подписи согласно документации
     let signatureString = `${merchantLogin}:${outSum}:${invId}`
     
-    // Добавляем receipt если есть
+    // Добавляем receipt если есть (должен быть перед паролем)
     if (receipt) {
       signatureString += `:${receipt}`
     }
     
+    // Добавляем пароль
     signatureString += `:${password}`
     
     // Добавляем пользовательские параметры в алфавитном порядке
@@ -70,7 +72,11 @@ export class RobokassaService {
       }
     }
     
-    return crypto.createHash('md5').update(signatureString).digest('hex')
+    console.log('Signature string:', signatureString)
+    const signature = crypto.createHash('md5').update(signatureString).digest('hex')
+    console.log('Generated signature:', signature)
+    
+    return signature
   }
 
   // Проверка подписи от Robokassa
@@ -110,7 +116,7 @@ export class RobokassaService {
     return encodeURIComponent(JSON.stringify(receipt))
   }
 
-  // Создание данных для платежа с пользовательскими параметрами
+  // Создание данных для платежа (минимальная версия без пользовательских параметров)
   static createPayment(
     plan: PaymentPlan,
     userEmail?: string,
@@ -118,30 +124,18 @@ export class RobokassaService {
   ): RobokassaPayment {
     const invId = Date.now() // Уникальный номер заказа
     
-    // Создаем пользовательские параметры для передачи данных о покупке
-    const shpParams: Record<string, string> = {
-      shp_plan: plan.id,
-      shp_interviews: plan.interviews.toString()
-    }
-    
-    if (userId) {
-      shpParams.shp_user_id = userId
-    }
-    
-    // Генерируем подпись с пользовательскими параметрами
+    // Генерируем подпись БЕЗ пользовательских параметров для избежания ошибки 29
     const signatureValue = this.generateSignature(
       ROBOKASSA_CONFIG.merchantLogin,
       plan.price,
       invId,
-      ROBOKASSA_CONFIG.password1,
-      shpParams
+      ROBOKASSA_CONFIG.password1
     )
     
-    console.log('Payment signature data:', {
+    console.log('Payment signature data (minimal):', {
       merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
       outSum: plan.price,
       invId,
-      shpParams,
       signatureValue
     })
 
@@ -149,34 +143,43 @@ export class RobokassaService {
       merchantLogin: ROBOKASSA_CONFIG.merchantLogin,
       outSum: plan.price,
       invId,
-      description: `Покупка тарифа "${plan.name}" - ${plan.interviews} интервью`,
+      description: `Plan ${plan.id}`, // Минимальное описание на английском
       signatureValue,
       culture: 'ru',
       email: userEmail,
       shp_plan: plan.id,
-      shp_interviews: plan.interviews.toString(),
       shp_user_id: userId
     }
   }
 
-  // Генерация URL для оплаты
+  // Генерация URL для оплаты (только обязательные параметры)
   static generatePaymentUrl(payment: RobokassaPayment): string {
-    const params = new URLSearchParams({
-      MerchantLogin: payment.merchantLogin,
-      OutSum: payment.outSum.toString(),
-      InvId: payment.invId.toString(),
-      Description: payment.description,
-      SignatureValue: payment.signatureValue,
-      Culture: payment.culture || 'ru',
-      ...(payment.email && { Email: payment.email }),
-      ...(payment.shp_plan && { Shp_plan: payment.shp_plan }),
-      ...(payment.shp_interviews && { Shp_interviews: payment.shp_interviews }),
-      ...(payment.shp_user_id && { Shp_user_id: payment.shp_user_id }),
-      ...(ROBOKASSA_CONFIG.testMode && { IsTest: '1' })
-    })
+    const params = new URLSearchParams()
+    
+    // Только обязательные параметры для избежания ошибки 29
+    params.set('MerchantLogin', payment.merchantLogin)
+    params.set('OutSum', payment.outSum.toString())
+    params.set('InvId', payment.invId.toString())
+    params.set('Description', payment.description)
+    params.set('SignatureValue', payment.signatureValue)
+    
+    // Культура (рекомендуемый параметр)
+    if (payment.culture) {
+      params.set('Culture', payment.culture)
+    }
+    
+    // Email только если есть
+    if (payment.email) {
+      params.set('Email', payment.email)
+    }
+    
+    // Тестовый режим
+    if (ROBOKASSA_CONFIG.testMode) {
+      params.set('IsTest', '1')
+    }
 
     const fullUrl = `${ROBOKASSA_CONFIG.paymentUrl}?${params.toString()}`
-    console.log('Generated payment URL:', fullUrl)
+    console.log('Generated payment URL (minimal):', fullUrl)
     console.log('Payment URL params:', Object.fromEntries(params.entries()))
     return fullUrl
   }

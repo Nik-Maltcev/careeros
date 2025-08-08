@@ -74,6 +74,35 @@ export async function POST(request: NextRequest) {
     // Создаем данные для платежа
     const payment = RobokassaService.createPayment(plan, userEmail, userId)
     
+    // Временно сохраняем информацию о платеже в обычную таблицу payments
+    try {
+      const { error: paymentError } = await supabase
+        .from('payments')
+        .insert({
+          inv_id: payment.invId,
+          user_id: userId,
+          plan_id: plan.id,
+          amount: payment.outSum,
+          email: userEmail,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        })
+
+      if (paymentError) {
+        console.error('Error saving payment:', paymentError)
+        return NextResponse.json(
+          { error: 'Failed to create payment record' },
+          { status: 500 }
+        )
+      }
+    } catch (error) {
+      console.error('Error creating payment:', error)
+      return NextResponse.json(
+        { error: 'Failed to create payment record' },
+        { status: 500 }
+      )
+    }
+    
     // Генерируем URL для оплаты
     const paymentUrl = RobokassaService.generatePaymentUrl(payment)
     

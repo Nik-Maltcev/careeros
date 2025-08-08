@@ -79,8 +79,22 @@ CREATE TABLE IF NOT EXISTS payments (
   completed_at TIMESTAMP WITH TIME ZONE
 );
 
--- Включение Row Level Security для payments
+-- Создание таблицы ожидающих платежей (для связи с Robokassa)
+CREATE TABLE IF NOT EXISTS pending_payments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  inv_id INTEGER UNIQUE NOT NULL,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  plan_id TEXT NOT NULL,
+  amount DECIMAL NOT NULL,
+  email TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'expired')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '1 hour')
+);
+
+-- Включение Row Level Security для payments и pending_payments
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pending_payments ENABLE ROW LEVEL SECURITY;
 
 -- Политики безопасности для payments
 CREATE POLICY "Users can view own payments" ON payments
@@ -92,6 +106,19 @@ CREATE POLICY "System can insert payments" ON payments
 CREATE POLICY "System can update payments" ON payments
   FOR UPDATE USING (true);
 
+-- Политики безопасности для pending_payments
+CREATE POLICY "Users can view own pending payments" ON pending_payments
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "System can insert pending payments" ON pending_payments
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "System can update pending payments" ON pending_payments
+  FOR UPDATE USING (true);
+
+CREATE POLICY "System can delete pending payments" ON pending_payments
+  FOR DELETE USING (true);
+
 -- Индексы для производительности
 CREATE INDEX IF NOT EXISTS idx_interview_results_user_id ON interview_results(user_id);
 CREATE INDEX IF NOT EXISTS idx_interview_results_completed_at ON interview_results(completed_at);
@@ -99,3 +126,7 @@ CREATE INDEX IF NOT EXISTS idx_interview_results_specialty ON interview_results(
 CREATE INDEX IF NOT EXISTS idx_payments_user_id ON payments(user_id);
 CREATE INDEX IF NOT EXISTS idx_payments_inv_id ON payments(inv_id);
 CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
+CREATE INDEX IF NOT EXISTS idx_pending_payments_user_id ON pending_payments(user_id);
+CREATE INDEX IF NOT EXISTS idx_pending_payments_inv_id ON pending_payments(inv_id);
+CREATE INDEX IF NOT EXISTS idx_pending_payments_status ON pending_payments(status);
+CREATE INDEX IF NOT EXISTS idx_pending_payments_expires_at ON pending_payments(expires_at);
