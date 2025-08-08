@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
           inv_id: payment.invId,
           user_id: userId,
           plan_id: plan.id,
-          amount: payment.outSum,
+          amount: payment.outSum.toString(), // Преобразуем в строку для DECIMAL
           email: userEmail,
           status: 'pending',
           created_at: new Date().toISOString()
