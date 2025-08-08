@@ -4,10 +4,32 @@ import { supabase } from '@/lib/supabase'
 
 // GET обработчик для тестирования
 export async function GET(request: NextRequest) {
-  return NextResponse.json({ 
-    message: 'Payment result endpoint is working',
-    timestamp: new Date().toISOString()
-  })
+  console.log('🔍 GET request to payment result endpoint')
+  
+  // Проверим последние платежи
+  try {
+    const { data: payments, error } = await supabase
+      .from('payments')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(5)
+    
+    console.log('📋 Recent payments:', payments)
+    
+    return NextResponse.json({ 
+      message: 'Payment result endpoint is working',
+      timestamp: new Date().toISOString(),
+      recentPayments: payments,
+      error: error?.message
+    })
+  } catch (error) {
+    console.error('Error fetching payments:', error)
+    return NextResponse.json({ 
+      message: 'Payment result endpoint is working',
+      timestamp: new Date().toISOString(),
+      error: 'Failed to fetch payments'
+    })
+  }
 }
 
 export async function POST(request: NextRequest) {
