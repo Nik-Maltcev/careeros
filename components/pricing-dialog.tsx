@@ -66,11 +66,18 @@ export function PricingDialog({ isOpen, open, onClose, onOpenChange, onSuccess }
       const userEmail = currentUser.email
       console.log('✅ User authenticated for purchase:', { userEmail })
 
+      // Получаем токен для передачи на сервер
+      const { data: { session } } = await SupabaseAuthService.getSession()
+      const accessToken = session?.access_token
+      
+      console.log('🔑 Sending request with token:', { hasToken: !!accessToken })
+
       // Создаем платеж
       const response = await fetch('/api/payment/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           planId

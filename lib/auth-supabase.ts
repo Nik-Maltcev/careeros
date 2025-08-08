@@ -91,6 +91,20 @@ export class SupabaseAuthService {
     }
   }
 
+  // Получить сессию
+  static async getSession() {
+    if (!isSupabaseConfigured) {
+      return { data: { session: null }, error: null }
+    }
+
+    try {
+      return await supabase.auth.getSession()
+    } catch (error) {
+      console.error("Error getting session:", error)
+      return { data: { session: null }, error }
+    }
+  }
+
   // Выход
   static async logout() {
     if (!isSupabaseConfigured) {

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { RobokassaService } from '@/lib/robokassa'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { isSupabaseConfigured } from '@/lib/supabase'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +15,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // ОБЯЗАТЕЛЬНАЯ проверка авторизации для серверной стороны
+    // ОБЯЗАТЕЛЬНАЯ проверка авторизации через токен в заголовках
     console.log('🔍 API: Checking user auth for payment...')
     
     if (!isSupabaseConfigured) {
@@ -28,18 +26,32 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createRouteHandlerClient({ cookies })
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    // Получаем токен из заголовков
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
     
-    console.log('👤 API: Session check:', { 
-      hasSession: !!session, 
-      hasUser: !!session?.user,
-      email: session?.user?.email,
-      sessionError: sessionError?.message 
+    console.log('🔑 API: Token check:', { hasAuthHeader: !!authHeader, hasToken: !!token })
+    
+    if (!token) {
+      console.log('❌ API: No auth token provided')
+      return NextResponse.json(
+        { error: 'Для покупки необходимо войти в аккаунт' },
+        { status: 401 }
+      )
+    }
+
+    // Проверяем токен через Supabase
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token)
+    
+    console.log('👤 API: User check:', { 
+      hasUser: !!user, 
+      email: user?.email,
+      id: user?.id,
+      userError: userError?.message 
     })
     
-    if (sessionError || !session?.user) {
-      console.log('❌ API: No valid session found for payment')
+    if (userError || !user) {
+      console.log('❌ API: Invalid token or user not found')
       return NextResponse.json(
         { error: 'Для покупки необходимо войти в аккаунт' },
         { status: 401 }
@@ -54,8 +66,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const userId = session.user.id
-    const userEmail = session.user.email
+    const userId = user.id
+    const userEmail = user.email
     
     console.log('Authorized user info:', { userId, userEmail })
 
