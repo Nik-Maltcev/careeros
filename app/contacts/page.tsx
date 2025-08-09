@@ -108,7 +108,7 @@ export default function ContactsPage() {
                     <div>
                       <h3 className="text-white font-medium mb-1">Telegram Bot</h3>
                       <p className="text-blue-300 font-mono">@careeros_bot</p>
-                      <p className="text-gray-400 text-sm mt-2">
+                      <p className="text-gray-300 text-sm mt-2">
                         Пишите нам в любое время - отвечаем быстро!
                       </p>
                     </div>

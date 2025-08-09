@@ -659,7 +659,167 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing-section" className="py-12 md:py-16 px-4 scroll-mt-20">
+        <div className="container mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Тарифы</h2>
+            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+              Выберите подходящий тариф для подготовки к собеседованиям
+            </p>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Тариф 1 интервью */}
+            <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-white text-xl mb-2">Попробовать</CardTitle>
+                <div className="text-3xl font-bold text-white mb-2">99₽</div>
+                <CardDescription className="text-gray-400">
+                  1 интервью с ИИ
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">1 интервью с ИИ</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Детальный анализ</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Голосовые вопросы</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">История результатов</span>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => handleDirectPurchase('single')}
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"
+                >
+                  Купить за 99₽
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Тариф 5 интервью - Популярный */}
+            <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 relative ring-2 ring-blue-500">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-blue-500 text-white px-3 py-1">
+                  <Star className="w-3 h-3 mr-1" />
+                  Популярный
+                </Badge>
+              </div>
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-white text-xl mb-2">Подготовка</CardTitle>
+                <div className="text-3xl font-bold text-white mb-2">350₽</div>
+                <CardDescription className="text-gray-400">
+                  5 интервью с ИИ
+                </CardDescription>
+                <div className="text-sm text-green-400 mt-1">70₽ за интервью</div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">5 интервью с ИИ</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Детальный анализ</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Голосовые вопросы</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">История результатов</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Экономия 145₽</span>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => handleDirectPurchase('basic')}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                >
+                  Купить за 350₽
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Тариф 10 интервью */}
+            <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-white text-xl mb-2">Максимум</CardTitle>
+                <div className="text-3xl font-bold text-white mb-2">649₽</div>
+                <CardDescription className="text-gray-400">
+                  10 интервью с ИИ
+                </CardDescription>
+                <div className="text-sm text-green-400 mt-1">65₽ за интервью</div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">10 интервью с ИИ</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Детальный анализ</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Голосовые вопросы</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">История результатов</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-gray-300 text-sm">Экономия 341₽</span>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => handleDirectPurchase('pro')}
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                >
+                  Купить за 649₽
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Дополнительная информация */}
+          <div className="text-center mt-8 md:mt-12">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-gray-400 text-xs md:text-sm">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Мгновенная активация</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Безопасная оплата</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Без подписки</span>
+              </div>
+            </div>
+            <p className="text-gray-500 text-xs mt-4">
+              Оплата обрабатывается через Robokassa
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Contact Section */}
       <section className="py-12 md:py-16 px-4">
