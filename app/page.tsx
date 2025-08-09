@@ -569,6 +569,50 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section className="py-12 md:py-16 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Как это работает</h2>
+            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+              Простой процесс подготовки к собеседованию с персональной обратной связью
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-white">1</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Выберите специальность</h3>
+              <p className="text-gray-300">
+                Выберите свою IT-специальность из 13 доступных направлений для получения персонализированных вопросов
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-white">2</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Пройдите интервью</h3>
+              <p className="text-gray-300">
+                Отвечайте на вопросы голосом или текстом. ИИ генерирует актуальные вопросы для вашего уровня
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Получите анализ</h3>
+              <p className="text-gray-300">
+                Получите детальную обратную связь с оценками, рекомендациями и планом развития
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Specialties Section */}
       <section id="specialties-section" className="py-12 md:py-16 px-4 scroll-mt-20">
         <div className="container mx-auto">
@@ -615,49 +659,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-12 md:py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Как это работает</h2>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
-              Простой процесс подготовки к собеседованию с персональной обратной связью
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl font-bold text-white">1</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Выберите специальность</h3>
-              <p className="text-gray-300">
-                Выберите свою IT-специальность из 11 доступных направлений для получения персонализированных вопросов
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl font-bold text-white">2</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Пройдите интервью</h3>
-              <p className="text-gray-300">
-                Отвечайте на вопросы голосом или текстом. ИИ генерирует актуальные вопросы для вашего уровня
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl font-bold text-white">3</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Получите анализ</h3>
-              <p className="text-gray-300">
-                Получите детальную обратную связь с оценками, рекомендациями и планом развития
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Contact Section */}
       <section className="py-12 md:py-16 px-4">
