@@ -351,6 +351,9 @@ export default function LandingPage() {
               <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
                 Найти вакансии
               </Link>
+              <Link href="/contacts" className="text-white hover:text-blue-300 transition-colors">
+                Контакты
+              </Link>
 
             </nav>
 
