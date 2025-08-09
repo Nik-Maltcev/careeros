@@ -49,7 +49,9 @@ const specialtyNames: Record<string, string> = {
   'project-manager': 'Project Manager',
   'business-analyst': 'Бизнес-аналитик',
   'system-analyst': 'Системный аналитик',
-  'tech-support': 'Техническая поддержка'
+  'tech-support': 'Техническая поддержка',
+  'smm': 'SMM-специалист',
+  'qa': 'QA Engineer'
 }
 
 // Функция для получения читаемого названия специальности
@@ -412,7 +414,7 @@ export default function ProfilePage() {
                     <h3 className="text-white font-medium">Имя</h3>
                     <p className="text-gray-400 text-sm">{currentUser.name}</p>
                   </div>
-                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
+                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/20 hover:text-white bg-transparent">
                     <Settings className="w-4 h-4 mr-2" />
                     Изменить
                   </Button>
@@ -423,7 +425,7 @@ export default function ProfilePage() {
                     <h3 className="text-white font-medium">Email</h3>
                     <p className="text-gray-400 text-sm">{currentUser.email}</p>
                   </div>
-                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
+                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/20 hover:text-white bg-transparent">
                     <Settings className="w-4 h-4 mr-2" />
                     Изменить
                   </Button>
@@ -437,7 +439,7 @@ export default function ProfilePage() {
                     </p>
                   </div>
                   <Link href="/#pricing-section">
-                    <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
+                    <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/20 hover:text-white bg-transparent">
                       <CreditCard className="w-4 h-4 mr-2" />
                       Купить еще
                     </Button>

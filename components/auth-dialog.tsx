@@ -347,7 +347,7 @@ export function AuthDialog({ open, onOpenChange, onSuccess, showLimitMessage = f
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-400 hover:text-white hover:bg-transparent"
           >
             Продолжить как гость
           </Button>

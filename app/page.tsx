@@ -114,6 +114,20 @@ const specialties = [
     icon: Headphones,
     gradient: "from-sky-500 to-blue-500",
   },
+  {
+    id: "smm",
+    title: "SMM-специалист",
+    description: "Продвижение в социальных сетях, контент-маркетинг",
+    icon: TrendingUp,
+    gradient: "from-pink-500 to-red-500",
+  },
+  {
+    id: "qa",
+    title: "QA Engineer",
+    description: "Тестирование ПО, обеспечение качества продукта",
+    icon: CheckCircle,
+    gradient: "from-teal-500 to-green-500",
+  },
 ]
 
 export default function LandingPage() {
