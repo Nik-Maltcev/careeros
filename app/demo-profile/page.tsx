@@ -31,9 +31,9 @@ import Link from "next/link"
 
 // Демо данные для красивого профиля
 const demoUser = {
-  name: "Александр Петров",
-  email: "alex.petrov@example.com",
-  plan: "premium",
+  name: "Андрей Соколов",
+  email: "andrey.sokolov@mail.ru",
+  plan: "basic",
   interviews_used: 15,
   max_interviews: 20,
   created_at: "2024-01-15",
@@ -229,9 +229,6 @@ export default function DemoProfilePage() {
                   <Brain className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold text-white">Личный кабинет</span>
-                <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs">
-                  DEMO
-                </Badge>
               </div>
             </div>
           </div>
@@ -246,19 +243,12 @@ export default function DemoProfilePage() {
             <CardHeader className="relative">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center relative">
+                  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                     <User className="w-10 h-10 text-white" />
-                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                      <Crown className="w-3 h-3 text-white" />
-                    </div>
                   </div>
                   <div>
-                    <CardTitle className="text-white text-3xl flex items-center space-x-2">
-                      <span>{currentUser.name}</span>
-                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400">
-                        <Crown className="w-3 h-3 mr-1" />
-                        Premium
-                      </Badge>
+                    <CardTitle className="text-white text-3xl">
+                      {currentUser.name}
                     </CardTitle>
                     <CardDescription className="text-gray-300 text-lg">{currentUser.email}</CardDescription>
                     <div className="flex items-center space-x-3 mt-3">
@@ -566,10 +556,10 @@ export default function DemoProfilePage() {
 
               <Card className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20 backdrop-blur-sm">
                 <CardHeader className="text-center">
-                  <Crown className="w-12 h-12 text-indigo-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Premium</CardTitle>
+                  <Target className="w-12 h-12 text-indigo-400 mx-auto mb-2" />
+                  <CardTitle className="text-white">Целеустремленный</CardTitle>
                   <CardDescription className="text-indigo-300">
-                    Активирован Premium план
+                    Прошли интервью по 4 специальностям
                   </CardDescription>
                 </CardHeader>
               </Card>
