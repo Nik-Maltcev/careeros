@@ -40,7 +40,7 @@ interface InterviewResult {
 // Маппинг ID специальностей на читаемые названия
 const specialtyNames: Record<string, string> = {
   'frontend': 'Frontend Developer',
-  'backend': 'Backend Developer', 
+  'backend': 'Backend Developer',
   'devops': 'DevOps Engineer',
   'data-scientist': 'Data Scientist',
   'product-manager': 'Product Manager',
@@ -70,11 +70,11 @@ export default function ProfilePage() {
       try {
         const user = await SupabaseAuthService.getCurrentUser()
         setCurrentUser(user)
-        
+
         if (user) {
           const history = await SupabaseAuthService.getInterviewHistory()
           setInterviewHistory(history)
-          
+
           const remaining = await InterviewManager.getRemainingInterviews()
           setRemainingInterviews(remaining)
         }
@@ -116,10 +116,10 @@ export default function ProfilePage() {
 
   // Вычисляем статистику
   const totalInterviews = interviewHistory.length
-  const averageScore = totalInterviews > 0 
+  const averageScore = totalInterviews > 0
     ? Math.round(interviewHistory.reduce((sum, interview) => sum + interview.overall_score, 0) / totalInterviews)
     : 0
-  
+
   const specialtyStats = interviewHistory.reduce((acc, interview) => {
     if (!acc[interview.specialty]) {
       acc[interview.specialty] = { count: 0, totalScore: 0 }
@@ -312,8 +312,8 @@ export default function ProfilePage() {
                               <AlertCircle className="w-4 h-4 text-red-400" />
                             )}
                             <span className="text-xs text-gray-400">
-                              {interview.overall_score >= 8 ? 'Отлично' : 
-                               interview.overall_score >= 6 ? 'Хорошо' : 'Нужно улучшить'}
+                              {interview.overall_score >= 8 ? 'Отлично' :
+                                interview.overall_score >= 6 ? 'Хорошо' : 'Нужно улучшить'}
                             </span>
                           </div>
                         </div>
@@ -373,13 +373,13 @@ export default function ProfilePage() {
                         <span className="text-white">{currentUser.interviews_used}/{currentUser.max_interviews}</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full"
                           style={{ width: `${(currentUser.interviews_used / currentUser.max_interviews) * 100}%` }}
                         ></div>
                       </div>
                     </div>
-                    
+
                     {averageScore > 0 && (
                       <div>
                         <div className="flex justify-between text-sm mb-2">
@@ -387,7 +387,7 @@ export default function ProfilePage() {
                           <span className="text-white">{averageScore}/10</span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full"
                             style={{ width: `${averageScore * 10}%` }}
                           ></div>
@@ -447,10 +447,20 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="pt-4 border-t border-white/10">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => SupabaseAuthService.logout()}
-                    className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                  <Button
+                    variant="outline"
+                    onClick={async () => {
+                      try {
+                        await SupabaseAuthService.logout()
+                        // Перенаправляем на главную страницу после выхода
+                        window.location.href = '/'
+                      } catch (error) {
+                        console.error('Logout error:', error)
+                        // В случае ошибки все равно перенаправляем
+                        window.location.href = '/'
+                      }
+                    }}
+                    className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 bg-transparent"
                   >
                     Выйти из аккаунта
                   </Button>
