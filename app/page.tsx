@@ -357,6 +357,9 @@ export default function LandingPage() {
               <Link href="/contacts" className="text-white hover:text-blue-300 transition-colors">
                 Контакты
               </Link>
+              <Link href="/demo-profile" className="text-yellow-300 hover:text-yellow-200 transition-colors">
+                Демо профиль
+              </Link>
 
             </nav>
 
