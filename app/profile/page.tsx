@@ -201,7 +201,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{totalInterviews}</div>
-              <p className="text-xs text-gray-400 mt-1">Пройдено интервью</p>
+              <p className="text-xs text-gray-200 mt-1">Пройдено интервью</p>
             </CardContent>
           </Card>
 
@@ -214,7 +214,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{averageScore}/10</div>
-              <p className="text-xs text-gray-400 mt-1">По всем интервью</p>
+              <p className="text-xs text-gray-200 mt-1">По всем интервью</p>
             </CardContent>
           </Card>
 
@@ -227,7 +227,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{remainingInterviews}</div>
-              <p className="text-xs text-gray-400 mt-1">Интервью осталось</p>
+              <p className="text-xs text-gray-200 mt-1">Интервью осталось</p>
             </CardContent>
           </Card>
 
@@ -240,7 +240,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{currentUser.interviews_used}</div>
-              <p className="text-xs text-gray-400 mt-1">Из {currentUser.max_interviews} всего</p>
+              <p className="text-xs text-gray-200 mt-1">Из {currentUser.max_interviews} всего</p>
             </CardContent>
           </Card>
         </div>

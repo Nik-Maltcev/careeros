@@ -283,7 +283,7 @@ export default function ProfileAndreyPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{totalInterviews}</div>
-              <p className="text-xs text-blue-300 mt-1">Пройдено интервью</p>
+              <p className="text-xs text-white mt-1">Пройдено интервью</p>
             </CardContent>
           </Card>
 
@@ -296,7 +296,7 @@ export default function ProfileAndreyPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{averageScore}/10</div>
-              <p className="text-xs text-green-300 mt-1">Отличный результат!</p>
+              <p className="text-xs text-white mt-1">Отличный результат!</p>
             </CardContent>
           </Card>
 
@@ -309,7 +309,7 @@ export default function ProfileAndreyPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{remainingInterviews}</div>
-              <p className="text-xs text-purple-300 mt-1">Интервью осталось</p>
+              <p className="text-xs text-white mt-1">Интервью осталось</p>
             </CardContent>
           </Card>
 
@@ -322,7 +322,7 @@ export default function ProfileAndreyPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{Math.round((currentUser.interviews_used / currentUser.max_interviews) * 100)}%</div>
-              <p className="text-xs text-orange-300 mt-1">Из {currentUser.max_interviews} интервью</p>
+              <p className="text-xs text-white mt-1">Из {currentUser.max_interviews} интервью</p>
             </CardContent>
           </Card>
         </div>
