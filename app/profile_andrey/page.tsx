@@ -504,61 +504,61 @@ export default function ProfileAndreyPage() {
           <TabsContent value="achievements" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Достижения */}
-              <Card className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/20 backdrop-blur-sm">
+              <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Trophy className="w-12 h-12 text-yellow-400 mx-auto mb-2" />
                   <CardTitle className="text-white">Первое интервью</CardTitle>
-                  <CardDescription className="text-yellow-300">
+                  <CardDescription className="text-gray-300">
                     Прошли первое интервью
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20 backdrop-blur-sm">
+              <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Star className="w-12 h-12 text-green-400 mx-auto mb-2" />
                   <CardTitle className="text-white">Отличник</CardTitle>
-                  <CardDescription className="text-green-300">
+                  <CardDescription className="text-gray-300">
                     Средний балл выше 8.5
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20 backdrop-blur-sm">
+              <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Brain className="w-12 h-12 text-blue-400 mx-auto mb-2" />
                   <CardTitle className="text-white">Эксперт</CardTitle>
-                  <CardDescription className="text-blue-300">
+                  <CardDescription className="text-gray-300">
                     Прошли 10+ интервью
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20 backdrop-blur-sm">
+              <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Code className="w-12 h-12 text-purple-400 mx-auto mb-2" />
                   <CardTitle className="text-white">Frontend Мастер</CardTitle>
-                  <CardDescription className="text-purple-300">
+                  <CardDescription className="text-gray-300">
                     3+ интервью по Frontend
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/20 backdrop-blur-sm">
+              <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Zap className="w-12 h-12 text-red-400 mx-auto mb-2" />
                   <CardTitle className="text-white">Скоростной</CardTitle>
-                  <CardDescription className="text-red-300">
+                  <CardDescription className="text-gray-300">
                     5 интервью за неделю
                   </CardDescription>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20 backdrop-blur-sm">
+              <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Target className="w-12 h-12 text-indigo-400 mx-auto mb-2" />
                   <CardTitle className="text-white">Целеустремленный</CardTitle>
-                  <CardDescription className="text-indigo-300">
+                  <CardDescription className="text-gray-300">
                     Прошли интервью по 4 специальностям
                   </CardDescription>
                 </CardHeader>
