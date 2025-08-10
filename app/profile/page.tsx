@@ -192,7 +192,7 @@ export default function ProfilePage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Всего интервью</CardTitle>
@@ -201,11 +201,11 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{totalInterviews}</div>
-              <p className="text-xs text-gray-200 mt-1">Пройдено интервью</p>
+              <p className="text-xs text-gray-300 mt-1">Пройдено интервью</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Средний балл</CardTitle>
@@ -214,11 +214,11 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{averageScore}/10</div>
-              <p className="text-xs text-gray-200 mt-1">По всем интервью</p>
+              <p className="text-xs text-gray-300 mt-1">По всем интервью</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Доступно</CardTitle>
@@ -227,11 +227,11 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{remainingInterviews}</div>
-              <p className="text-xs text-gray-200 mt-1">Интервью осталось</p>
+              <p className="text-xs text-gray-300 mt-1">Интервью осталось</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Использовано</CardTitle>
@@ -240,7 +240,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{currentUser.interviews_used}</div>
-              <p className="text-xs text-gray-200 mt-1">Из {currentUser.max_interviews} всего</p>
+              <p className="text-xs text-gray-300 mt-1">Из {currentUser.max_interviews} всего</p>
             </CardContent>
           </Card>
         </div>

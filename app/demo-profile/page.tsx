@@ -274,7 +274,7 @@ export default function DemoProfilePage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20 backdrop-blur-sm">
+          <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Всего интервью</CardTitle>
@@ -283,11 +283,11 @@ export default function DemoProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{totalInterviews}</div>
-              <p className="text-xs text-white mt-1">Пройдено интервью</p>
+              <p className="text-xs text-gray-300 mt-1">Пройдено интервью</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20 backdrop-blur-sm">
+          <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Средний балл</CardTitle>
@@ -296,11 +296,11 @@ export default function DemoProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{averageScore}/10</div>
-              <p className="text-xs text-white mt-1">Отличный результат!</p>
+              <p className="text-xs text-gray-300 mt-1">Отличный результат!</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20 backdrop-blur-sm">
+          <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Доступно</CardTitle>
@@ -309,11 +309,11 @@ export default function DemoProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{remainingInterviews}</div>
-              <p className="text-xs text-white mt-1">Интервью осталось</p>
+              <p className="text-xs text-gray-300 mt-1">Интервью осталось</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20 backdrop-blur-sm">
+          <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white text-sm font-medium">Прогресс</CardTitle>
@@ -322,7 +322,7 @@ export default function DemoProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{Math.round((currentUser.interviews_used / currentUser.max_interviews) * 100)}%</div>
-              <p className="text-xs text-white mt-1">Из {currentUser.max_interviews} интервью</p>
+              <p className="text-xs text-gray-300 mt-1">Из {currentUser.max_interviews} интервью</p>
             </CardContent>
           </Card>
         </div>
