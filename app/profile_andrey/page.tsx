@@ -215,21 +215,68 @@ export default function ProfileAndreyPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="container mx-auto px-4 py-3">
+          {/* Мобильная версия */}
+          <div className="flex md:hidden items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-bold text-white">Careeros</span>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                {remainingInterviews} интервью
+              </Badge>
               <Link href="/">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Назад
+                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white p-1 h-7 w-7">
+                  <ArrowLeft className="w-3 h-3" />
                 </Button>
               </Link>
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <Brain className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold text-white">Личный кабинет</span>
+            </div>
+          </div>
+
+          {/* Десктопная версия */}
+          <div className="hidden md:flex items-center justify-between py-1">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
               </div>
+              <span className="text-xl font-bold text-white">Careeros</span>
+            </div>
+
+            {/* Навигационное меню */}
+            <nav className="flex items-center space-x-6">
+              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+                Интервью
+              </Link>
+              <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
+                Сопроводительное письмо
+              </Link>
+              <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+                Найти вакансии
+              </Link>
+            </nav>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Badge className="bg-green-500/20 text-green-300 border-green-400">
+                  {remainingInterviews} интервью доступно
+                </Badge>
+                <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
+                  {currentUser.interviews_used} использовано
+                </Badge>
+              </div>
+              <Link href="/">
+                <Button
+                  variant="outline"
+                  className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 bg-transparent"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  На главную
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
