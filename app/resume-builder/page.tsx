@@ -220,7 +220,7 @@ export default function CoverLetterBuilderPage() {
               <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold text-white">Careeros</span>
+              <span className="text-lg font-bold text-white">CareerOS</span>
             </div>
             
             {/* Мобильные кнопки - только самое важное */}
@@ -274,7 +274,7 @@ export default function CoverLetterBuilderPage() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">Careeros</span>
+              <span className="text-xl font-bold text-white">CareerOS</span>
             </div>
 
             {/* Навигационное меню */}
@@ -679,7 +679,7 @@ export default function CoverLetterBuilderPage() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">Careeros</span>
+              <span className="text-xl font-bold text-white">CareerOS</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">
               Платформа для подготовки к техническим собеседованиям с использованием ИИ
@@ -697,7 +697,7 @@ export default function CoverLetterBuilderPage() {
             </div>
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-gray-500 text-xs">
-                © 2024 Careeros. Все права защищены.
+                © 2024 CareerOS. Все права защищены.
               </p>
             </div>
           </div>
