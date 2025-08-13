@@ -24,7 +24,10 @@ import {
   LogOut,
   MessageCircle,
   ExternalLink,
-  Mail
+  Mail,
+  Trophy,
+  Zap,
+  Rocket
 } from "lucide-react"
 import Link from "next/link"
 import { SupabaseAuthService } from "@/lib/auth-supabase"
@@ -61,6 +64,61 @@ const specialtyNames: Record<string, string> = {
 // Функция для получения читаемого названия специальности
 const getSpecialtyName = (specialtyId: string): string => {
   return specialtyNames[specialtyId] || specialtyId
+}
+
+// Система достижений
+interface Achievement {
+  id: string
+  title: string
+  description: string
+  icon: any
+  requirement: number
+  color: string
+  bgColor: string
+}
+
+const achievements: Achievement[] = [
+  {
+    id: 'first_interview',
+    title: 'Начало положено',
+    description: 'Пройдите первое интервью',
+    icon: Target,
+    requirement: 1,
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-500/20'
+  },
+  {
+    id: 'third_interview',
+    title: 'На правильном пути',
+    description: 'Пройдите 3 интервью',
+    icon: Rocket,
+    requirement: 3,
+    color: 'text-green-400',
+    bgColor: 'bg-green-500/20'
+  },
+  {
+    id: 'fifth_interview',
+    title: 'Опытный кандидат',
+    description: 'Пройдите 5 интервью',
+    icon: Star,
+    requirement: 5,
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-500/20'
+  },
+  {
+    id: 'tenth_interview',
+    title: 'Мастер собеседований',
+    description: 'Пройдите 10 интервью',
+    icon: Crown,
+    requirement: 10,
+    color: 'text-yellow-400',
+    bgColor: 'bg-yellow-500/20'
+  }
+]
+
+// Функция для получения заработанных достижений
+const getEarnedAchievements = (totalInterviews: number) => {
+  return achievements.filter(achievement => totalInterviews >= achievement.requirement)
 }
 
 export default function ProfilePage() {
@@ -295,13 +353,15 @@ export default function ProfilePage() {
           <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Использовано</CardTitle>
-                <Award className="w-4 h-4 text-orange-400" />
+                <CardTitle className="text-white text-sm font-medium">Достижения</CardTitle>
+                <Trophy className="w-4 h-4 text-yellow-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{currentUser.interviews_used}</div>
-              <p className="text-xs text-gray-300 mt-1">Из {currentUser.max_interviews} всего</p>
+              <div className="text-2xl font-bold text-white">
+                {getEarnedAchievements(totalInterviews).length}/{achievements.length}
+              </div>
+              <p className="text-xs text-gray-300 mt-1">Получено наград</p>
             </CardContent>
           </Card>
         </div>
@@ -311,6 +371,9 @@ export default function ProfilePage() {
           <TabsList className="bg-white/5 border-white/10">
             <TabsTrigger value="history" className="data-[state=active]:bg-white/10">
               История интервью
+            </TabsTrigger>
+            <TabsTrigger value="achievements" className="data-[state=active]:bg-white/10">
+              Достижения
             </TabsTrigger>
             <TabsTrigger value="stats" className="data-[state=active]:bg-white/10">
               Статистика
@@ -382,6 +445,112 @@ export default function ProfilePage() {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="achievements" className="space-y-6">
+            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Trophy className="w-5 h-5 mr-2 text-yellow-400" />
+                  Достижения
+                </CardTitle>
+                <CardDescription className="text-gray-300">
+                  Ваши успехи в прохождении интервью
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {achievements.map((achievement) => {
+                    const isEarned = totalInterviews >= achievement.requirement
+                    const IconComponent = achievement.icon
+                    
+                    return (
+                      <div
+                        key={achievement.id}
+                        className={`p-4 rounded-lg border transition-all ${
+                          isEarned
+                            ? `${achievement.bgColor} border-current ${achievement.color}`
+                            : 'bg-gray-800/50 border-gray-700 text-gray-500'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            isEarned ? achievement.bgColor : 'bg-gray-700'
+                          }`}>
+                            <IconComponent className={`w-6 h-6 ${
+                              isEarned ? achievement.color : 'text-gray-500'
+                            }`} />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className={`font-semibold ${
+                              isEarned ? 'text-white' : 'text-gray-500'
+                            }`}>
+                              {achievement.title}
+                            </h3>
+                            <p className={`text-sm ${
+                              isEarned ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                              {achievement.description}
+                            </p>
+                            <div className="mt-2">
+                              {isEarned ? (
+                                <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs">
+                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                  Получено
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-gray-700 text-gray-400 border-gray-600 text-xs">
+                                  {totalInterviews}/{achievement.requirement} интервью
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {!isEarned && (
+                          <div className="mt-3">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all"
+                                style={{ 
+                                  width: `${Math.min((totalInterviews / achievement.requirement) * 100, 100)}%` 
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+                
+                {/* Статистика достижений */}
+                <div className="mt-6 pt-6 border-t border-white/10">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-white font-medium">Прогресс достижений</h4>
+                      <p className="text-gray-400 text-sm">
+                        Получено {getEarnedAchievements(totalInterviews).length} из {achievements.length} достижений
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-white">
+                        {Math.round((getEarnedAchievements(totalInterviews).length / achievements.length) * 100)}%
+                      </div>
+                      <p className="text-gray-400 text-xs">завершено</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 w-full bg-gray-700 rounded-full h-3">
+                    <div
+                      className="bg-gradient-to-r from-yellow-500 to-orange-500 h-3 rounded-full transition-all"
+                      style={{ 
+                        width: `${(getEarnedAchievements(totalInterviews).length / achievements.length) * 100}%` 
+                      }}
+                    ></div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
