@@ -25,7 +25,10 @@ import {
   Zap,
   Code,
   Server,
-  Palette
+  Palette,
+  MessageCircle,
+  ExternalLink,
+  Mail
 } from "lucide-react"
 import Link from "next/link"
 
@@ -613,6 +616,80 @@ export default function DemoProfilePage() {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Help Section */}
+        <section className="py-12 md:py-16 px-4">
+          <div className="container mx-auto">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Нужна помощь?</h2>
+              <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+                Если у вас возникли проблемы или есть вопросы/предложения, пишите нам в Telegram бот
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <MessageCircle className="w-8 h-8 text-white" />
+                  </div>
+                  
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                    Telegram Bot поддержки
+                  </h3>
+                  
+                  <p className="text-gray-300 mb-2 text-lg font-mono">
+                    @careeros_bot
+                  </p>
+                  
+                  <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                    Пишите нам в любое время - отвечаем быстро! Поможем с любыми вопросами по платформе.
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a 
+                      href="https://t.me/careeros_bot" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3">
+                        <MessageCircle className="w-5 h-5 mr-2" />
+                        Написать в Telegram
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                      </Button>
+                    </a>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="border-blue-500/50 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 px-6 py-3 bg-transparent"
+                      onClick={() => window.open('mailto:support@careeros.ru', '_blank')}
+                    >
+                      <Mail className="w-5 h-5 mr-2" />
+                      Написать на email
+                    </Button>
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-white/10">
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-green-400" />
+                        <span>Быстрые ответы</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <span>Техническая поддержка</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-green-400" />
+                        <span>Предложения и отзывы</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
