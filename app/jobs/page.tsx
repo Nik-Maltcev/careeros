@@ -109,6 +109,9 @@ export default function JobsPage() {
             <div className="flex items-center">
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-1">
+                  <Link href="/profile" className="text-gray-400 hover:text-gray-300 transition-colors text-xs px-2 py-1">
+                    Личный кабинет
+                  </Link>
                   {currentUser.plan === 'premium' ? (
                     <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs px-2 py-1">
                       <Crown className="w-3 h-3 mr-1" />
@@ -167,6 +170,11 @@ export default function JobsPage() {
               <Link href="/jobs" className="text-blue-300 font-medium">
                 Найти вакансии
               </Link>
+              {currentUser && (
+                <Link href="/profile" className="text-gray-400 hover:text-gray-300 transition-colors text-sm">
+                  Личный кабинет
+                </Link>
+              )}
             </nav>
 
             <div className="flex items-center space-x-2 md:space-x-4">
@@ -512,6 +520,39 @@ export default function JobsPage() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-8 px-4">
+        <div className="container mx-auto">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-bold text-white">Careeros</span>
+            </div>
+            <p className="text-gray-400 text-sm mb-4">
+              Платформа для подготовки к техническим собеседованиям с использованием ИИ
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+              <Link href="/" className="hover:text-white transition-colors">
+                Интервью
+              </Link>
+              <Link href="/resume-builder" className="hover:text-white transition-colors">
+                Сопроводительное письмо
+              </Link>
+              <Link href="/jobs" className="hover:text-white transition-colors">
+                Найти вакансии
+              </Link>
+            </div>
+            <div className="mt-6 pt-6 border-t border-white/10">
+              <p className="text-gray-500 text-xs">
+                © 2024 Careeros. Все права защищены.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* Диалоги */}
       <AuthDialog 
