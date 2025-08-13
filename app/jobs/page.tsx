@@ -180,10 +180,10 @@ export default function JobsPage() {
             <div className="flex items-center space-x-2 md:space-x-4">
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-2">
-                  <Badge className="bg-blue-500/20 text-blue-300 border-blue-400 text-xs md:text-sm px-2 py-1">
-                    <User className="w-3 h-3 mr-1" />
+                  <Link href="/profile" className="bg-blue-500/20 text-blue-300 border border-blue-400 text-xs md:text-sm px-2 py-1 rounded hover:bg-blue-500/30 transition-colors">
+                    <User className="w-3 h-3 mr-1 inline" />
                     {currentUser.name}
-                  </Badge>
+                  </Link>
                   {currentUser.plan === 'premium' ? (
                     <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400 text-xs md:text-sm px-2 py-1">
                       <Crown className="w-3 h-3 mr-1" />
