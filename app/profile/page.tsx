@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import {
   User,
   TrendingUp,
@@ -27,7 +29,9 @@ import {
   Mail,
   Trophy,
   Zap,
-  Rocket
+  Rocket,
+  Send,
+  Gift
 } from "lucide-react"
 import Link from "next/link"
 import { SupabaseAuthService } from "@/lib/auth-supabase"
@@ -121,6 +125,150 @@ const getEarnedAchievements = (totalInterviews: number) => {
   return achievements.filter(achievement => totalInterviews >= achievement.requirement)
 }
 
+// Компонент формы обратной связи
+interface FeedbackFormProps {
+  currentUser: Profile
+  onSuccess: () => void
+}
+
+function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
+  const [feedback1, setFeedback1] = useState("")
+  const [feedback2, setFeedback2] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  // Проверяем, отправлял ли пользователь уже обратную связь
+  useEffect(() => {
+    const checkFeedbackStatus = async () => {
+      try {
+        const response = await fetch('/api/check-feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentUser.id })
+        })
+        const data = await response.json()
+        setIsSubmitted(data.hasSubmitted)
+      } catch (error) {
+        console.error('Error checking feedback status:', error)
+      }
+    }
+    
+    checkFeedbackStatus()
+  }, [currentUser.id])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!feedback1.trim() || !feedback2.trim()) {
+      alert('Пожалуйста, заполните все поля')
+      return
+    }
+
+    setIsSubmitting(true)
+    
+    try {
+      const response = await fetch('/api/submit-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          userEmail: currentUser.email,
+          userName: currentUser.name,
+          feedback1: feedback1.trim(),
+          feedback2: feedback2.trim()
+        })
+      })
+
+      if (response.ok) {
+        setIsSubmitted(true)
+        setFeedback1("")
+        setFeedback2("")
+        onSuccess()
+        alert('Спасибо за обратную связь! Вам начислено +1 бесплатное интервью 🎉')
+      } else {
+        const error = await response.json()
+        alert(error.message || 'Произошла ошибка при отправке')
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error)
+      alert('Произошла ошибка при отправке')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="text-center py-6">
+        <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Gift className="w-8 h-8 text-green-400" />
+        </div>
+        <h3 className="text-white font-medium mb-2">Спасибо за обратную связь!</h3>
+        <p className="text-gray-300 text-sm">
+          Вам уже начислено +1 бесплатное интервью за участие в улучшении сервиса
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="feedback1" className="text-white">
+          Что не устраивает в сервисе?
+        </Label>
+        <Textarea
+          id="feedback1"
+          placeholder="Расскажите, что можно улучшить, какие проблемы вы заметили..."
+          value={feedback1}
+          onChange={(e) => setFeedback1(e.target.value)}
+          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[80px]"
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="feedback2" className="text-white">
+          Как бы вы улучшили продукт?
+        </Label>
+        <Textarea
+          id="feedback2"
+          placeholder="Поделитесь идеями, какие функции добавить, что изменить..."
+          value={feedback2}
+          onChange={(e) => setFeedback2(e.target.value)}
+          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[80px]"
+          required
+        />
+      </div>
+
+      <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center space-x-2 text-sm text-gray-300">
+          <Gift className="w-4 h-4 text-green-400" />
+          <span>За отправку: <span className="text-green-400 font-medium">+1 интервью</span></span>
+        </div>
+        
+        <Button
+          type="submit"
+          disabled={isSubmitting || !feedback1.trim() || !feedback2.trim()}
+          className="bg-green-600 hover:bg-green-700 text-white"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              Отправляем...
+            </>
+          ) : (
+            <>
+              <Send className="w-4 h-4 mr-2" />
+              Отправить
+            </>
+          )}
+        </Button>
+      </div>
+    </form>
+  )
+}
+
 export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [interviewHistory, setInterviewHistory] = useState<InterviewResult[]>([])
@@ -211,7 +359,7 @@ export default function ProfilePage() {
               <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold text-white">Careeros</span>
+              <span className="text-lg font-bold text-white">CareerOS</span>
             </div>
             
             <div className="flex items-center space-x-2">
@@ -232,7 +380,7 @@ export default function ProfilePage() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">Careeros</span>
+              <span className="text-xl font-bold text-white">CareerOS</span>
             </div>
 
             {/* Навигационное меню */}
@@ -245,9 +393,6 @@ export default function ProfilePage() {
               </Link>
               <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
                 Найти вакансии
-              </Link>
-              <Link href="/demo" className="text-gray-400 hover:text-gray-300 transition-colors text-sm">
-                Демо
               </Link>
             </nav>
 
@@ -631,6 +776,25 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
+            {/* Форма обратной связи */}
+            <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <MessageCircle className="w-5 h-5 mr-2 text-green-400" />
+                  Обратная связь
+                </CardTitle>
+                <CardDescription className="text-gray-300">
+                  Поделитесь мнением о сервисе и получите <span className="text-green-400 font-medium">+1 бесплатное интервью</span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FeedbackForm currentUser={currentUser} onSuccess={() => {
+                  // Обновляем количество интервью после успешной отправки
+                  InterviewManager.getRemainingInterviews().then(setRemainingInterviews)
+                }} />
+              </CardContent>
+            </Card>
+
             <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-white">Настройки аккаунта</CardTitle>
