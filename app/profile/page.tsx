@@ -132,8 +132,10 @@ interface FeedbackFormProps {
 }
 
 function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
-  const [feedback1, setFeedback1] = useState("")
-  const [feedback2, setFeedback2] = useState("")
+  const [stage, setStage] = useState("")
+  const [purpose, setPurpose] = useState("")
+  const [liked, setLiked] = useState("")
+  const [improvements, setImprovements] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -159,7 +161,7 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!feedback1.trim() || !feedback2.trim()) {
+    if (!stage || !purpose || !liked.trim() || !improvements.trim()) {
       alert('Пожалуйста, заполните все поля')
       return
     }
@@ -174,15 +176,19 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
           userId: currentUser.id,
           userEmail: currentUser.email,
           userName: currentUser.name,
-          feedback1: feedback1.trim(),
-          feedback2: feedback2.trim()
+          stage,
+          purpose,
+          liked: liked.trim(),
+          improvements: improvements.trim()
         })
       })
 
       if (response.ok) {
         setIsSubmitted(true)
-        setFeedback1("")
-        setFeedback2("")
+        setStage("")
+        setPurpose("")
+        setLiked("")
+        setImprovements("")
         onSuccess()
         alert('Спасибо за обратную связь! Вам начислено +1 бесплатное интервью 🎉')
       } else {
@@ -214,28 +220,64 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="feedback1" className="text-white">
-          Что не устраивает в сервисе?
+        <Label htmlFor="stage" className="text-white">
+          На каком этапе поиска сейчас находитесь?
+        </Label>
+        <select
+          id="stage"
+          value={stage}
+          onChange={(e) => setStage(e.target.value)}
+          className="w-full bg-white/10 border border-white/20 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none cursor-pointer"
+          required
+        >
+          <option value="" className="bg-gray-800">Выберите вариант</option>
+          <option value="learning" className="bg-gray-800">Прохожу обучение</option>
+          <option value="job-searching" className="bg-gray-800">Ищу работу</option>
+          <option value="self-development" className="bg-gray-800">Прохожу просто для себя</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="purpose" className="text-white">
+          Для чего проходите интервью?
+        </Label>
+        <select
+          id="purpose"
+          value={purpose}
+          onChange={(e) => setPurpose(e.target.value)}
+          className="w-full bg-white/10 border border-white/20 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none cursor-pointer"
+          required
+        >
+          <option value="" className="bg-gray-800">Выберите вариант</option>
+          <option value="fear-of-interviews" className="bg-gray-800">У меня боязнь интервью</option>
+          <option value="future-preparation" className="bg-gray-800">Готовлюсь на будущее</option>
+          <option value="practice-after-rejections" className="bg-gray-800">У меня были отказы и я практикуюсь</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="liked" className="text-white">
+          Что понравилось?
         </Label>
         <Textarea
-          id="feedback1"
-          placeholder="Расскажите, что можно улучшить, какие проблемы вы заметили..."
-          value={feedback1}
-          onChange={(e) => setFeedback1(e.target.value)}
+          id="liked"
+          placeholder="Расскажите, что вам больше всего понравилось в сервисе..."
+          value={liked}
+          onChange={(e) => setLiked(e.target.value)}
           className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[80px]"
           required
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="feedback2" className="text-white">
-          Как бы вы улучшили продукт?
+        <Label htmlFor="improvements" className="text-white">
+          Чего не хватило? Что можно улучшить?
         </Label>
         <Textarea
-          id="feedback2"
-          placeholder="Поделитесь идеями, какие функции добавить, что изменить..."
-          value={feedback2}
-          onChange={(e) => setFeedback2(e.target.value)}
+          id="improvements"
+          placeholder="Поделитесь идеями, что добавить или изменить для улучшения сервиса..."
+          value={improvements}
+          onChange={(e) => setImprovements(e.target.value)}
           className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[80px]"
           required
         />
@@ -249,7 +291,7 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
         
         <Button
           type="submit"
-          disabled={isSubmitting || !feedback1.trim() || !feedback2.trim()}
+          disabled={isSubmitting || !stage || !purpose || !liked.trim() || !improvements.trim()}
           className="bg-green-600 hover:bg-green-700 text-white"
         >
           {isSubmitting ? (

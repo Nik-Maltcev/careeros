@@ -3,9 +3,9 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, userEmail, userName, feedback1, feedback2 } = await request.json()
+    const { userId, userEmail, userName, stage, purpose, liked, improvements } = await request.json()
 
-    if (!userId || !feedback1 || !feedback2) {
+    if (!userId || !stage || !purpose || !liked || !improvements) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
 
@@ -27,8 +27,10 @@ export async function POST(request: NextRequest) {
         user_id: userId,
         user_email: userEmail,
         user_name: userName,
-        question1: feedback1,
-        question2: feedback2,
+        stage: stage,
+        purpose: purpose,
+        liked: liked,
+        improvements: improvements,
         created_at: new Date().toISOString()
       })
 

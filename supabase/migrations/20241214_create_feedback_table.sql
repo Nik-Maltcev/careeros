@@ -4,8 +4,10 @@ CREATE TABLE IF NOT EXISTS feedback (
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   user_email TEXT NOT NULL,
   user_name TEXT NOT NULL,
-  question1 TEXT NOT NULL, -- Что не устраивает в сервисе
-  question2 TEXT NOT NULL, -- Как бы вы улучшили продукт
+  stage TEXT NOT NULL, -- На каком этапе поиска находится
+  purpose TEXT NOT NULL, -- Для чего проходит интервью
+  liked TEXT NOT NULL, -- Что понравилось
+  improvements TEXT NOT NULL, -- Чего не хватило, что улучшить
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   
   -- Индексы для быстрого поиска
@@ -24,5 +26,7 @@ CREATE POLICY "Users can insert their own feedback" ON feedback
 
 -- Комментарии к таблице
 COMMENT ON TABLE feedback IS 'Таблица для хранения обратной связи от пользователей';
-COMMENT ON COLUMN feedback.question1 IS 'Ответ на вопрос: Что не устраивает в сервисе?';
-COMMENT ON COLUMN feedback.question2 IS 'Ответ на вопрос: Как бы вы улучшили продукт?';
+COMMENT ON COLUMN feedback.stage IS 'На каком этапе поиска находится: learning, job-searching, self-development';
+COMMENT ON COLUMN feedback.purpose IS 'Для чего проходит интервью: fear-of-interviews, future-preparation, practice-after-rejections';
+COMMENT ON COLUMN feedback.liked IS 'Что понравилось в сервисе';
+COMMENT ON COLUMN feedback.improvements IS 'Чего не хватило, что можно улучшить';
