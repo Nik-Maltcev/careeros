@@ -205,58 +205,65 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
 
   if (isSubmitted) {
     return (
-      <div className="text-center py-6">
-        <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Gift className="w-8 h-8 text-green-400" />
+      <div className="text-center py-8">
+        <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Gift className="w-10 h-10 text-blue-400" />
         </div>
-        <h3 className="text-white font-medium mb-2">Спасибо за обратную связь!</h3>
-        <p className="text-gray-300 text-sm">
-          Вам уже начислено +1 бесплатное интервью за участие в улучшении сервиса
+        <h3 className="text-white font-semibold text-lg mb-2">Спасибо за обратную связь!</h3>
+        <p className="text-gray-300">
+          Вам уже начислено <span className="text-blue-400 font-medium">+1 бесплатное интервью</span> за участие в улучшении сервиса
         </p>
+        <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <p className="text-blue-300 text-sm">
+            Ваше мнение поможет нам сделать платформу еще лучше! 🚀
+          </p>
+        </div>
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="stage" className="text-white">
-          На каком этапе поиска сейчас находитесь?
-        </Label>
-        <select
-          id="stage"
-          value={stage}
-          onChange={(e) => setStage(e.target.value)}
-          className="w-full bg-white/10 border border-white/20 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none cursor-pointer"
-          required
-        >
-          <option value="" className="bg-gray-800">Выберите вариант</option>
-          <option value="learning" className="bg-gray-800">Прохожу обучение</option>
-          <option value="job-searching" className="bg-gray-800">Ищу работу</option>
-          <option value="self-development" className="bg-gray-800">Прохожу просто для себя</option>
-        </select>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="stage" className="text-white font-medium">
+            На каком этапе поиска сейчас находитесь?
+          </Label>
+          <select
+            id="stage"
+            value={stage}
+            onChange={(e) => setStage(e.target.value)}
+            className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+            required
+          >
+            <option value="" className="bg-slate-800 text-gray-400">Выберите вариант</option>
+            <option value="learning" className="bg-slate-800 text-white">Прохожу обучение</option>
+            <option value="job-searching" className="bg-slate-800 text-white">Ищу работу</option>
+            <option value="self-development" className="bg-slate-800 text-white">Прохожу просто для себя</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="purpose" className="text-white font-medium">
+            Для чего проходите интервью?
+          </Label>
+          <select
+            id="purpose"
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+            className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+            required
+          >
+            <option value="" className="bg-slate-800 text-gray-400">Выберите вариант</option>
+            <option value="fear-of-interviews" className="bg-slate-800 text-white">У меня боязнь интервью</option>
+            <option value="future-preparation" className="bg-slate-800 text-white">Готовлюсь на будущее</option>
+            <option value="practice-after-rejections" className="bg-slate-800 text-white">У меня были отказы и я практикуюсь</option>
+          </select>
+        </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="purpose" className="text-white">
-          Для чего проходите интервью?
-        </Label>
-        <select
-          id="purpose"
-          value={purpose}
-          onChange={(e) => setPurpose(e.target.value)}
-          className="w-full bg-white/10 border border-white/20 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none cursor-pointer"
-          required
-        >
-          <option value="" className="bg-gray-800">Выберите вариант</option>
-          <option value="fear-of-interviews" className="bg-gray-800">У меня боязнь интервью</option>
-          <option value="future-preparation" className="bg-gray-800">Готовлюсь на будущее</option>
-          <option value="practice-after-rejections" className="bg-gray-800">У меня были отказы и я практикуюсь</option>
-        </select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="liked" className="text-white">
+        <Label htmlFor="liked" className="text-white font-medium">
           Что понравилось?
         </Label>
         <Textarea
@@ -264,13 +271,13 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
           placeholder="Расскажите, что вам больше всего понравилось в сервисе..."
           value={liked}
           onChange={(e) => setLiked(e.target.value)}
-          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[80px]"
+          className="bg-slate-800 border-slate-600 text-white placeholder:text-gray-400 min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="improvements" className="text-white">
+        <Label htmlFor="improvements" className="text-white font-medium">
           Чего не хватило? Что можно улучшить?
         </Label>
         <Textarea
@@ -278,21 +285,21 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
           placeholder="Поделитесь идеями, что добавить или изменить для улучшения сервиса..."
           value={improvements}
           onChange={(e) => setImprovements(e.target.value)}
-          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[80px]"
+          className="bg-slate-800 border-slate-600 text-white placeholder:text-gray-400 min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
         />
       </div>
 
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between pt-4 border-t border-slate-600">
         <div className="flex items-center space-x-2 text-sm text-gray-300">
-          <Gift className="w-4 h-4 text-green-400" />
-          <span>За отправку: <span className="text-green-400 font-medium">+1 интервью</span></span>
+          <Gift className="w-5 h-5 text-blue-400" />
+          <span>За отправку: <span className="text-blue-400 font-medium">+1 интервью</span></span>
         </div>
         
         <Button
           type="submit"
           disabled={isSubmitting || !stage || !purpose || !liked.trim() || !improvements.trim()}
-          className="bg-green-600 hover:bg-green-700 text-white"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
         >
           {isSubmitting ? (
             <>
@@ -571,6 +578,25 @@ export default function ProfilePage() {
           </TabsList>
 
           <TabsContent value="history" className="space-y-4">
+            {/* Форма обратной связи */}
+            <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <MessageCircle className="w-5 h-5 mr-2 text-blue-400" />
+                  Поделитесь опытом использования
+                </CardTitle>
+                <CardDescription className="text-gray-300">
+                  Помогите нам улучшить сервис и получите <span className="text-blue-400 font-medium">+1 бесплатное интервью</span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FeedbackForm currentUser={currentUser} onSuccess={() => {
+                  // Обновляем количество интервью после успешной отправки
+                  InterviewManager.getRemainingInterviews().then(setRemainingInterviews)
+                }} />
+              </CardContent>
+            </Card>
+
             <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-white">История интервью</CardTitle>
@@ -818,25 +844,6 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
-            {/* Форма обратной связи */}
-            <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <MessageCircle className="w-5 h-5 mr-2 text-green-400" />
-                  Обратная связь
-                </CardTitle>
-                <CardDescription className="text-gray-300">
-                  Поделитесь мнением о сервисе и получите <span className="text-green-400 font-medium">+1 бесплатное интервью</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FeedbackForm currentUser={currentUser} onSuccess={() => {
-                  // Обновляем количество интервью после успешной отправки
-                  InterviewManager.getRemainingInterviews().then(setRemainingInterviews)
-                }} />
-              </CardContent>
-            </Card>
-
             <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-white">Настройки аккаунта</CardTitle>
