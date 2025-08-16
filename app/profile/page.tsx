@@ -448,7 +448,7 @@ export default function ProfilePage() {
             </nav>
 
             <div className="flex items-center space-x-4">
-              <VpnWarning variant="header" />
+              <VpnWarning />
               <div className="flex items-center space-x-2">
                 <Badge className="bg-green-500/20 text-green-300 border-green-400">
                   {remainingInterviews} интервью доступно

@@ -293,7 +293,7 @@ export default function CoverLetterBuilderPage() {
             </nav>
 
             <div className="flex items-center space-x-2 md:space-x-4">
-              <VpnWarning variant="header" />
+              <VpnWarning />
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-2">
                   <Link href="/profile">
