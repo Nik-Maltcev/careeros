@@ -23,6 +23,7 @@ import {
   Lightbulb,
   Star,
   Loader2,
+  Clock,
 } from "lucide-react"
 
 interface CriteriaScore {
