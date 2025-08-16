@@ -38,6 +38,7 @@ import { SupabaseAuthService } from "@/lib/auth-supabase"
 import { AuthDialog } from "@/components/auth-dialog"
 import { PricingDialog } from "@/components/pricing-dialog"
 import { isSupabaseConfigured, type Profile } from "@/lib/supabase"
+import { VpnWarning, VpnWarningMobile } from "@/components/vpn-warning"
 
 const specialties = [
   {
@@ -312,6 +313,9 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* VPN Warning Sticky */}
+      <VpnWarning variant="sticky" />
+      
       {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
         <div className="container mx-auto px-4 py-3">
@@ -322,6 +326,7 @@ export default function LandingPage() {
                 <Brain className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-bold text-white">CareerOS</span>
+              <VpnWarningMobile />
             </div>
             
             {/* Мобильные кнопки - только самое важное */}
@@ -389,6 +394,7 @@ export default function LandingPage() {
             </nav>
 
             <div className="flex items-center space-x-2 md:space-x-4">
+              <VpnWarning variant="header" />
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-2">
                   <Link href="/profile">

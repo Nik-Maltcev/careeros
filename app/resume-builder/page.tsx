@@ -36,6 +36,7 @@ import { AuthDialog } from "@/components/auth-dialog"
 import { PricingDialog } from "@/components/pricing-dialog"
 import { isSupabaseConfigured, type Profile } from "@/lib/supabase"
 import { InterviewManager } from "@/lib/interview-manager"
+import { VpnWarning, VpnWarningMobile } from "@/components/vpn-warning"
 
 interface GenerationStep {
   id: string
@@ -221,6 +222,7 @@ export default function CoverLetterBuilderPage() {
                 <Brain className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-bold text-white">CareerOS</span>
+              <VpnWarningMobile />
             </div>
             
             {/* Мобильные кнопки - только самое важное */}
@@ -291,6 +293,7 @@ export default function CoverLetterBuilderPage() {
             </nav>
 
             <div className="flex items-center space-x-2 md:space-x-4">
+              <VpnWarning variant="header" />
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-2">
                   <Link href="/profile">

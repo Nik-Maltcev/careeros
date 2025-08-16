@@ -37,6 +37,7 @@ import Link from "next/link"
 import { SupabaseAuthService } from "@/lib/auth-supabase"
 import { InterviewManager } from "@/lib/interview-manager"
 import { type Profile } from "@/lib/supabase"
+import { VpnWarning, VpnWarningMobile } from "@/components/vpn-warning"
 
 interface InterviewResult {
   id: string
@@ -409,6 +410,7 @@ export default function ProfilePage() {
                 <Brain className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-bold text-white">CareerOS</span>
+              <VpnWarningMobile />
             </div>
             
             <div className="flex items-center space-x-2">
@@ -446,6 +448,7 @@ export default function ProfilePage() {
             </nav>
 
             <div className="flex items-center space-x-4">
+              <VpnWarning variant="header" />
               <div className="flex items-center space-x-2">
                 <Badge className="bg-green-500/20 text-green-300 border-green-400">
                   {remainingInterviews} интервью доступно
