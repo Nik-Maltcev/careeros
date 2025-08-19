@@ -17,7 +17,19 @@ async function generateQuestionFeedback(
   model: string
 ): Promise<QuestionFeedback[]> {
   const feedbackPromises = responses.map(async (response, index) => {
-    const answerText = response.response || "Ответ не предоставлен"
+    const answerText = response.response || ""
+    const isAnswered = answerText && answerText.trim() !== "" && answerText !== "Не отвечен"
+
+    if (!isAnswered) {
+      return {
+        questionId: index + 1,
+        questionText: response.question,
+        feedback: "Ответ на вопрос не был предоставлен.",
+        score: 2,
+        strengths: [],
+        improvements: ["Необходимо изучить эту тему и подготовить ответ."],
+      }
+    }
 
     const prompt = `Ты мотивирующий эксперт по техническим собеседованиям в IT. Твоя цель - сохранить высокую мотивацию кандидата без потери объективности.
 
@@ -527,9 +539,9 @@ function generateCorrectedDemoAnalysis(responses: any[], specialty: string) {
     if (!answerText || answerText === "Не отвечен" || answerText.trim().length === 0) {
       // Нет ответа
       score = 2
-      feedback = "Демо-режим: Вопрос не был отвечен. Рекомендуется изучить тему и подготовить ответ."
-      strengths = ["Участие в интервью"]
-      improvements = ["Изучить основы темы", "Подготовить ответ на вопрос"]
+      feedback = "Ответ на вопрос не был предоставлен."
+      strengths = []
+      improvements = ["Необходимо изучить эту тему и подготовить ответ."]
     } else {
       // Анализируем содержание ответа
       const hasKeywords = analyzeAnswerContent(answerText, question, specialty)
