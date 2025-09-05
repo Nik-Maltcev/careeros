@@ -142,6 +142,23 @@ export default function LandingPage() {
   const [showAuthDialog, setShowAuthDialog] = useState(false)
   const [showPricingDialog, setShowPricingDialog] = useState(false)
 
+  // Функция для правильного склонения слова "попытка"
+  const formatAttempts = (num: number) => {
+    const lastDigit = num % 10
+    const lastTwoDigits = num % 100
+
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+      return "попыток"
+    }
+    if (lastDigit === 1) {
+      return "попытка"
+    }
+    if (lastDigit >= 2 && lastDigit <= 4) {
+      return "попытки"
+    }
+    return "попыток"
+  }
+
   useEffect(() => {
     setIsClient(true)
     
@@ -337,7 +354,7 @@ export default function LandingPage() {
                     </Badge>
                   ) : (
                     <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
-                      {remainingInterviews} интервью
+                      {remainingInterviews} {formatAttempts(remainingInterviews)}
                     </Badge>
                   )}
                   <Button
@@ -352,7 +369,7 @@ export default function LandingPage() {
               ) : isClient ? (
                 <div className="flex items-center space-x-1">
                   <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
-                    {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
+                    {remainingInterviews} {formatAttempts(remainingInterviews)}
                   </Badge>
                   <Button
                     size="sm"
@@ -411,7 +428,7 @@ export default function LandingPage() {
                     </Badge>
                   ) : (
                     <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                      {remainingInterviews} интервью
+                      {remainingInterviews} {formatAttempts(remainingInterviews)}
                     </Badge>
                   )}
 
@@ -427,7 +444,7 @@ export default function LandingPage() {
               ) : isClient ? (
                 <div className="flex items-center space-x-2">
                   <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
-                    {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
+                    {remainingInterviews} {formatAttempts(remainingInterviews)}
                   </Badge>
                   <Button
                     size="sm"
