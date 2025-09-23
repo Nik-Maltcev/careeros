@@ -964,6 +964,30 @@ export default function LandingPage() {
                 Сопроводительное письмо
               </Link>
             </div>
+            <div className="mt-8 pt-8 border-t border-white/10 text-xs text-gray-400">
+              <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 text-left">
+                <div>
+                  <h4 className="font-bold text-sm text-white mb-2">Реквизиты Исполнителя</h4>
+                  <p>Полное наименование:</p>
+                  <p>ИНН: 165924805367</p>
+                  <p>ОГРН/ОГРНИП:</p>
+                  <p>Контактный телефон: <a href="tel:+79003242125" className="hover:text-white">+7 900 324-21-25</a></p>
+                  <p>Контактный e-mail: <a href="mailto:nikmaltcev@vk.com" className="hover:text-white">nikmaltcev@vk.com</a></p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-white mb-2">Юридическая информация</h4>
+                  <a href="https://docs.google.com/document/d/1zL0IVdekD7hRbH0oLXce305wK2vihhYeOye9XqmZ-LA/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="block hover:text-white transition-colors mb-1">
+                    Оферта
+                  </a>
+                  <a href="https://docs.google.com/document/d/1246j4yie5ZNovJoOZ5HlcL8uCZejeb8jTPRp9My692g/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="block hover:text-white transition-colors mb-1">
+                    Согласие на обработку персональных данных
+                  </a>
+                  <a href="https://docs.google.com/document/d/1gAtv0dwzobwDbc2hT5XxKJpBPZBsL22VEwSc2OkRUaE/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="block hover:text-white transition-colors">
+                    Политика обработки персональных данных
+                  </a>
+                </div>
+              </div>
+            </div>
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-gray-500 text-xs">
                 © 2024 CareerOS. Все права защищены.
