@@ -12,6 +12,14 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		container: {
+  			center: true,
+  			padding: {
+  				DEFAULT: "1.5rem",
+  				lg: "2rem",
+  				"2xl": "3rem"
+  			}
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -68,6 +76,10 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		fontFamily: {
+  			sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+  			display: ['var(--font-display)', 'var(--font-sans)', 'system-ui', 'sans-serif']
   		},
   		keyframes: {
   			'accordion-down': {

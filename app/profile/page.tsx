@@ -90,7 +90,7 @@ const achievements: Achievement[] = [
     icon: Target,
     requirement: 1,
     color: 'text-blue-400',
-    bgColor: 'bg-blue-500/20'
+    bgColor: 'bg-sky-50'
   },
   {
     id: 'third_interview',
@@ -98,8 +98,8 @@ const achievements: Achievement[] = [
     description: 'Пройдите 3 интервью',
     icon: Rocket,
     requirement: 3,
-    color: 'text-green-400',
-    bgColor: 'bg-green-500/20'
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50'
   },
   {
     id: 'fifth_interview',
@@ -207,15 +207,15 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
   if (isSubmitted) {
     return (
       <div className="text-center py-8">
-        <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="w-20 h-20 bg-sky-50 rounded-full flex items-center justify-center mx-auto mb-6">
           <Gift className="w-10 h-10 text-blue-400" />
         </div>
-        <h3 className="text-white font-bold text-xl mb-3">Спасибо за обратную связь!</h3>
-        <p className="text-gray-200 text-lg mb-4">
+        <h3 className="text-foreground font-bold text-xl mb-3">Спасибо за обратную связь!</h3>
+        <p className="text-muted-foreground/80 text-lg mb-4">
           Вам уже начислено <span className="text-blue-400 font-bold">+1 бесплатное интервью</span>
         </p>
         <div className="mt-6 p-4 bg-blue-500/10 border-2 border-blue-500/30 rounded-lg">
-          <p className="text-blue-200 font-medium">
+          <p className="text-sky-500 font-medium">
             Ваше мнение поможет нам сделать платформу еще лучше! 🚀
           </p>
         </div>
@@ -227,44 +227,44 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
-          <Label htmlFor="stage" className="text-white font-semibold text-sm">
+          <Label htmlFor="stage" className="text-foreground font-semibold text-sm">
             На каком этапе поиска сейчас находитесь?
           </Label>
           <select
             id="stage"
             value={stage}
             onChange={(e) => setStage(e.target.value)}
-            className="w-full bg-gray-900 border-2 border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 appearance-none cursor-pointer hover:border-gray-600 transition-colors"
+            className="w-full bg-white border-2 border-border/60 text-foreground rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer hover:border-border/80 transition-colors"
             required
           >
-            <option value="" className="bg-gray-900 text-gray-400">Выберите вариант</option>
-            <option value="learning" className="bg-gray-900 text-white">Прохожу обучение</option>
-            <option value="job-searching" className="bg-gray-900 text-white">Ищу работу</option>
-            <option value="self-development" className="bg-gray-900 text-white">Прохожу просто для себя</option>
+            <option value="" className="bg-white text-muted-foreground">Выберите вариант</option>
+            <option value="learning" className="bg-white text-foreground">Прохожу обучение</option>
+            <option value="job-searching" className="bg-white text-foreground">Ищу работу</option>
+            <option value="self-development" className="bg-white text-foreground">Прохожу просто для себя</option>
           </select>
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="purpose" className="text-white font-semibold text-sm">
+          <Label htmlFor="purpose" className="text-foreground font-semibold text-sm">
             Для чего проходите интервью?
           </Label>
           <select
             id="purpose"
             value={purpose}
             onChange={(e) => setPurpose(e.target.value)}
-            className="w-full bg-gray-900 border-2 border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 appearance-none cursor-pointer hover:border-gray-600 transition-colors"
+            className="w-full bg-white border-2 border-border/60 text-foreground rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer hover:border-border/80 transition-colors"
             required
           >
-            <option value="" className="bg-gray-900 text-gray-400">Выберите вариант</option>
-            <option value="fear-of-interviews" className="bg-gray-900 text-white">У меня боязнь интервью</option>
-            <option value="future-preparation" className="bg-gray-900 text-white">Готовлюсь на будущее</option>
-            <option value="practice-after-rejections" className="bg-gray-900 text-white">У меня были отказы и я практикуюсь</option>
+            <option value="" className="bg-white text-muted-foreground">Выберите вариант</option>
+            <option value="fear-of-interviews" className="bg-white text-foreground">У меня боязнь интервью</option>
+            <option value="future-preparation" className="bg-white text-foreground">Готовлюсь на будущее</option>
+            <option value="practice-after-rejections" className="bg-white text-foreground">У меня были отказы и я практикуюсь</option>
           </select>
         </div>
       </div>
 
       <div className="space-y-3">
-        <Label htmlFor="liked" className="text-white font-semibold text-sm">
+        <Label htmlFor="liked" className="text-foreground font-semibold text-sm">
           Что понравилось?
         </Label>
         <Textarea
@@ -272,13 +272,13 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
           placeholder="Расскажите, что вам больше всего понравилось в сервисе..."
           value={liked}
           onChange={(e) => setLiked(e.target.value)}
-          className="bg-gray-900 border-2 border-gray-700 text-white placeholder:text-gray-400 min-h-[100px] focus:ring-2 focus:ring-blue-400 focus:border-blue-400 hover:border-gray-600 transition-colors"
+          className="bg-white border-2 border-border/60 text-foreground placeholder:text-muted-foreground min-h-[100px] focus:ring-2 focus:ring-primary focus:border-primary hover:border-border/80 transition-colors"
           required
         />
       </div>
 
       <div className="space-y-3">
-        <Label htmlFor="improvements" className="text-white font-semibold text-sm">
+        <Label htmlFor="improvements" className="text-foreground font-semibold text-sm">
           Чего не хватило? Что можно улучшить?
         </Label>
         <Textarea
@@ -286,13 +286,13 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
           placeholder="Поделитесь идеями, что добавить или изменить для улучшения сервиса..."
           value={improvements}
           onChange={(e) => setImprovements(e.target.value)}
-          className="bg-gray-900 border-2 border-gray-700 text-white placeholder:text-gray-400 min-h-[100px] focus:ring-2 focus:ring-blue-400 focus:border-blue-400 hover:border-gray-600 transition-colors"
+          className="bg-white border-2 border-border/60 text-foreground placeholder:text-muted-foreground min-h-[100px] focus:ring-2 focus:ring-primary focus:border-primary hover:border-border/80 transition-colors"
           required
         />
       </div>
 
-      <div className="flex items-center justify-between pt-6 border-t-2 border-gray-700">
-        <div className="flex items-center space-x-2 text-gray-300">
+      <div className="flex items-center justify-between pt-6 border-t-2 border-border/60">
+        <div className="flex items-center space-x-2 text-muted-foreground">
           <Gift className="w-5 h-5 text-blue-400" />
           <span className="font-medium">За отправку: <span className="text-blue-400 font-semibold">+1 интервью</span></span>
         </div>
@@ -300,7 +300,7 @@ function FeedbackForm({ currentUser, onSuccess }: FeedbackFormProps) {
         <Button
           type="submit"
           disabled={isSubmitting || !stage || !purpose || !liked.trim() || !improvements.trim()}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+          className="bg-primary hover:bg-primary/90 disabled:bg-gray-600 text-foreground font-semibold px-8 py-3 rounded-lg transition-colors"
         >
           {isSubmitting ? (
             <>
@@ -350,10 +350,10 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white">Загрузка профиля...</p>
+          <p className="text-foreground">Загрузка профиля...</p>
         </div>
       </div>
     )
@@ -361,11 +361,11 @@ export default function ProfilePage() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Необходима авторизация</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Необходима авторизация</h1>
           <Link href="/">
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-primary hover:bg-primary/90">
               Вернуться на главную
             </Button>
           </Link>
@@ -399,26 +399,26 @@ export default function ProfilePage() {
     .slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
+      <header className="border-b border-border/60 backdrop-blur-sm bg-white/90">
         <div className="container mx-auto px-4 py-3">
           {/* Мобильная версия */}
           <div className="flex md:hidden items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-4 h-4 text-white" />
+                <Brain className="w-4 h-4 text-foreground" />
               </div>
-              <span className="text-lg font-bold text-white">CareerOS</span>
+              <span className="text-lg font-bold text-foreground">CareerOS</span>
               <VpnWarningMobile />
             </div>
             
             <div className="flex items-center space-x-2">
-              <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+              <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs px-2 py-1">
                 {remainingInterviews} интервью
               </Badge>
               <Link href="/">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white p-1 h-7 w-7">
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground p-1 h-7 w-7">
                   <ArrowLeft className="w-3 h-3" />
                 </Button>
               </Link>
@@ -429,20 +429,20 @@ export default function ProfilePage() {
           <div className="hidden md:flex items-center justify-between py-1">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">CareerOS</span>
+              <span className="text-xl font-bold text-foreground">CareerOS</span>
             </div>
 
             {/* Навигационное меню */}
             <nav className="flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/" className="text-foreground hover:text-sky-600 transition-colors">
                 Интервью
               </Link>
-              <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/resume-builder" className="text-foreground hover:text-sky-600 transition-colors">
                 Сопроводительное письмо
               </Link>
-              <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/jobs" className="text-foreground hover:text-sky-600 transition-colors">
                 Найти вакансии
               </Link>
             </nav>
@@ -450,10 +450,10 @@ export default function ProfilePage() {
             <div className="flex items-center space-x-4">
               <VpnWarning />
               <div className="flex items-center space-x-2">
-                <Badge className="bg-green-500/20 text-green-300 border-green-400">
+                <Badge className="bg-emerald-50 text-emerald-500 border-green-400">
                   {remainingInterviews} интервью доступно
                 </Badge>
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
+                <Badge className="bg-sky-50 text-sky-600 border-blue-400">
                   {currentUser.interviews_used} использовано
                 </Badge>
               </div>
@@ -481,21 +481,21 @@ export default function ProfilePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Profile Header */}
         <div className="mb-8">
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <User className="w-8 h-8 text-white" />
+                    <User className="w-8 h-8 text-foreground" />
                   </div>
                   <div>
-                    <CardTitle className="text-white text-2xl">{currentUser.name}</CardTitle>
-                    <CardDescription className="text-gray-300">{currentUser.email}</CardDescription>
+                    <CardTitle className="text-foreground text-2xl">{currentUser.name}</CardTitle>
+                    <CardDescription className="text-muted-foreground">{currentUser.email}</CardDescription>
                     <div className="flex items-center space-x-2 mt-2">
-                      <Badge className="bg-green-500/20 text-green-300 border-green-400">
+                      <Badge className="bg-emerald-50 text-emerald-500 border-green-400">
                         {remainingInterviews} интервью доступно
                       </Badge>
-                      <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
+                      <Badge className="bg-sky-50 text-sky-600 border-blue-400">
                         {currentUser.interviews_used} использовано
                       </Badge>
                     </div>
@@ -511,90 +511,90 @@ export default function ProfilePage() {
           <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Всего интервью</CardTitle>
+                <CardTitle className="text-foreground text-sm font-medium">Всего интервью</CardTitle>
                 <BarChart3 className="w-4 h-4 text-blue-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{totalInterviews}</div>
-              <p className="text-xs text-gray-300 mt-1">Пройдено интервью</p>
+              <div className="text-2xl font-bold text-foreground">{totalInterviews}</div>
+              <p className="text-xs text-muted-foreground mt-1">Пройдено интервью</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Средний балл</CardTitle>
-                <Target className="w-4 h-4 text-green-400" />
+                <CardTitle className="text-foreground text-sm font-medium">Средний балл</CardTitle>
+                <Target className="w-4 h-4 text-emerald-600" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{averageScore}/10</div>
-              <p className="text-xs text-gray-300 mt-1">По всем интервью</p>
+              <div className="text-2xl font-bold text-foreground">{averageScore}/10</div>
+              <p className="text-xs text-muted-foreground mt-1">По всем интервью</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Доступно</CardTitle>
+                <CardTitle className="text-foreground text-sm font-medium">Доступно</CardTitle>
                 <Clock className="w-4 h-4 text-purple-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{remainingInterviews}</div>
-              <p className="text-xs text-gray-300 mt-1">Интервью осталось</p>
+              <div className="text-2xl font-bold text-foreground">{remainingInterviews}</div>
+              <p className="text-xs text-muted-foreground mt-1">Интервью осталось</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-800/80 border-slate-700 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Достижения</CardTitle>
+                <CardTitle className="text-foreground text-sm font-medium">Достижения</CardTitle>
                 <Trophy className="w-4 h-4 text-yellow-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-foreground">
                 {getEarnedAchievements(totalInterviews).length}/{achievements.length}
               </div>
-              <p className="text-xs text-gray-300 mt-1">Получено наград</p>
+              <p className="text-xs text-muted-foreground mt-1">Получено наград</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="history" className="space-y-6">
-          <TabsList className="bg-white/5 border-white/10">
-            <TabsTrigger value="history" className="data-[state=active]:bg-white/10">
+          <TabsList className="bg-white/90 border-border/60">
+            <TabsTrigger value="history" className="data-[state=active]:bg-white/70">
               История интервью
             </TabsTrigger>
-            <TabsTrigger value="achievements" className="data-[state=active]:bg-white/10">
+            <TabsTrigger value="achievements" className="data-[state=active]:bg-white/70">
               Достижения
             </TabsTrigger>
-            <TabsTrigger value="stats" className="data-[state=active]:bg-white/10">
+            <TabsTrigger value="stats" className="data-[state=active]:bg-white/70">
               Статистика
             </TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-white/10">
+            <TabsTrigger value="settings" className="data-[state=active]:bg-white/70">
               Настройки
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="history" className="space-y-4">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white">История интервью</CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardTitle className="text-foreground">История интервью</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Все ваши пройденные интервью с результатами
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {interviewHistory.length === 0 ? (
                   <div className="text-center py-8">
-                    <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-400">Вы еще не проходили интервью</p>
+                    <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">Вы еще не проходили интервью</p>
                     <Link href="/">
-                      <Button className="mt-4 bg-blue-600 hover:bg-blue-700">
+                      <Button className="mt-4 bg-primary hover:bg-primary/90">
                         Пройти первое интервью
                       </Button>
                     </Link>
@@ -604,35 +604,35 @@ export default function ProfilePage() {
                     {interviewHistory.map((interview) => (
                       <div
                         key={interview.id}
-                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10"
+                        className="flex items-center justify-between p-4 bg-white/90 rounded-lg border border-border/60"
                       >
                         <div className="flex items-center space-x-4">
                           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <Brain className="w-5 h-5 text-white" />
+                            <Brain className="w-5 h-5 text-foreground" />
                           </div>
                           <div>
-                            <h3 className="text-white font-medium">{getSpecialtyName(interview.specialty)}</h3>
-                            <p className="text-gray-400 text-sm">
+                            <h3 className="text-foreground font-medium">{getSpecialtyName(interview.specialty)}</h3>
+                            <p className="text-muted-foreground text-sm">
                               {interview.level} • {interview.questions_count} вопросов
                             </p>
-                            <p className="text-gray-500 text-xs">
+                            <p className="text-muted-foreground text-xs">
                               {new Date(interview.completed_at).toLocaleDateString('ru-RU')}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-lg font-bold text-white">
+                          <div className="text-lg font-bold text-foreground">
                             {interview.overall_score}/10
                           </div>
                           <div className="flex items-center space-x-1">
                             {interview.overall_score >= 8 ? (
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-emerald-600" />
                             ) : interview.overall_score >= 6 ? (
                               <AlertCircle className="w-4 h-4 text-yellow-400" />
                             ) : (
                               <AlertCircle className="w-4 h-4 text-red-400" />
                             )}
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs text-muted-foreground">
                               {interview.overall_score >= 8 ? 'Отлично' :
                                 interview.overall_score >= 6 ? 'Хорошо' : 'Нужно улучшить'}
                             </span>
@@ -646,13 +646,13 @@ export default function ProfilePage() {
             </Card>
 
             {/* Форма обратной связи */}
-            <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
+            <Card className="bg-white/70 border-border/50 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-foreground flex items-center">
                   <MessageCircle className="w-5 h-5 mr-2 text-blue-400" />
                   Поделитесь опытом использования
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Помогите нам улучшить сервис и получите <span className="text-blue-400 font-medium">+1 бесплатное интервью</span>
                 </CardDescription>
               </CardHeader>
@@ -666,13 +666,13 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="achievements" className="space-y-6">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-foreground flex items-center">
                   <Trophy className="w-5 h-5 mr-2 text-yellow-400" />
                   Достижения
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Ваши успехи в прохождении интервью
                 </CardDescription>
               </CardHeader>
@@ -688,7 +688,7 @@ export default function ProfilePage() {
                         className={`p-4 rounded-lg border transition-all ${
                           isEarned
                             ? `${achievement.bgColor} border-current ${achievement.color}`
-                            : 'bg-gray-800/50 border-gray-700 text-gray-500'
+                            : 'bg-white/80/50 border-border/60 text-muted-foreground'
                         }`}
                       >
                         <div className="flex items-center space-x-3">
@@ -696,28 +696,28 @@ export default function ProfilePage() {
                             isEarned ? achievement.bgColor : 'bg-gray-700'
                           }`}>
                             <IconComponent className={`w-6 h-6 ${
-                              isEarned ? achievement.color : 'text-gray-500'
+                              isEarned ? achievement.color : 'text-muted-foreground'
                             }`} />
                           </div>
                           <div className="flex-1">
                             <h3 className={`font-semibold ${
-                              isEarned ? 'text-white' : 'text-gray-500'
+                              isEarned ? 'text-foreground' : 'text-muted-foreground'
                             }`}>
                               {achievement.title}
                             </h3>
                             <p className={`text-sm ${
-                              isEarned ? 'text-gray-300' : 'text-gray-600'
+                              isEarned ? 'text-muted-foreground' : 'text-gray-600'
                             }`}>
                               {achievement.description}
                             </p>
                             <div className="mt-2">
                               {isEarned ? (
-                                <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs">
+                                <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs">
                                   <CheckCircle className="w-3 h-3 mr-1" />
                                   Получено
                                 </Badge>
                               ) : (
-                                <Badge className="bg-gray-700 text-gray-400 border-gray-600 text-xs">
+                                <Badge className="bg-gray-700 text-muted-foreground border-gray-600 text-xs">
                                   {totalInterviews}/{achievement.requirement} интервью
                                 </Badge>
                               )}
@@ -743,19 +743,19 @@ export default function ProfilePage() {
                 </div>
                 
                 {/* Статистика достижений */}
-                <div className="mt-6 pt-6 border-t border-white/10">
+                <div className="mt-6 pt-6 border-t border-border/60">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-white font-medium">Прогресс достижений</h4>
-                      <p className="text-gray-400 text-sm">
+                      <h4 className="text-foreground font-medium">Прогресс достижений</h4>
+                      <p className="text-muted-foreground text-sm">
                         Получено {getEarnedAchievements(totalInterviews).length} из {achievements.length} достижений
                       </p>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-white">
+                      <div className="text-2xl font-bold text-foreground">
                         {Math.round((getEarnedAchievements(totalInterviews).length / achievements.length) * 100)}%
                       </div>
-                      <p className="text-gray-400 text-xs">завершено</p>
+                      <p className="text-muted-foreground text-xs">завершено</p>
                     </div>
                   </div>
                   <div className="mt-3 w-full bg-gray-700 rounded-full h-3">
@@ -773,29 +773,29 @@ export default function ProfilePage() {
 
           <TabsContent value="stats" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+              <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white">Топ специальности</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Топ специальности</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     Ваши наиболее изученные направления
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {topSpecialties.length === 0 ? (
-                    <p className="text-gray-400">Нет данных</p>
+                    <p className="text-muted-foreground">Нет данных</p>
                   ) : (
                     <div className="space-y-3">
                       {topSpecialties.map((item, index) => (
                         <div key={item.specialty} className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-foreground text-xs font-bold">
                               {index + 1}
                             </div>
-                            <span className="text-white">{getSpecialtyName(item.specialty)}</span>
+                            <span className="text-foreground">{getSpecialtyName(item.specialty)}</span>
                           </div>
                           <div className="text-right">
-                            <div className="text-white font-medium">{item.averageScore}/10</div>
-                            <div className="text-gray-400 text-xs">{item.count} интервью</div>
+                            <div className="text-foreground font-medium">{item.averageScore}/10</div>
+                            <div className="text-muted-foreground text-xs">{item.count} интервью</div>
                           </div>
                         </div>
                       ))}
@@ -804,10 +804,10 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+              <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white">Прогресс</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Прогресс</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     Ваше развитие в цифрах
                   </CardDescription>
                 </CardHeader>
@@ -815,8 +815,8 @@ export default function ProfilePage() {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-300">Использовано интервью</span>
-                        <span className="text-white">{currentUser.interviews_used}/{currentUser.max_interviews}</span>
+                        <span className="text-muted-foreground">Использовано интервью</span>
+                        <span className="text-foreground">{currentUser.interviews_used}/{currentUser.max_interviews}</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
                         <div
@@ -829,8 +829,8 @@ export default function ProfilePage() {
                     {averageScore > 0 && (
                       <div>
                         <div className="flex justify-between text-sm mb-2">
-                          <span className="text-gray-300">Средний балл</span>
-                          <span className="text-white">{averageScore}/10</span>
+                          <span className="text-muted-foreground">Средний балл</span>
+                          <span className="text-foreground">{averageScore}/10</span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
                           <div
@@ -847,52 +847,52 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white">Настройки аккаунта</CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardTitle className="text-foreground">Настройки аккаунта</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Управление вашим профилем и подпиской
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-white/90 rounded-lg">
                   <div>
-                    <h3 className="text-white font-medium">Имя</h3>
-                    <p className="text-gray-400 text-sm">{currentUser.name}</p>
+                    <h3 className="text-foreground font-medium">Имя</h3>
+                    <p className="text-muted-foreground text-sm">{currentUser.name}</p>
                   </div>
-                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/20 hover:text-white bg-transparent">
+                  <Button variant="outline" size="sm" className="border-border/50 text-foreground hover:bg-white/20 hover:text-foreground bg-transparent">
                     <Settings className="w-4 h-4 mr-2" />
                     Изменить
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-white/90 rounded-lg">
                   <div>
-                    <h3 className="text-white font-medium">Email</h3>
-                    <p className="text-gray-400 text-sm">{currentUser.email}</p>
+                    <h3 className="text-foreground font-medium">Email</h3>
+                    <p className="text-muted-foreground text-sm">{currentUser.email}</p>
                   </div>
-                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/20 hover:text-white bg-transparent">
+                  <Button variant="outline" size="sm" className="border-border/50 text-foreground hover:bg-white/20 hover:text-foreground bg-transparent">
                     <Settings className="w-4 h-4 mr-2" />
                     Изменить
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-white/90 rounded-lg">
                   <div>
-                    <h3 className="text-white font-medium">Интервью</h3>
-                    <p className="text-gray-400 text-sm">
+                    <h3 className="text-foreground font-medium">Интервью</h3>
+                    <p className="text-muted-foreground text-sm">
                       {remainingInterviews} доступно • {currentUser.interviews_used} использовано
                     </p>
                   </div>
                   <Link href="/#pricing-section">
-                    <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/20 hover:text-white bg-transparent">
+                    <Button variant="outline" size="sm" className="border-border/50 text-foreground hover:bg-white/20 hover:text-foreground bg-transparent">
                       <CreditCard className="w-4 h-4 mr-2" />
                       Купить еще
                     </Button>
                   </Link>
                 </div>
 
-                <div className="pt-4 border-t border-white/10">
+                <div className="pt-4 border-t border-border/60">
                   <Button
                     variant="outline"
                     onClick={async () => {
@@ -921,28 +921,28 @@ export default function ProfilePage() {
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Нужна помощь?</h2>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">Нужна помощь?</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
               Если у вас возникли проблемы или есть вопросы/предложения, пишите нам в Telegram бот
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-sky-200 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <MessageCircle className="w-8 h-8 text-white" />
+                  <MessageCircle className="w-8 h-8 text-foreground" />
                 </div>
                 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
                   Telegram Bot поддержки
                 </h3>
                 
-                <p className="text-gray-300 mb-2 text-lg font-mono">
+                <p className="text-muted-foreground mb-2 text-lg font-mono">
                   @careeros_bot
                 </p>
                 
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   Пишите нам в любое время - отвечаем быстро! Поможем с любыми вопросами по платформе.
                 </p>
                 
@@ -952,7 +952,7 @@ export default function ProfilePage() {
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3">
+                    <Button className="bg-blue-500 hover:bg-primary text-foreground px-6 py-3">
                       <MessageCircle className="w-5 h-5 mr-2" />
                       Написать в Telegram
                       <ExternalLink className="w-4 h-4 ml-2" />
@@ -961,7 +961,7 @@ export default function ProfilePage() {
                   
                   <Button 
                     variant="outline" 
-                    className="border-blue-500/50 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 px-6 py-3 bg-transparent"
+                    className="border-blue-500/50 text-sky-600 hover:bg-sky-50 hover:border-blue-400 px-6 py-3 bg-transparent"
                     onClick={() => window.open('mailto:support@careeros.ru', '_blank')}
                   >
                     <Mail className="w-5 h-5 mr-2" />
@@ -969,18 +969,18 @@ export default function ProfilePage() {
                   </Button>
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+                <div className="mt-6 pt-6 border-t border-border/60">
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-green-400" />
+                      <Clock className="w-4 h-4 text-emerald-600" />
                       <span>Быстрые ответы</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span>Техническая поддержка</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Star className="w-4 h-4 text-green-400" />
+                      <Star className="w-4 h-4 text-emerald-600" />
                       <span>Предложения и отзывы</span>
                     </div>
                   </div>

@@ -93,17 +93,17 @@ export default function JobsPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
+      <header className="border-b border-border/60 backdrop-blur-sm bg-white/90">
         <div className="container mx-auto px-4 py-3">
           {/* Мобильная версия */}
           <div className="flex md:hidden items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-4 h-4 text-white" />
+                <Brain className="w-4 h-4 text-foreground" />
               </div>
-              <span className="text-lg font-bold text-white">CareerOS</span>
+              <span className="text-lg font-bold text-foreground">CareerOS</span>
               <VpnWarningMobile />
             </div>
             
@@ -111,7 +111,7 @@ export default function JobsPage() {
             <div className="flex items-center">
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-1">
-                  <Link href="/profile" className="text-gray-400 hover:text-gray-300 transition-colors text-xs px-2 py-1">
+                  <Link href="/profile" className="text-muted-foreground hover:text-muted-foreground transition-colors text-xs px-2 py-1">
                     Личный кабинет
                   </Link>
                   {currentUser.plan === 'premium' ? (
@@ -120,7 +120,7 @@ export default function JobsPage() {
                       Premium
                     </Badge>
                   ) : (
-                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                    <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs px-2 py-1">
                       {remainingInterviews} интервью
                     </Badge>
                   )}
@@ -128,21 +128,21 @@ export default function JobsPage() {
                     size="sm"
                     variant="ghost"
                     onClick={() => SupabaseAuthService.logout()}
-                    className="text-gray-300 hover:text-white p-1 h-7 w-7 ml-1"
+                    className="text-muted-foreground hover:text-foreground p-1 h-7 w-7 ml-1"
                   >
                     <LogOut className="w-3 h-3" />
                   </Button>
                 </div>
               ) : isClient ? (
                 <div className="flex items-center space-x-1">
-                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                  <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs px-2 py-1">
                     {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
                   </Badge>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => setShowAuthDialog(true)}
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-2 py-1 h-7"
+                    className="bg-white/70 border-border/50 text-foreground hover:bg-white/90 text-xs px-2 py-1 h-7"
                   >
                     <LogIn className="w-3 h-3 mr-1" />
                     Войти
@@ -156,20 +156,20 @@ export default function JobsPage() {
           <div className="hidden md:flex items-center justify-between py-1">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">CareerOS</span>
+              <span className="text-xl font-bold text-foreground">CareerOS</span>
             </div>
 
             {/* Навигационное меню */}
             <nav className="flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/" className="text-foreground hover:text-sky-600 transition-colors">
                 Интервью
               </Link>
-              <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/resume-builder" className="text-foreground hover:text-sky-600 transition-colors">
                 Сопроводительное письмо
               </Link>
-              <Link href="/jobs" className="text-blue-300 font-medium">
+              <Link href="/jobs" className="text-sky-600 font-medium">
                 Найти вакансии
               </Link>
             </nav>
@@ -182,7 +182,7 @@ export default function JobsPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-blue-500/20 border-blue-400 text-blue-300 hover:bg-blue-500/30 text-xs md:text-sm px-2 py-1"
+                      className="bg-sky-50 border-blue-400 text-sky-600 hover:bg-blue-500/30 text-xs md:text-sm px-2 py-1"
                     >
                       <User className="w-3 h-3 mr-1" />
                       Личный кабинет
@@ -194,7 +194,7 @@ export default function JobsPage() {
                       Premium
                     </Badge>
                   ) : (
-                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                    <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs md:text-sm px-2 py-1">
                       {remainingInterviews} интервью
                     </Badge>
                   )}
@@ -202,21 +202,21 @@ export default function JobsPage() {
                     size="sm"
                     variant="ghost"
                     onClick={() => SupabaseAuthService.logout()}
-                    className="text-gray-300 hover:text-white p-1"
+                    className="text-muted-foreground hover:text-foreground p-1"
                   >
                     <LogOut className="w-4 h-4" />
                   </Button>
                 </div>
               ) : isClient ? (
                 <div className="flex items-center space-x-2">
-                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                  <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs md:text-sm px-2 py-1">
                     {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
                   </Badge>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => setShowAuthDialog(true)}
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
+                    className="bg-white/70 border-border/50 text-foreground hover:bg-white/90 text-xs md:text-sm"
                   >
                     <LogIn className="w-3 h-3 mr-1" />
                     Войти
@@ -224,7 +224,7 @@ export default function JobsPage() {
                   <Button
                     size="sm"
                     onClick={() => setShowPricingDialog(true)}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-foreground text-xs md:text-sm"
                   >
                     <Crown className="w-3 h-3 mr-1" />
                     Купить
@@ -237,13 +237,13 @@ export default function JobsPage() {
       </header>
 
       {/* Page Title Section */}
-      <div className="bg-white/5 backdrop-blur-sm border-b border-white/10">
+      <div className="bg-white/90 backdrop-blur-sm border-b border-border/60">
         <div className="container mx-auto px-4 py-6 md:py-8 text-center">
           <div className="flex items-center justify-center mb-3 md:mb-4">
             <Search className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mr-2 md:mr-3" />
-            <h1 className="text-2xl md:text-3xl font-bold text-white">Найти вакансии</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Найти вакансии</h1>
           </div>
-          <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             Откройте для себя лучшие IT-вакансии с помощью нашего умного телеграм-бота
           </p>
         </div>
@@ -253,23 +253,23 @@ export default function JobsPage() {
         <div className="max-w-6xl mx-auto space-y-8 md:space-y-12">
           {/* Telegram Bot Hero Section */}
           <div className="text-center space-y-4 md:space-y-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-blue-500/20 rounded-full mb-4 md:mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-sky-50 rounded-full mb-4 md:mb-6">
               <Bot className="w-8 h-8 md:w-10 md:h-10 text-blue-400" />
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4 px-4">
+            <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4 px-4">
               Телеграм-бот для поиска вакансий
             </h2>
-            <p className="text-base md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
+            <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
               Умный помощник, который найдет идеальную работу в IT специально для вас. 
               Персонализированный поиск, мгновенные уведомления и экспертные рекомендации.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mt-6 md:mt-8 px-4">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-2.5 md:py-3 text-base md:text-lg">
+              <Button className="bg-primary hover:bg-primary/90 text-foreground px-6 md:px-8 py-2.5 md:py-3 text-base md:text-lg">
                 <MessageCircle className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 Открыть бота
                 <ExternalLink className="w-3 h-3 md:w-4 md:h-4 ml-2" />
               </Button>
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 md:px-8 py-2.5 md:py-3 text-base md:text-lg">
+              <Button variant="outline" className="bg-white/70 border-border/50 text-foreground hover:bg-white/90 px-6 md:px-8 py-2.5 md:py-3 text-base md:text-lg">
                 <Bell className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 Настроить уведомления
               </Button>
@@ -278,49 +278,49 @@ export default function JobsPage() {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+            <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
               <CardHeader>
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-green-500/20 rounded-lg">
-                    <Target className="w-6 h-6 text-green-400" />
+                  <div className="p-2 bg-emerald-50 rounded-lg">
+                    <Target className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <CardTitle className="text-white">Персонализированный поиск</CardTitle>
+                  <CardTitle className="text-foreground">Персонализированный поиск</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Бот анализирует ваши навыки и предпочтения, чтобы найти идеально подходящие вакансии
                 </CardDescription>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+            <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
               <CardHeader>
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <div className="p-2 bg-sky-50 rounded-lg">
                     <Zap className="w-6 h-6 text-blue-400" />
                   </div>
-                  <CardTitle className="text-white">Мгновенные уведомления</CardTitle>
+                  <CardTitle className="text-foreground">Мгновенные уведомления</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Получайте уведомления о новых вакансиях в реальном времени, не упустите возможность
                 </CardDescription>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+            <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
               <CardHeader>
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-purple-500/20 rounded-lg">
                     <Users className="w-6 h-6 text-purple-400" />
                   </div>
-                  <CardTitle className="text-white">Экспертные рекомендации</CardTitle>
+                  <CardTitle className="text-foreground">Экспертные рекомендации</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Получайте советы по карьере и рекомендации от экспертов индустрии
                 </CardDescription>
               </CardContent>
@@ -328,33 +328,33 @@ export default function JobsPage() {
           </div>
 
           {/* How it Works */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+          <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-white text-2xl text-center flex items-center justify-center">
+              <CardTitle className="text-foreground text-2xl text-center flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 mr-2 text-blue-400" />
                 Как это работает
               </CardTitle>
-              <CardDescription className="text-gray-300 text-center">
+              <CardDescription className="text-muted-foreground text-center">
                 Простой процесс для поиска идеальной работы
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center space-y-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-sky-50 rounded-full">
                     <span className="text-blue-400 font-bold text-lg">1</span>
                   </div>
-                  <h3 className="text-white font-semibold">Настройте профиль</h3>
-                  <p className="text-gray-300 text-sm">
+                  <h3 className="text-foreground font-semibold">Настройте профиль</h3>
+                  <p className="text-muted-foreground text-sm">
                     Расскажите боту о своих навыках, опыте и предпочтениях
                   </p>
                 </div>
                 <div className="text-center space-y-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-full">
-                    <span className="text-green-400 font-bold text-lg">2</span>
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-50 rounded-full">
+                    <span className="text-emerald-600 font-bold text-lg">2</span>
                   </div>
-                  <h3 className="text-white font-semibold">Получайте предложения</h3>
-                  <p className="text-gray-300 text-sm">
+                  <h3 className="text-foreground font-semibold">Получайте предложения</h3>
+                  <p className="text-muted-foreground text-sm">
                     Бот автоматически найдет и отправит подходящие вакансии
                   </p>
                 </div>
@@ -362,8 +362,8 @@ export default function JobsPage() {
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-purple-500/20 rounded-full">
                     <span className="text-purple-400 font-bold text-lg">3</span>
                   </div>
-                  <h3 className="text-white font-semibold">Подавайте заявки</h3>
-                  <p className="text-gray-300 text-sm">
+                  <h3 className="text-foreground font-semibold">Подавайте заявки</h3>
+                  <p className="text-muted-foreground text-sm">
                     Откликайтесь на интересные вакансии прямо из телеграма
                   </p>
                 </div>
@@ -373,24 +373,24 @@ export default function JobsPage() {
 
           {/* Sample Job Cards */}
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-white text-center">
+            <h3 className="text-2xl font-bold text-foreground text-center">
               Примеры вакансий, которые найдет бот
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+              <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-white">Senior Frontend Developer</CardTitle>
-                      <CardDescription className="text-gray-300">TechCorp Inc.</CardDescription>
+                      <CardTitle className="text-foreground">Senior Frontend Developer</CardTitle>
+                      <CardDescription className="text-muted-foreground">TechCorp Inc.</CardDescription>
                     </div>
-                    <Badge className="bg-green-500/20 text-green-300 border-0">
+                    <Badge className="bg-emerald-50 text-emerald-500 border-0">
                       Новая
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-4 text-sm text-gray-300">
+                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-1" />
                       Москва
@@ -405,25 +405,25 @@ export default function JobsPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">React</Badge>
-                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">TypeScript</Badge>
-                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">Next.js</Badge>
+                    <Badge variant="secondary" className="bg-sky-50 text-sky-600">React</Badge>
+                    <Badge variant="secondary" className="bg-sky-50 text-sky-600">TypeScript</Badge>
+                    <Badge variant="secondary" className="bg-sky-50 text-sky-600">Next.js</Badge>
                   </div>
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     Ищем опытного фронтенд-разработчика для работы над инновационными проектами...
                   </p>
-                  <div className="text-white font-semibold">
+                  <div className="text-foreground font-semibold">
                     от 200 000 ₽
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+              <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-white">Backend Developer</CardTitle>
-                      <CardDescription className="text-gray-300">StartupXYZ</CardDescription>
+                      <CardTitle className="text-foreground">Backend Developer</CardTitle>
+                      <CardDescription className="text-muted-foreground">StartupXYZ</CardDescription>
                     </div>
                     <Badge className="bg-yellow-500/20 text-yellow-300 border-0">
                       Горячая
@@ -431,7 +431,7 @@ export default function JobsPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-4 text-sm text-gray-300">
+                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-1" />
                       Удаленно
@@ -446,14 +446,14 @@ export default function JobsPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-300">Node.js</Badge>
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-300">PostgreSQL</Badge>
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-300">Docker</Badge>
+                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-500">Node.js</Badge>
+                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-500">PostgreSQL</Badge>
+                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-500">Docker</Badge>
                   </div>
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     Присоединяйтесь к нашей команде для создания масштабируемых решений...
                   </p>
-                  <div className="text-white font-semibold">
+                  <div className="text-foreground font-semibold">
                     от 150 000 ₽
                   </div>
                 </CardContent>
@@ -462,9 +462,9 @@ export default function JobsPage() {
           </div>
 
           {/* Benefits */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+          <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-white text-2xl text-center flex items-center justify-center">
+              <CardTitle className="text-foreground text-2xl text-center flex items-center justify-center">
                 <Star className="w-6 h-6 mr-2 text-yellow-400" />
                 Преимущества нашего бота
               </CardTitle>
@@ -472,31 +472,31 @@ export default function JobsPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="text-white font-semibold mb-1">Бесплатное использование</h4>
-                    <p className="text-gray-300 text-sm">Полный доступ ко всем функциям без скрытых платежей</p>
+                    <h4 className="text-foreground font-semibold mb-1">Бесплатное использование</h4>
+                    <p className="text-muted-foreground text-sm">Полный доступ ко всем функциям без скрытых платежей</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="text-white font-semibold mb-1">Актуальная база вакансий</h4>
-                    <p className="text-gray-300 text-sm">Ежедневное обновление базы данных с новыми предложениями</p>
+                    <h4 className="text-foreground font-semibold mb-1">Актуальная база вакансий</h4>
+                    <p className="text-muted-foreground text-sm">Ежедневное обновление базы данных с новыми предложениями</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="text-white font-semibold mb-1">Умная фильтрация</h4>
-                    <p className="text-gray-300 text-sm">Алгоритмы машинного обучения для точного подбора</p>
+                    <h4 className="text-foreground font-semibold mb-1">Умная фильтрация</h4>
+                    <p className="text-muted-foreground text-sm">Алгоритмы машинного обучения для точного подбора</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="text-white font-semibold mb-1">Поддержка 24/7</h4>
-                    <p className="text-gray-300 text-sm">Круглосуточная техническая поддержка и консультации</p>
+                    <h4 className="text-foreground font-semibold mb-1">Поддержка 24/7</h4>
+                    <p className="text-muted-foreground text-sm">Круглосуточная техническая поддержка и консультации</p>
                   </div>
                 </div>
               </div>
@@ -505,19 +505,19 @@ export default function JobsPage() {
 
           {/* CTA Section */}
           <div className="text-center space-y-6 py-12">
-            <h3 className="text-3xl font-bold text-white">
+            <h3 className="text-3xl font-bold text-foreground">
               Готовы найти работу мечты?
             </h3>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Присоединяйтесь к тысячам IT-специалистов, которые уже нашли работу с помощью нашего бота
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
+              <Button className="bg-primary hover:bg-primary/90 text-foreground px-8 py-3 text-lg">
                 <Bot className="w-5 h-5 mr-2" />
                 Начать поиск вакансий
                 <ExternalLink className="w-4 h-4 ml-2" />
               </Button>
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-8 py-3 text-lg">
+              <Button variant="outline" className="bg-white/70 border-border/50 text-foreground hover:bg-white/90 px-8 py-3 text-lg">
                 Узнать больше
               </Button>
             </div>
@@ -526,31 +526,31 @@ export default function JobsPage() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 px-4">
+      <footer className="border-t border-border/60 py-8 px-4">
         <div className="container mx-auto">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">CareerOS</span>
+              <span className="text-xl font-bold text-foreground">CareerOS</span>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-4">
               Платформа для подготовки к техническим собеседованиям с использованием ИИ
             </p>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-              <Link href="/" className="hover:text-white transition-colors">
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+              <Link href="/" className="hover:text-foreground transition-colors">
                 Интервью
               </Link>
-              <Link href="/resume-builder" className="hover:text-white transition-colors">
+              <Link href="/resume-builder" className="hover:text-foreground transition-colors">
                 Сопроводительное письмо
               </Link>
-              <Link href="/jobs" className="hover:text-white transition-colors">
+              <Link href="/jobs" className="hover:text-foreground transition-colors">
                 Найти вакансии
               </Link>
             </div>
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-gray-500 text-xs">
+            <div className="mt-6 pt-6 border-t border-border/60">
+              <p className="text-muted-foreground text-xs">
                 © 2024 CareerOS. Все права защищены.
               </p>
             </div>

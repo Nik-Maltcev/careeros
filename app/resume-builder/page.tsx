@@ -211,17 +211,17 @@ export default function CoverLetterBuilderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
+      <header className="border-b border-border/60 backdrop-blur-sm bg-white/90">
         <div className="container mx-auto px-4 py-3">
           {/* Мобильная версия */}
           <div className="flex md:hidden items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-4 h-4 text-white" />
+                <Brain className="w-4 h-4 text-foreground" />
               </div>
-              <span className="text-lg font-bold text-white">CareerOS</span>
+              <span className="text-lg font-bold text-foreground">CareerOS</span>
               <VpnWarningMobile />
             </div>
             
@@ -229,7 +229,7 @@ export default function CoverLetterBuilderPage() {
             <div className="flex items-center">
               {isClient && currentUser ? (
                 <div className="flex items-center space-x-1">
-                  <Link href="/profile" className="text-gray-400 hover:text-gray-300 transition-colors text-xs px-2 py-1">
+                  <Link href="/profile" className="text-muted-foreground hover:text-muted-foreground transition-colors text-xs px-2 py-1">
                     Личный кабинет
                   </Link>
                   {currentUser.plan === 'premium' ? (
@@ -238,7 +238,7 @@ export default function CoverLetterBuilderPage() {
                       Premium
                     </Badge>
                   ) : (
-                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                    <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs px-2 py-1">
                       {remainingInterviews} интервью
                     </Badge>
                   )}
@@ -246,21 +246,21 @@ export default function CoverLetterBuilderPage() {
                     size="sm"
                     variant="ghost"
                     onClick={() => SupabaseAuthService.logout()}
-                    className="text-gray-300 hover:text-white p-1 h-7 w-7 ml-1"
+                    className="text-muted-foreground hover:text-foreground p-1 h-7 w-7 ml-1"
                   >
                     <LogOut className="w-3 h-3" />
                   </Button>
                 </div>
               ) : isClient ? (
                 <div className="flex items-center space-x-1">
-                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+                  <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs px-2 py-1">
                     {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
                   </Badge>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => setShowAuthDialog(true)}
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs px-2 py-1 h-7"
+                    className="bg-white/70 border-border/50 text-foreground hover:bg-white/20 text-xs px-2 py-1 h-7"
                   >
                     <LogIn className="w-3 h-3 mr-1" />
                     Войти
@@ -274,20 +274,20 @@ export default function CoverLetterBuilderPage() {
           <div className="hidden md:flex items-center justify-between py-1">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">CareerOS</span>
+              <span className="text-xl font-bold text-foreground">CareerOS</span>
             </div>
 
             {/* Навигационное меню */}
             <nav className="flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/" className="text-foreground hover:text-sky-600 transition-colors">
                 Интервью
               </Link>
-              <Link href="/resume-builder" className="text-blue-300 font-medium">
+              <Link href="/resume-builder" className="text-sky-600 font-medium">
                 Сопроводительное письмо
               </Link>
-              <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/jobs" className="text-foreground hover:text-sky-600 transition-colors">
                 Найти вакансии
               </Link>
             </nav>
@@ -300,7 +300,7 @@ export default function CoverLetterBuilderPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-blue-500/20 border-blue-400 text-blue-300 hover:bg-blue-500/30 text-xs md:text-sm px-2 py-1"
+                      className="bg-sky-50 border-blue-400 text-sky-600 hover:bg-blue-500/30 text-xs md:text-sm px-2 py-1"
                     >
                       <User className="w-3 h-3 mr-1" />
                       Личный кабинет
@@ -312,7 +312,7 @@ export default function CoverLetterBuilderPage() {
                       Premium
                     </Badge>
                   ) : (
-                    <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                    <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs md:text-sm px-2 py-1">
                       {remainingInterviews} интервью
                     </Badge>
                   )}
@@ -320,21 +320,21 @@ export default function CoverLetterBuilderPage() {
                     size="sm"
                     variant="ghost"
                     onClick={() => SupabaseAuthService.logout()}
-                    className="text-gray-300 hover:text-white p-1"
+                    className="text-muted-foreground hover:text-foreground p-1"
                   >
                     <LogOut className="w-4 h-4" />
                   </Button>
                 </div>
               ) : isClient ? (
                 <div className="flex items-center space-x-2">
-                  <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs md:text-sm px-2 py-1">
+                  <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs md:text-sm px-2 py-1">
                     {remainingInterviews === 1 ? '1 бесплатное интервью' : `${remainingInterviews} бесплатных интервью`}
                   </Badge>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => setShowAuthDialog(true)}
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs md:text-sm"
+                    className="bg-white/70 border-border/50 text-foreground hover:bg-white/20 text-xs md:text-sm"
                   >
                     <LogIn className="w-3 h-3 mr-1" />
                     Войти
@@ -342,7 +342,7 @@ export default function CoverLetterBuilderPage() {
                   <Button
                     size="sm"
                     onClick={() => setShowPricingDialog(true)}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs md:text-sm"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-foreground text-xs md:text-sm"
                   >
                     <Crown className="w-3 h-3 mr-1" />
                     Купить
@@ -355,13 +355,13 @@ export default function CoverLetterBuilderPage() {
       </header>
 
       {/* Page Title Section */}
-      <div className="bg-white/5 backdrop-blur-sm border-b border-white/10">
+      <div className="bg-white/90 backdrop-blur-sm border-b border-border/60">
         <div className="container mx-auto px-4 py-6 md:py-8 text-center">
           <div className="flex items-center justify-center mb-3 md:mb-4">
             <FileText className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mr-2 md:mr-3" />
-            <h1 className="text-2xl md:text-3xl font-bold text-white">Сопроводительное письмо</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Сопроводительное письмо</h1>
           </div>
-          <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             ИИ проанализирует вакансию и создаст персонализированное сопроводительное письмо
           </p>
         </div>
@@ -371,76 +371,76 @@ export default function CoverLetterBuilderPage() {
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Создайте{" "}
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 сопроводительное письмо
               </span>
             </h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               ИИ проанализирует вакансию и создаст персонализированное сопроводительное письмо, которое поможет получить интервью
             </p>
           </div>
 
           {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <Target className="w-6 h-6 text-blue-400" />
                 </div>
-                <h3 className="font-semibold text-white mb-2">Точное соответствие</h3>
-                <p className="text-gray-300 text-sm">Письмо адаптируется под требования конкретной вакансии</p>
+                <h3 className="font-semibold text-foreground mb-2">Точное соответствие</h3>
+                <p className="text-muted-foreground text-sm">Письмо адаптируется под требования конкретной вакансии</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
-                <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <Zap className="w-6 h-6 text-green-400" />
+                <div className="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Zap className="w-6 h-6 text-emerald-600" />
                 </div>
-                <h3 className="font-semibold text-white mb-2">ATS оптимизация</h3>
-                <p className="text-gray-300 text-sm">Ключевые слова для прохождения автоматических фильтров</p>
+                <h3 className="font-semibold text-foreground mb-2">ATS оптимизация</h3>
+                <p className="text-muted-foreground text-sm">Ключевые слова для прохождения автоматических фильтров</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
                 <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <Sparkles className="w-6 h-6 text-purple-400" />
                 </div>
-                <h3 className="font-semibold text-white mb-2">ИИ анализ</h3>
-                <p className="text-gray-300 text-sm">Умный анализ требований и автоматическая адаптация</p>
+                <h3 className="font-semibold text-foreground mb-2">ИИ анализ</h3>
+                <p className="text-muted-foreground text-sm">Умный анализ требований и автоматическая адаптация</p>
               </CardContent>
             </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Input Form */}
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-foreground flex items-center">
                   <FileText className="w-5 h-5 mr-2" />
                   Данные для генерации
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Укажите ссылку на вакансию и информацию о себе
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Job Description (Required) */}
                 <div className="space-y-2">
-                  <Label htmlFor="jobDescription" className="text-white flex items-center">
+                  <Label htmlFor="jobDescription" className="text-foreground flex items-center">
                     <FileText className="w-4 h-4 mr-2" />
                     Описание вакансии
                     <span className="ml-2 px-2 py-1 bg-red-500/20 text-red-300 text-xs rounded border border-red-500/30">
                       Обязательно
                     </span>
                   </Label>
-                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-2">
+                  <div className="bg-blue-500/10 border border-sky-200 rounded-lg p-3 mb-2">
                     <div className="flex items-start space-x-2">
                       <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                      <div className="text-blue-200 text-sm">
+                      <div className="text-sky-500 text-sm">
                         <p className="font-medium mb-1">Как получить описание вакансии:</p>
                         <ol className="list-decimal list-inside space-y-1 text-xs">
                           <li>Найдите интересную вакансию на hh.ru, LinkedIn или другом сайте</li>
@@ -465,7 +465,7 @@ export default function CoverLetterBuilderPage() {
 - Работа в команде разработки"
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[150px]"
+                    className="bg-white/70 border-border/50 text-foreground placeholder:text-muted-foreground min-h-[150px]"
                     required
                   />
                   <p className="text-blue-400 text-xs">
@@ -475,7 +475,7 @@ export default function CoverLetterBuilderPage() {
 
                 {/* Candidate Info */}
                 <div className="space-y-2">
-                  <Label htmlFor="candidateInfo" className="text-white flex items-center">
+                  <Label htmlFor="candidateInfo" className="text-foreground flex items-center">
                     <User className="w-4 h-4 mr-2" />
                     Информация о себе
                   </Label>
@@ -489,10 +489,10 @@ export default function CoverLetterBuilderPage() {
 - Почему вас интересует эта сфера"
                     value={candidateInfo}
                     onChange={(e) => setCandidateInfo(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-[150px]"
+                    className="bg-white/70 border-border/50 text-foreground placeholder:text-muted-foreground min-h-[150px]"
                     required
                   />
-                  <p className="text-gray-400 text-xs">
+                  <p className="text-muted-foreground text-xs">
                     Чем подробнее информация, тем лучше будет сопроводительное письмо
                   </p>
                 </div>
@@ -509,7 +509,7 @@ export default function CoverLetterBuilderPage() {
                 <Button
                   onClick={handleGenerate}
                   disabled={isGenerating || !jobDescription.trim() || !candidateInfo.trim()}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-foreground border-0"
                 >
                   {isGenerating ? (
                     <>
@@ -527,13 +527,13 @@ export default function CoverLetterBuilderPage() {
             </Card>
 
             {/* Progress and Result */}
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-foreground flex items-center">
                   <Sparkles className="w-5 h-5 mr-2" />
                   Процесс генерации
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Отслеживайте прогресс создания сопроводительного письма
                 </CardDescription>
               </CardHeader>
@@ -542,10 +542,10 @@ export default function CoverLetterBuilderPage() {
                 {isGenerating && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-300">{currentStep}</span>
-                      <span className="text-gray-300">{progress}%</span>
+                      <span className="text-muted-foreground">{currentStep}</span>
+                      <span className="text-muted-foreground">{progress}%</span>
                     </div>
-                    <Progress value={progress} className="bg-white/10" />
+                    <Progress value={progress} className="bg-white/70" />
                   </div>
                 )}
 
@@ -554,14 +554,14 @@ export default function CoverLetterBuilderPage() {
                   {steps.map((step) => (
                     <div key={step.id} className="flex items-center space-x-3">
                       <div className="flex-shrink-0">
-                        {step.status === "completed" && <CheckCircle className="w-5 h-5 text-green-400" />}
+                        {step.status === "completed" && <CheckCircle className="w-5 h-5 text-emerald-600" />}
                         {step.status === "processing" && <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />}
                         {step.status === "error" && <AlertCircle className="w-5 h-5 text-red-400" />}
                         {step.status === "pending" && <div className="w-5 h-5 rounded-full border-2 border-gray-600" />}
                       </div>
                       <div className="flex-1">
-                        <div className="text-white font-medium">{step.title}</div>
-                        <div className="text-gray-400 text-sm">{step.description}</div>
+                        <div className="text-foreground font-medium">{step.title}</div>
+                        <div className="text-muted-foreground text-sm">{step.description}</div>
                       </div>
                     </div>
                   ))}
@@ -571,27 +571,27 @@ export default function CoverLetterBuilderPage() {
                 {generatedCoverLetter && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-white font-semibold">Сопроводительное письмо</h3>
-                      <Button onClick={downloadCoverLetter} size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                      <h3 className="text-foreground font-semibold">Сопроводительное письмо</h3>
+                      <Button onClick={downloadCoverLetter} size="sm" className="bg-green-600 hover:bg-green-700 text-foreground">
                         <Download className="w-4 h-4 mr-2" />
                         Скачать
                       </Button>
                     </div>
                     {jobData && (
-                      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-4">
+                      <div className="bg-blue-500/10 border border-sky-200 rounded-lg p-3 mb-4">
                         <div className="flex items-center space-x-2 mb-2">
                           <Building className="w-4 h-4 text-blue-400" />
-                          <span className="text-blue-300 font-medium">Информация о вакансии</span>
+                          <span className="text-sky-600 font-medium">Информация о вакансии</span>
                         </div>
-                        <div className="text-sm text-gray-300 space-y-1">
+                        <div className="text-sm text-muted-foreground space-y-1">
                           {jobData.company_name && <p><strong>Компания:</strong> {jobData.company_name}</p>}
                           {jobData.job_title && <p><strong>Должность:</strong> {jobData.job_title}</p>}
                           {jobData.location && <p><strong>Местоположение:</strong> {jobData.location}</p>}
                         </div>
                       </div>
                     )}
-                    <div className="bg-white/10 border border-white/20 rounded-lg p-4 max-h-96 overflow-y-auto">
-                      <pre className="text-gray-300 text-sm whitespace-pre-wrap">{generatedCoverLetter}</pre>
+                    <div className="bg-white/70 border border-border/50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                      <pre className="text-muted-foreground text-sm whitespace-pre-wrap">{generatedCoverLetter}</pre>
                     </div>
                   </div>
                 )}
@@ -605,28 +605,28 @@ export default function CoverLetterBuilderPage() {
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Нужна помощь?</h2>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">Нужна помощь?</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
               Если у вас возникли проблемы или есть вопросы/предложения, пишите нам в Telegram бот
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-sky-200 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <Mail className="w-8 h-8 text-white" />
+                  <Mail className="w-8 h-8 text-foreground" />
                 </div>
                 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
                   Telegram Bot поддержки
                 </h3>
                 
-                <p className="text-gray-300 mb-2 text-lg font-mono">
+                <p className="text-muted-foreground mb-2 text-lg font-mono">
                   @careeros_bot
                 </p>
                 
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   Пишите нам в любое время - отвечаем быстро! Поможем с любыми вопросами по платформе.
                 </p>
                 
@@ -636,7 +636,7 @@ export default function CoverLetterBuilderPage() {
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3">
+                    <Button className="bg-blue-500 hover:bg-primary text-foreground px-6 py-3">
                       <Mail className="w-5 h-5 mr-2" />
                       Написать в Telegram
                     </Button>
@@ -644,7 +644,7 @@ export default function CoverLetterBuilderPage() {
                   
                   <Button 
                     variant="outline" 
-                    className="border-blue-500/50 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 px-6 py-3 bg-transparent"
+                    className="border-blue-500/50 text-sky-600 hover:bg-sky-50 hover:border-blue-400 px-6 py-3 bg-transparent"
                     onClick={() => window.open('mailto:support@careeros.ru', '_blank')}
                   >
                     <Mail className="w-5 h-5 mr-2" />
@@ -652,18 +652,18 @@ export default function CoverLetterBuilderPage() {
                   </Button>
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+                <div className="mt-6 pt-6 border-t border-border/60">
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span>Быстрые ответы</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span>Техническая поддержка</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Sparkles className="w-4 h-4 text-green-400" />
+                      <Sparkles className="w-4 h-4 text-emerald-600" />
                       <span>Предложения и отзывы</span>
                     </div>
                   </div>
@@ -675,31 +675,31 @@ export default function CoverLetterBuilderPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 px-4">
+      <footer className="border-t border-border/60 py-8 px-4">
         <div className="container mx-auto">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">CareerOS</span>
+              <span className="text-xl font-bold text-foreground">CareerOS</span>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-4">
               Платформа для подготовки к техническим собеседованиям с использованием ИИ
             </p>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-              <Link href="/" className="hover:text-white transition-colors">
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+              <Link href="/" className="hover:text-foreground transition-colors">
                 Интервью
               </Link>
-              <Link href="/resume-builder" className="hover:text-white transition-colors">
+              <Link href="/resume-builder" className="hover:text-foreground transition-colors">
                 Сопроводительное письмо
               </Link>
-              <Link href="/jobs" className="hover:text-white transition-colors">
+              <Link href="/jobs" className="hover:text-foreground transition-colors">
                 Найти вакансии
               </Link>
             </div>
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-gray-500 text-xs">
+            <div className="mt-6 pt-6 border-t border-border/60">
+              <p className="text-muted-foreground text-xs">
                 © 2024 CareerOS. Все права защищены.
               </p>
             </div>

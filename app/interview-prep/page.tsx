@@ -136,18 +136,18 @@ function InterviewPrepContent() {
   const canStart = !limitWarning
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-300 mb-8">
-          <Link href="/" className="hover:text-white transition-colors flex items-center">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
+          <Link href="/" className="hover:text-foreground transition-colors flex items-center">
             <Home className="w-4 h-4 mr-1" />
             Главная
           </Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-blue-400">{specialty}</span>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-white">Подготовка</span>
+          <span className="text-foreground">Подготовка</span>
         </nav>
 
         <div className="max-w-4xl mx-auto">
@@ -155,11 +155,11 @@ function InterviewPrepContent() {
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-4">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mr-4">
-                <SpecialtyIcon className="w-6 h-6 text-white" />
+                <SpecialtyIcon className="w-6 h-6 text-foreground" />
               </div>
-              <h1 className="text-4xl font-bold text-white">Подготовка к интервью</h1>
+              <h1 className="text-4xl font-bold text-foreground">Подготовка к интервью</h1>
             </div>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-muted-foreground">
               Специальность: <span className="text-blue-400 font-semibold">{specialty}</span>
             </p>
             {selectedLevel && (
@@ -179,7 +179,7 @@ function InterviewPrepContent() {
             {/* Remaining Interviews Info */}
             {canStart && remainingInterviews !== undefined && (
               <div className="mt-4">
-                <Badge className="bg-green-500/20 text-green-300 border-green-400">
+                <Badge className="bg-emerald-50 text-emerald-500 border-green-400">
                   {remainingInterviews === 1 ? '1 бесплатное интервью осталось' : `${remainingInterviews} интервью осталось`}
                 </Badge>
               </div>
@@ -190,7 +190,7 @@ function InterviewPrepContent() {
           <div className="flex items-center justify-center mb-8">
             <div className="flex items-center space-x-4">
               <div
-                className={`flex items-center space-x-2 ${currentStep === "level" ? "text-blue-400" : selectedLevel ? "text-green-400" : "text-gray-400"}`}
+                className={`flex items-center space-x-2 ${currentStep === "level" ? "text-blue-400" : selectedLevel ? "text-emerald-600" : "text-muted-foreground"}`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "level" ? "bg-blue-500" : selectedLevel ? "bg-green-500" : "bg-gray-600"
@@ -202,7 +202,7 @@ function InterviewPrepContent() {
               </div>
               <div className={`w-8 h-0.5 ${selectedLevel ? "bg-green-400" : "bg-gray-600"}`} />
               <div
-                className={`flex items-center space-x-2 ${currentStep === "checklist" ? "text-blue-400" : "text-gray-400"}`}
+                className={`flex items-center space-x-2 ${currentStep === "checklist" ? "text-blue-400" : "text-muted-foreground"}`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "checklist" ? "bg-blue-500" : "bg-gray-600"
@@ -217,7 +217,7 @@ function InterviewPrepContent() {
 
           {/* Level Selection Step */}
           {currentStep === "level" && (
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardContent className="p-8">
                 <LevelSelector selectedLevel={selectedLevel} onLevelSelect={handleLevelSelect} specialty={specialty} />
               </CardContent>
@@ -232,7 +232,7 @@ function InterviewPrepContent() {
                 <Button
                   variant="outline"
                   onClick={handleBackToLevelSelection}
-                  className="bg-white/10 text-white border-white/20 hover:bg-white/20"
+                  className="bg-white/70 text-foreground border-border/50 hover:bg-white/20"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Изменить уровень
@@ -241,26 +241,26 @@ function InterviewPrepContent() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Interview Info */}
-                <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+                <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center">
+                    <CardTitle className="text-foreground flex items-center">
                       <MessageSquare className="w-5 h-5 mr-2 text-blue-400" />
                       Информация об интервью
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center text-muted-foreground">
                         <Clock className="w-4 h-4 mr-2" />
                         Продолжительность
                       </div>
-                      <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
+                      <Badge variant="secondary" className="bg-sky-50 text-sky-600">
                         {getLevelInfo(selectedLevel).duration}
                       </Badge>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center text-muted-foreground">
                         <MessageSquare className="w-4 h-4 mr-2" />
                         Количество вопросов
                       </div>
@@ -270,17 +270,17 @@ function InterviewPrepContent() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center text-muted-foreground">
                         <Mic className="w-4 h-4 mr-2" />
                         Формат
                       </div>
-                      <Badge variant="secondary" className="bg-green-500/20 text-green-300">
+                      <Badge variant="secondary" className="bg-emerald-50 text-emerald-500">
                         Голосовые ответы
                       </Badge>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center text-muted-foreground">
                         <Star className="w-4 h-4 mr-2" />
                         Уровень сложности
                       </div>
@@ -295,13 +295,13 @@ function InterviewPrepContent() {
                 </Card>
 
                 {/* Preparation Tips */}
-                <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+                <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center">
+                    <CardTitle className="text-foreground flex items-center">
                       <AlertTriangle className="w-5 h-5 mr-2 text-yellow-400" />
                       Рекомендации для подготовки
                     </CardTitle>
-                    <CardDescription className="text-gray-300">
+                    <CardDescription className="text-muted-foreground">
                       Советы для успешного прохождения интервью
                     </CardDescription>
                   </CardHeader>
@@ -309,34 +309,34 @@ function InterviewPrepContent() {
                     <div className="flex items-start space-x-3">
                       <Mic className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-white font-medium text-sm">Проверьте работу микрофона</p>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-foreground font-medium text-sm">Проверьте работу микрофона</p>
+                        <p className="text-muted-foreground text-sm">
                           Убедитесь, что микрофон работает и звук записывается четко
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-start space-x-3">
-                      <Wifi className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                      <Wifi className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-white font-medium text-sm">Стабильное интернет-соединение</p>
-                        <p className="text-gray-400 text-sm">Проверьте качество соединения для бесперебойной работы</p>
+                        <p className="text-foreground font-medium text-sm">Стабильное интернет-соединение</p>
+                        <p className="text-muted-foreground text-sm">Проверьте качество соединения для бесперебойной работы</p>
                       </div>
                     </div>
 
                     <div className="flex items-start space-x-3">
                       <Volume2 className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-white font-medium text-sm">Тихое место</p>
-                        <p className="text-gray-400 text-sm">Найдите спокойное место без посторонних шумов</p>
+                        <p className="text-foreground font-medium text-sm">Тихое место</p>
+                        <p className="text-muted-foreground text-sm">Найдите спокойное место без посторонних шумов</p>
                       </div>
                     </div>
 
                     <div className="flex items-start space-x-3">
                       <Languages className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-white font-medium text-sm">Готовность к ответам</p>
-                        <p className="text-gray-400 text-sm">Будьте готовы отвечать на русском или английском языке</p>
+                        <p className="text-foreground font-medium text-sm">Готовность к ответам</p>
+                        <p className="text-muted-foreground text-sm">Будьте готовы отвечать на русском или английском языке</p>
                       </div>
                     </div>
                   </CardContent>
@@ -350,8 +350,8 @@ function InterviewPrepContent() {
                   onClick={handleStartInterview}
                   disabled={!canStart}
                   className={`px-12 py-4 text-lg font-semibold ${canStart
-                    ? `bg-gradient-to-r from-${getLevelInfo(selectedLevel).color}-600 to-blue-600 hover:from-${getLevelInfo(selectedLevel).color}-700 hover:to-blue-700 text-white border-0 transition-all duration-300`
-                    : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    ? `bg-gradient-to-r from-${getLevelInfo(selectedLevel).color}-600 to-blue-600 hover:from-${getLevelInfo(selectedLevel).color}-700 hover:to-blue-700 text-foreground border-0 transition-all duration-300`
+                    : "bg-gray-600 text-muted-foreground cursor-not-allowed"
                     }`}
                 >
                   <Play className="w-5 h-5 mr-2" />
@@ -360,7 +360,7 @@ function InterviewPrepContent() {
                     : "Достигнут лимит интервью"}
                 </Button>
 
-                <p className="text-gray-400 text-sm mt-3">
+                <p className="text-muted-foreground text-sm mt-3">
                   {canStart ? "Интервью начнется сразу после нажатия кнопки. Убедитесь, что вы готовы!" : limitWarning}
                 </p>
               </div>
@@ -373,28 +373,28 @@ function InterviewPrepContent() {
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Нужна помощь?</h2>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">Нужна помощь?</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
               Если у вас возникли проблемы или есть вопросы/предложения, пишите нам в Telegram бот
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-sky-200 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <MessageSquare className="w-8 h-8 text-white" />
+                  <MessageSquare className="w-8 h-8 text-foreground" />
                 </div>
                 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
                   Telegram Bot поддержки
                 </h3>
                 
-                <p className="text-gray-300 mb-2 text-lg font-mono">
+                <p className="text-muted-foreground mb-2 text-lg font-mono">
                   @careeros_bot
                 </p>
                 
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   Пишите нам в любое время - отвечаем быстро! Поможем с любыми вопросами по платформе.
                 </p>
                 
@@ -404,7 +404,7 @@ function InterviewPrepContent() {
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3">
+                    <Button className="bg-blue-500 hover:bg-primary text-foreground px-6 py-3">
                       <MessageSquare className="w-5 h-5 mr-2" />
                       Написать в Telegram
                     </Button>
@@ -412,7 +412,7 @@ function InterviewPrepContent() {
                   
                   <Button 
                     variant="outline" 
-                    className="border-blue-500/50 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 px-6 py-3 bg-transparent"
+                    className="border-blue-500/50 text-sky-600 hover:bg-sky-50 hover:border-blue-400 px-6 py-3 bg-transparent"
                     onClick={() => window.open('mailto:support@careeros.ru', '_blank')}
                   >
                     <MessageSquare className="w-5 h-5 mr-2" />
@@ -420,18 +420,18 @@ function InterviewPrepContent() {
                   </Button>
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+                <div className="mt-6 pt-6 border-t border-border/60">
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-green-400" />
+                      <Clock className="w-4 h-4 text-emerald-600" />
                       <span>Быстрые ответы</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <MessageSquare className="w-4 h-4 text-green-400" />
+                      <MessageSquare className="w-4 h-4 text-emerald-600" />
                       <span>Техническая поддержка</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Star className="w-4 h-4 text-green-400" />
+                      <Star className="w-4 h-4 text-emerald-600" />
                       <span>Предложения и отзывы</span>
                     </div>
                   </div>

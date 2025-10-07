@@ -193,7 +193,7 @@ export default function DemoProfilePage() {
 
   const getScoreColor = (score: number) => {
     if (score >= 9) return "text-emerald-400"
-    if (score >= 8) return "text-green-400" 
+    if (score >= 8) return "text-emerald-600" 
     if (score >= 7) return "text-yellow-400"
     if (score >= 6) return "text-orange-400"
     return "text-red-400"
@@ -201,7 +201,7 @@ export default function DemoProfilePage() {
 
   const getScoreIcon = (score: number) => {
     if (score >= 9) return <Trophy className="w-4 h-4 text-emerald-400" />
-    if (score >= 8) return <CheckCircle className="w-4 h-4 text-green-400" />
+    if (score >= 8) return <CheckCircle className="w-4 h-4 text-emerald-600" />
     if (score >= 7) return <Star className="w-4 h-4 text-yellow-400" />
     return <AlertCircle className="w-4 h-4 text-orange-400" />
   }
@@ -215,25 +215,25 @@ export default function DemoProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-sm bg-white/5">
+      <header className="border-b border-border/60 backdrop-blur-sm bg-white/90">
         <div className="container mx-auto px-4 py-3">
           {/* Мобильная версия */}
           <div className="flex md:hidden items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-4 h-4 text-white" />
+                <Brain className="w-4 h-4 text-foreground" />
               </div>
-              <span className="text-lg font-bold text-white">Careeros</span>
+              <span className="text-lg font-bold text-foreground">Careeros</span>
             </div>
             
             <div className="flex items-center space-x-2">
-              <Badge className="bg-green-500/20 text-green-300 border-green-400 text-xs px-2 py-1">
+              <Badge className="bg-emerald-50 text-emerald-500 border-green-400 text-xs px-2 py-1">
                 {remainingInterviews} интервью
               </Badge>
               <Link href="/">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white p-1 h-7 w-7">
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground p-1 h-7 w-7">
                   <ArrowLeft className="w-3 h-3" />
                 </Button>
               </Link>
@@ -244,37 +244,37 @@ export default function DemoProfilePage() {
           <div className="hidden md:flex items-center justify-between py-1">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">Careeros</span>
+              <span className="text-xl font-bold text-foreground">Careeros</span>
             </div>
 
             {/* Навигационное меню */}
             <nav className="flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/" className="text-foreground hover:text-sky-600 transition-colors">
                 Интервью
               </Link>
-              <Link href="/resume-builder" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/resume-builder" className="text-foreground hover:text-sky-600 transition-colors">
                 Сопроводительное письмо
               </Link>
-              <Link href="/jobs" className="text-white hover:text-blue-300 transition-colors">
+              <Link href="/jobs" className="text-foreground hover:text-sky-600 transition-colors">
                 Найти вакансии
               </Link>
             </nav>
 
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Badge className="bg-green-500/20 text-green-300 border-green-400">
+                <Badge className="bg-emerald-50 text-emerald-500 border-green-400">
                   {remainingInterviews} интервью доступно
                 </Badge>
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
+                <Badge className="bg-sky-50 text-sky-600 border-blue-400">
                   {currentUser.interviews_used} использовано
                 </Badge>
               </div>
               <Link href="/">
                 <Button
                   variant="outline"
-                  className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 bg-transparent"
+                  className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:text-sky-600 bg-transparent"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   На главную
@@ -288,25 +288,25 @@ export default function DemoProfilePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Profile Header */}
         <div className="mb-8">
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm relative overflow-hidden">
+          <Card className="bg-white/90 border-border/60 backdrop-blur-sm relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10"></div>
             <CardHeader className="relative">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <User className="w-10 h-10 text-white" />
+                    <User className="w-10 h-10 text-foreground" />
                   </div>
                   <div>
-                    <CardTitle className="text-white text-3xl">
+                    <CardTitle className="text-foreground text-3xl">
                       {currentUser.name}
                     </CardTitle>
-                    <CardDescription className="text-gray-300 text-lg">{currentUser.email}</CardDescription>
+                    <CardDescription className="text-muted-foreground text-lg">{currentUser.email}</CardDescription>
                     <div className="flex items-center space-x-3 mt-3">
-                      <Badge className="bg-green-500/20 text-green-300 border-green-400">
+                      <Badge className="bg-emerald-50 text-emerald-500 border-green-400">
                         <Zap className="w-3 h-3 mr-1" />
                         {remainingInterviews} интервью доступно
                       </Badge>
-                      <Badge className="bg-blue-500/20 text-blue-300 border-blue-400">
+                      <Badge className="bg-sky-50 text-sky-600 border-blue-400">
                         <Trophy className="w-3 h-3 mr-1" />
                         {currentUser.interviews_used} пройдено
                       </Badge>
@@ -327,78 +327,78 @@ export default function DemoProfilePage() {
           <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Всего интервью</CardTitle>
+                <CardTitle className="text-foreground text-sm font-medium">Всего интервью</CardTitle>
                 <BarChart3 className="w-5 h-5 text-blue-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-white">{totalInterviews}</div>
-              <p className="text-xs text-gray-300 mt-1">Пройдено интервью</p>
+              <div className="text-3xl font-bold text-foreground">{totalInterviews}</div>
+              <p className="text-xs text-muted-foreground mt-1">Пройдено интервью</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Средний балл</CardTitle>
-                <Target className="w-5 h-5 text-green-400" />
+                <CardTitle className="text-foreground text-sm font-medium">Средний балл</CardTitle>
+                <Target className="w-5 h-5 text-emerald-600" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-white">{averageScore}/10</div>
-              <p className="text-xs text-gray-300 mt-1">Отличный результат!</p>
+              <div className="text-3xl font-bold text-foreground">{averageScore}/10</div>
+              <p className="text-xs text-muted-foreground mt-1">Отличный результат!</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Доступно</CardTitle>
+                <CardTitle className="text-foreground text-sm font-medium">Доступно</CardTitle>
                 <Clock className="w-5 h-5 text-purple-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-white">{remainingInterviews}</div>
-              <p className="text-xs text-gray-300 mt-1">Интервью осталось</p>
+              <div className="text-3xl font-bold text-foreground">{remainingInterviews}</div>
+              <p className="text-xs text-muted-foreground mt-1">Интервью осталось</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-sm font-medium">Прогресс</CardTitle>
+                <CardTitle className="text-foreground text-sm font-medium">Прогресс</CardTitle>
                 <Award className="w-5 h-5 text-orange-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-white">{Math.round((currentUser.interviews_used / currentUser.max_interviews) * 100)}%</div>
-              <p className="text-xs text-gray-300 mt-1">Из {currentUser.max_interviews} интервью</p>
+              <div className="text-3xl font-bold text-foreground">{Math.round((currentUser.interviews_used / currentUser.max_interviews) * 100)}%</div>
+              <p className="text-xs text-muted-foreground mt-1">Из {currentUser.max_interviews} интервью</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white/5 border-white/10">
-            <TabsTrigger value="history" className="data-[state=active]:bg-white/10">
+          <TabsList className="bg-white/90 border-border/60">
+            <TabsTrigger value="history" className="data-[state=active]:bg-white/70">
               История интервью
             </TabsTrigger>
-            <TabsTrigger value="stats" className="data-[state=active]:bg-white/10">
+            <TabsTrigger value="stats" className="data-[state=active]:bg-white/70">
               Статистика
             </TabsTrigger>
-            <TabsTrigger value="achievements" className="data-[state=active]:bg-white/10">
+            <TabsTrigger value="achievements" className="data-[state=active]:bg-white/70">
               Достижения
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="history" className="space-y-4">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white flex items-center space-x-2">
+                <CardTitle className="text-foreground flex items-center space-x-2">
                   <Brain className="w-5 h-5" />
                   <span>История интервью</span>
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Все ваши пройденные интервью с детальными результатами
                 </CardDescription>
               </CardHeader>
@@ -409,18 +409,18 @@ export default function DemoProfilePage() {
                     return (
                       <div
                         key={interview.id}
-                        className="flex items-center justify-between p-6 bg-gradient-to-r from-white/5 to-white/10 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300"
+                        className="flex items-center justify-between p-6 bg-gradient-to-r from-white/5 to-white/10 rounded-xl border border-border/60 hover:border-border/50 transition-all duration-300"
                       >
                         <div className="flex items-center space-x-4">
                           <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                            <SpecialtyIcon className="w-6 h-6 text-white" />
+                            <SpecialtyIcon className="w-6 h-6 text-foreground" />
                           </div>
                           <div>
-                            <h3 className="text-white font-semibold text-lg">{getSpecialtyName(interview.specialty)}</h3>
-                            <p className="text-gray-300 text-sm">
+                            <h3 className="text-foreground font-semibold text-lg">{getSpecialtyName(interview.specialty)}</h3>
+                            <p className="text-muted-foreground text-sm">
                               {interview.level} • {interview.questions_count} вопросов
                             </p>
-                            <p className="text-gray-400 text-xs">
+                            <p className="text-muted-foreground text-xs">
                               {new Date(interview.completed_at).toLocaleDateString('ru-RU', {
                                 day: 'numeric',
                                 month: 'long',
@@ -429,7 +429,7 @@ export default function DemoProfilePage() {
                             </p>
                             <div className="flex items-center space-x-2 mt-2">
                               {interview.analysis_data.strengths.slice(0, 3).map((strength: string) => (
-                                <Badge key={strength} className="bg-green-500/20 text-green-300 border-green-400 text-xs">
+                                <Badge key={strength} className="bg-emerald-50 text-emerald-500 border-green-400 text-xs">
                                   {strength}
                                 </Badge>
                               ))}
@@ -442,7 +442,7 @@ export default function DemoProfilePage() {
                           </div>
                           <div className="flex items-center justify-end space-x-1 mt-1">
                             {getScoreIcon(interview.overall_score)}
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs text-muted-foreground">
                               {getScoreLabel(interview.overall_score)}
                             </span>
                           </div>
@@ -457,13 +457,13 @@ export default function DemoProfilePage() {
 
           <TabsContent value="stats" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+              <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center space-x-2">
+                  <CardTitle className="text-foreground flex items-center space-x-2">
                     <Trophy className="w-5 h-5 text-yellow-400" />
                     <span>Топ специальности</span>
                   </CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-muted-foreground">
                     Ваши наиболее изученные направления
                   </CardDescription>
                 </CardHeader>
@@ -472,9 +472,9 @@ export default function DemoProfilePage() {
                     {topSpecialties.map((item, index) => {
                       const SpecialtyIcon = getSpecialtyIcon(item.specialty)
                       return (
-                        <div key={item.specialty} className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                        <div key={item.specialty} className="flex items-center justify-between p-4 bg-white/90 rounded-lg">
                           <div className="flex items-center space-x-3">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-foreground text-sm font-bold ${
                               index === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
                               index === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-500' :
                               'bg-gradient-to-r from-orange-600 to-red-600'
@@ -482,11 +482,11 @@ export default function DemoProfilePage() {
                               {index + 1}
                             </div>
                             <SpecialtyIcon className="w-5 h-5 text-blue-400" />
-                            <span className="text-white font-medium">{getSpecialtyName(item.specialty)}</span>
+                            <span className="text-foreground font-medium">{getSpecialtyName(item.specialty)}</span>
                           </div>
                           <div className="text-right">
                             <div className={`font-bold ${getScoreColor(item.averageScore)}`}>{item.averageScore}/10</div>
-                            <div className="text-gray-400 text-xs">{item.count} интервью</div>
+                            <div className="text-muted-foreground text-xs">{item.count} интервью</div>
                           </div>
                         </div>
                       )
@@ -495,13 +495,13 @@ export default function DemoProfilePage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+              <Card className="bg-white/90 border-border/60 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center space-x-2">
-                    <TrendingUp className="w-5 h-5 text-green-400" />
+                  <CardTitle className="text-foreground flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5 text-emerald-600" />
                     <span>Прогресс развития</span>
                   </CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-muted-foreground">
                     Ваше развитие в цифрах
                   </CardDescription>
                 </CardHeader>
@@ -509,8 +509,8 @@ export default function DemoProfilePage() {
                   <div className="space-y-6">
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-300">Использовано интервью</span>
-                        <span className="text-white font-medium">{currentUser.interviews_used}/{currentUser.max_interviews}</span>
+                        <span className="text-muted-foreground">Использовано интервью</span>
+                        <span className="text-foreground font-medium">{currentUser.interviews_used}/{currentUser.max_interviews}</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-3">
                         <div
@@ -522,8 +522,8 @@ export default function DemoProfilePage() {
 
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-300">Средний балл</span>
-                        <span className="text-white font-medium">{averageScore}/10</span>
+                        <span className="text-muted-foreground">Средний балл</span>
+                        <span className="text-foreground font-medium">{averageScore}/10</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-3">
                         <div
@@ -535,8 +535,8 @@ export default function DemoProfilePage() {
 
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-300">Специальностей изучено</span>
-                        <span className="text-white font-medium">{Object.keys(specialtyStats).length}/13</span>
+                        <span className="text-muted-foreground">Специальностей изучено</span>
+                        <span className="text-foreground font-medium">{Object.keys(specialtyStats).length}/13</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-3">
                         <div
@@ -557,8 +557,8 @@ export default function DemoProfilePage() {
               <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Trophy className="w-12 h-12 text-yellow-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Первое интервью</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Первое интервью</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     Прошли первое интервью
                   </CardDescription>
                 </CardHeader>
@@ -566,9 +566,9 @@ export default function DemoProfilePage() {
 
               <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
-                  <Star className="w-12 h-12 text-green-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Отличник</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <Star className="w-12 h-12 text-emerald-600 mx-auto mb-2" />
+                  <CardTitle className="text-foreground">Отличник</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     Средний балл выше 8.5
                   </CardDescription>
                 </CardHeader>
@@ -577,8 +577,8 @@ export default function DemoProfilePage() {
               <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Brain className="w-12 h-12 text-blue-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Эксперт</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Эксперт</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     Прошли 10+ интервью
                   </CardDescription>
                 </CardHeader>
@@ -587,8 +587,8 @@ export default function DemoProfilePage() {
               <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Code className="w-12 h-12 text-purple-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Frontend Мастер</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Frontend Мастер</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     3+ интервью по Frontend
                   </CardDescription>
                 </CardHeader>
@@ -597,8 +597,8 @@ export default function DemoProfilePage() {
               <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Zap className="w-12 h-12 text-red-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Скоростной</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Скоростной</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     5 интервью за неделю
                   </CardDescription>
                 </CardHeader>
@@ -607,8 +607,8 @@ export default function DemoProfilePage() {
               <Card className="bg-slate-800/90 border-slate-600 backdrop-blur-sm">
                 <CardHeader className="text-center">
                   <Target className="w-12 h-12 text-indigo-400 mx-auto mb-2" />
-                  <CardTitle className="text-white">Целеустремленный</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardTitle className="text-foreground">Целеустремленный</CardTitle>
+                  <CardDescription className="text-muted-foreground">
                     Прошли интервью по 4 специальностям
                   </CardDescription>
                 </CardHeader>
@@ -622,28 +622,28 @@ export default function DemoProfilePage() {
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Нужна помощь?</h2>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">Нужна помощь?</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
               Если у вас возникли проблемы или есть вопросы/предложения, пишите нам в Telegram бот
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-sky-200 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <MessageCircle className="w-8 h-8 text-white" />
+                  <MessageCircle className="w-8 h-8 text-foreground" />
                 </div>
                 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
                   Telegram Bot поддержки
                 </h3>
                 
-                <p className="text-gray-300 mb-2 text-lg font-mono">
+                <p className="text-muted-foreground mb-2 text-lg font-mono">
                   @careeros_bot
                 </p>
                 
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   Пишите нам в любое время - отвечаем быстро! Поможем с любыми вопросами по платформе.
                 </p>
                 
@@ -653,7 +653,7 @@ export default function DemoProfilePage() {
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3">
+                    <Button className="bg-blue-500 hover:bg-primary text-foreground px-6 py-3">
                       <MessageCircle className="w-5 h-5 mr-2" />
                       Написать в Telegram
                       <ExternalLink className="w-4 h-4 ml-2" />
@@ -662,7 +662,7 @@ export default function DemoProfilePage() {
                   
                   <Button 
                     variant="outline" 
-                    className="border-blue-500/50 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 px-6 py-3 bg-transparent"
+                    className="border-blue-500/50 text-sky-600 hover:bg-sky-50 hover:border-blue-400 px-6 py-3 bg-transparent"
                     onClick={() => window.open('mailto:support@careeros.ru', '_blank')}
                   >
                     <Mail className="w-5 h-5 mr-2" />
@@ -670,18 +670,18 @@ export default function DemoProfilePage() {
                   </Button>
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+                <div className="mt-6 pt-6 border-t border-border/60">
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-green-400" />
+                      <Clock className="w-4 h-4 text-emerald-600" />
                       <span>Быстрые ответы</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span>Техническая поддержка</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Star className="w-4 h-4 text-green-400" />
+                      <Star className="w-4 h-4 text-emerald-600" />
                       <span>Предложения и отзывы</span>
                     </div>
                   </div>

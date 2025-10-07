@@ -62,7 +62,7 @@ export default function AudioTestPage() {
                           <span className="text-sm">
                             Запись #{index + 1} - {Math.round(recording.duration)}с
                           </span>
-                          <span className="text-xs text-gray-500">{recording.timestamp.toLocaleTimeString()}</span>
+                          <span className="text-xs text-muted-foreground">{recording.timestamp.toLocaleTimeString()}</span>
                         </div>
                       ))}
                     </div>

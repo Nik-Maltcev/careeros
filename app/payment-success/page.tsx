@@ -40,15 +40,15 @@ export default function PaymentSuccessPage() {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 flex items-center justify-center">
       <div className="text-center">
         <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-8 h-8 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="text-3xl font-bold text-white mb-4">Оплата прошла успешно!</h1>
-        <p className="text-gray-300 mb-6">
+        <h1 className="text-3xl font-bold text-foreground mb-4">Оплата прошла успешно!</h1>
+        <p className="text-muted-foreground mb-6">
           Ваши интервью добавляются к аккаунту...
         </p>
         <div className="flex items-center justify-center space-x-2">
@@ -56,7 +56,7 @@ export default function PaymentSuccessPage() {
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
         </div>
-        <p className="text-gray-400 text-sm mt-4">
+        <p className="text-muted-foreground text-sm mt-4">
           Перенаправление на главную страницу через несколько секунд...
         </p>
       </div>

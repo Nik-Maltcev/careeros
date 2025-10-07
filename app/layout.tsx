@@ -1,10 +1,38 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next"
+import { Manrope } from "next/font/google"
+import "./globals.css"
+
+import { ThemeProvider } from "@/components/theme-provider"
+import { cn } from "@/lib/utils"
+import { Toaster } from "@/components/ui/toaster"
+
+const fontSans = Manrope({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-sans",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: "Careeros — современный карьерный помощник",
+  description:
+    "Подготовьтесь к техническим и продуктовым собеседованиям с Careeros: тренировки, обратная связь и персональные рекомендации.",
+  creator: "Careeros",
+  metadataBase: new URL("https://careeros.vercel.app"),
+  openGraph: {
+    title: "Careeros — современный карьерный помощник",
+    description:
+      "Светлый и вдохновляющий интерфейс для подготовки к собеседованиям: симуляции вопросов, аудиоанализ и ролевые сценарии.",
+    url: "https://careeros.vercel.app",
+    siteName: "Careeros",
+    locale: "ru_RU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Careeros — современный карьерный помощник",
+    description:
+      "Интервью-тренажёр с аналитикой навыков и готовыми сценариями. Лёгкий интерфейс, созданный на основе компонентов shadcn/ui.",
+  },
 }
 
 export default function RootLayout({
@@ -13,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="ru" suppressHydrationWarning>
+      <body className={cn("relative min-h-screen bg-transparent", fontSans.variable)}>
         {/* Yandex.Metrika counter */}
         <script
           type="text/javascript"
@@ -33,11 +61,19 @@ export default function RootLayout({
         />
         <noscript>
           <div>
-            <img src="https://mc.yandex.ru/watch/104231873" style={{ position: 'absolute', left: '-9999px' }} alt="" />
+            <img src="https://mc.yandex.ru/watch/104231873" style={{ position: "absolute", left: "-9999px" }} alt="" />
           </div>
         </noscript>
         {/* /Yandex.Metrika counter */}
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <div className="relative flex min-h-screen flex-col overflow-x-hidden">
+            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_45%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_45%),radial-gradient(circle_at_bottom,rgba(16,185,129,0.12),transparent_50%)]" />
+            <div className="bg-card/60 backdrop-blur-sm">
+              {children}
+            </div>
+          </div>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

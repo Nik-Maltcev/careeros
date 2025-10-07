@@ -82,7 +82,7 @@ const CircularProgress = ({
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="transparent"
-          className="text-white/20"
+          className="text-foreground/20"
         />
         <circle
           cx={size / 2}
@@ -99,8 +99,8 @@ const CircularProgress = ({
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-2xl font-bold text-white">{value.toFixed(1)}</div>
-          <div className="text-sm text-gray-400">из 10</div>
+          <div className="text-2xl font-bold text-foreground">{value.toFixed(1)}</div>
+          <div className="text-sm text-muted-foreground">из 10</div>
         </div>
       </div>
     </div>
@@ -485,24 +485,24 @@ export default function InterviewResultsPage() {
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 8) return "text-green-400"
+    if (score >= 8) return "text-emerald-600"
     if (score >= 6) return "text-yellow-400"
     return "text-red-400"
   }
 
   const getScoreBgColor = (score: number) => {
-    if (score >= 8) return "bg-green-500/20"
+    if (score >= 8) return "bg-emerald-50"
     if (score >= 6) return "bg-yellow-500/20"
     return "bg-red-500/20"
   }
 
   if (isAnalyzing) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 flex items-center justify-center">
+        <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg p-8 text-center">
           <Loader2 className="w-16 h-16 text-blue-400 mx-auto mb-4 animate-spin" />
-          <h2 className="text-2xl font-bold text-white mb-2">Анализируем ваши ответы...</h2>
-          <p className="text-gray-300">ИИ обрабатывает результаты интервью</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Анализируем ваши ответы...</h2>
+          <p className="text-muted-foreground">ИИ обрабатывает результаты интервью</p>
         </Card>
       </div>
     )
@@ -510,12 +510,12 @@ export default function InterviewResultsPage() {
 
   if (!analysisResult) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 flex items-center justify-center">
+        <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg p-8 text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Ошибка анализа</h2>
-          <p className="text-gray-300 mb-4">{error || "Не удалось проанализировать результаты"}</p>
-          <Button onClick={() => (window.location.href = "/")} className="bg-blue-600 hover:bg-blue-700 text-white">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Ошибка анализа</h2>
+          <p className="text-muted-foreground mb-4">{error || "Не удалось проанализировать результаты"}</p>
+          <Button onClick={() => (window.location.href = "/")} className="bg-primary hover:bg-primary/90 text-foreground">
             Вернуться на главную
           </Button>
         </Card>
@@ -526,29 +526,29 @@ export default function InterviewResultsPage() {
   const { overallScore, criteriaScores, feedback, roadmapGoals } = analysisResult
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       {/* Header */}
-      <header className="bg-white/5 backdrop-blur-sm border-b border-white/10">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-border/60">
         <div className="container mx-auto px-4 py-8 text-center">
           <div className="flex items-center justify-center mb-4">
             <Trophy className="w-8 h-8 text-yellow-400 mr-3" />
-            <h1 className="text-3xl font-bold text-white">Результаты интервью</h1>
+            <h1 className="text-3xl font-bold text-foreground">Результаты интервью</h1>
           </div>
-          <p className="text-gray-300">Анализ выполнен на основе ваших ответов</p>
+          <p className="text-muted-foreground">Анализ выполнен на основе ваших ответов</p>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Overall Score */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-lg">
+          <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-lg">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-6">Общая оценка</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-6">Общая оценка</h2>
               <div className="flex items-center justify-center space-x-8">
                 <CircularProgress value={overallScore} size={150} strokeWidth={12} />
                 <div className="text-left">
                   <div className="text-4xl font-bold text-blue-400 mb-2">{overallScore.toFixed(1)}/10</div>
-                  <div className="text-gray-300 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     {overallScore >= 8
                       ? "Отличный результат!"
                       : overallScore >= 6
@@ -557,7 +557,7 @@ export default function InterviewResultsPage() {
                           ? "Удовлетворительно"
                           : "Требует улучшения"}
                   </div>
-                  <div className="flex items-center text-sm text-gray-400">
+                  <div className="flex items-center text-sm text-muted-foreground">
                     <Star className="w-4 h-4 mr-1 text-yellow-400" />
                     Основано на анализе ваших ответов
                   </div>
@@ -571,7 +571,7 @@ export default function InterviewResultsPage() {
             {criteriaScores.map((criteria, index) => {
               const IconComponent = criteria.icon
               return (
-                <Card key={index} className="bg-white/5 backdrop-blur-sm border-white/10 shadow-sm">
+                <Card key={index} className="bg-white/90 backdrop-blur-sm border-border/60 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <IconComponent className="w-6 h-6 text-blue-400" />
@@ -579,9 +579,9 @@ export default function InterviewResultsPage() {
                         {criteria.score.toFixed(1)}/{criteria.maxScore}
                       </Badge>
                     </div>
-                    <h3 className="font-semibold text-white mb-2">{criteria.name}</h3>
-                    <p className="text-sm text-gray-300 mb-3">{criteria.description}</p>
-                    <Progress value={(criteria.score / criteria.maxScore) * 100} className="h-2 bg-white/10" />
+                    <h3 className="font-semibold text-foreground mb-2">{criteria.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{criteria.description}</p>
+                    <Progress value={(criteria.score / criteria.maxScore) * 100} className="h-2 bg-white/70" />
                   </CardContent>
                 </Card>
               )
@@ -591,34 +591,34 @@ export default function InterviewResultsPage() {
           {/* Detailed Feedback */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Strengths */}
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-sm">
+            <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-green-400 flex items-center">
+                <CardTitle className="text-emerald-600 flex items-center">
                   <CheckCircle className="w-5 h-5 mr-2" />
                   Сильные стороны
                 </CardTitle>
-                <CardDescription className="text-gray-300">Ваши преимущества и достижения</CardDescription>
+                <CardDescription className="text-muted-foreground">Ваши преимущества и достижения</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {feedback
                   .filter((item) => item.type === "strength")
                   .map((item, index) => (
                     <div key={index} className="flex items-start space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-300 text-sm">{item.text}</p>
+                      <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-muted-foreground text-sm">{item.text}</p>
                     </div>
                   ))}
               </CardContent>
             </Card>
 
             {/* Areas for Improvement */}
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-sm">
+            <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-orange-400 flex items-center">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   Области для улучшения
                 </CardTitle>
-                <CardDescription className="text-gray-300">Рекомендации для развития</CardDescription>
+                <CardDescription className="text-muted-foreground">Рекомендации для развития</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {feedback
@@ -626,7 +626,7 @@ export default function InterviewResultsPage() {
                   .map((item, index) => (
                     <div key={index} className="flex items-start space-x-3">
                       <AlertCircle className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-300 text-sm">{item.text}</p>
+                      <p className="text-muted-foreground text-sm">{item.text}</p>
                     </div>
                   ))}
               </CardContent>
@@ -634,33 +634,33 @@ export default function InterviewResultsPage() {
           </div>
 
           {/* Personal Roadmap */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-sm">
+          <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-sm">
             <CardHeader>
               <CardTitle className="text-blue-400 flex items-center">
                 <TrendingUp className="w-5 h-5 mr-2" />
                 Персональный роадмап развития
               </CardTitle>
-              <CardDescription className="text-gray-300">Пошаговый план для достижения ваших целей</CardDescription>
+              <CardDescription className="text-muted-foreground">Пошаговый план для достижения ваших целей</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {roadmapGoals.map((goal, index) => (
                 <div key={index} className="border-l-4 border-blue-400 pl-6 pb-6 last:pb-0">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-white">{goal.title}</h4>
-                    <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-400">
+                    <h4 className="font-semibold text-foreground">{goal.title}</h4>
+                    <Badge variant="outline" className="bg-sky-50 text-sky-600 border-blue-400">
                       <Calendar className="w-3 h-3 mr-1" />
                       {goal.timeframe}
                     </Badge>
                   </div>
-                  <p className="text-gray-300 text-sm mb-3">{goal.description}</p>
+                  <p className="text-muted-foreground text-sm mb-3">{goal.description}</p>
                   <div className="space-y-2">
-                    <div className="flex items-center text-sm text-gray-400 mb-2">
+                    <div className="flex items-center text-sm text-muted-foreground mb-2">
                       <BookOpen className="w-4 h-4 mr-2" />
                       Рекомендуемые ресурсы:
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {goal.resources.map((resource, resourceIndex) => (
-                        <Badge key={resourceIndex} variant="secondary" className="bg-white/10 text-gray-300">
+                        <Badge key={resourceIndex} variant="secondary" className="bg-white/70 text-muted-foreground">
                           {resource}
                         </Badge>
                       ))}
@@ -673,13 +673,13 @@ export default function InterviewResultsPage() {
 
           {/* Question Feedback */}
           {analysisResult.questionFeedback && analysisResult.questionFeedback.length > 0 && (
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 shadow-sm">
+            <Card className="bg-white/90 backdrop-blur-sm border-border/60 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-purple-400 flex items-center">
                   <MessageSquare className="w-5 h-5 mr-2" />
                   Обратная связь по вопросам
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-muted-foreground">
                   Детальный анализ ваших ответов на каждый вопрос
                 </CardDescription>
               </CardHeader>
@@ -688,7 +688,7 @@ export default function InterviewResultsPage() {
                   <div key={feedback.questionId} className="border-l-2 border-purple-500/30 pl-4 space-y-3">
                     {/* Вопрос и оценка */}
                     <div className="flex items-start justify-between">
-                      <h4 className="text-white font-medium text-sm leading-relaxed pr-4">
+                      <h4 className="text-foreground font-medium text-sm leading-relaxed pr-4">
                         {index + 1}. {feedback.questionText}
                       </h4>
                       <div className="flex items-center space-x-1 bg-purple-500/20 px-2 py-1 rounded-full flex-shrink-0">
@@ -700,7 +700,7 @@ export default function InterviewResultsPage() {
                     </div>
 
                     {/* Обратная связь */}
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       {feedback.feedback}
                     </p>
 
@@ -709,14 +709,14 @@ export default function InterviewResultsPage() {
                       {/* Сильные стороны */}
                       {feedback.strengths && feedback.strengths.length > 0 && (
                         <div>
-                          <h5 className="text-green-400 text-xs font-medium mb-2 flex items-center space-x-1">
+                          <h5 className="text-emerald-600 text-xs font-medium mb-2 flex items-center space-x-1">
                             <CheckCircle className="w-3 h-3" />
                             <span>Сильные стороны</span>
                           </h5>
                           <ul className="space-y-1">
                             {feedback.strengths.map((strength, idx) => (
-                              <li key={idx} className="text-gray-400 text-xs flex items-start space-x-1">
-                                <span className="text-green-400 mt-1">•</span>
+                              <li key={idx} className="text-muted-foreground text-xs flex items-start space-x-1">
+                                <span className="text-emerald-600 mt-1">•</span>
                                 <span>{strength}</span>
                               </li>
                             ))}
@@ -733,7 +733,7 @@ export default function InterviewResultsPage() {
                           </h5>
                           <ul className="space-y-1">
                             {feedback.improvements.map((improvement, idx) => (
-                              <li key={idx} className="text-gray-400 text-xs flex items-start space-x-1">
+                              <li key={idx} className="text-muted-foreground text-xs flex items-start space-x-1">
                                 <span className="text-orange-400 mt-1">•</span>
                                 <span>{improvement}</span>
                               </li>
@@ -750,13 +750,13 @@ export default function InterviewResultsPage() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+            <Button className="bg-primary hover:bg-primary/90 text-foreground px-8 py-3">
               <Download className="w-4 h-4 mr-2" />
               Скачать отчет PDF
             </Button>
             <Button
               variant="outline"
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-8 py-3"
+              className="bg-white/70 border-border/50 text-foreground hover:bg-white/20 px-8 py-3"
               onClick={() => (window.location.href = "/")}
             >
               <RefreshCw className="w-4 h-4 mr-2" />
@@ -766,7 +766,7 @@ export default function InterviewResultsPage() {
               variant="outline"
               onClick={handleShare}
               disabled={isSharing}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-8 py-3"
+              className="bg-white/70 border-border/50 text-foreground hover:bg-white/20 px-8 py-3"
             >
               {isSharing ? (
                 <>
@@ -788,28 +788,28 @@ export default function InterviewResultsPage() {
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">Нужна помощь?</h2>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">Нужна помощь?</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
               Если у вас возникли проблемы или есть вопросы/предложения, пишите нам в Telegram бот
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-sky-200 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <MessageSquare className="w-8 h-8 text-white" />
+                  <MessageSquare className="w-8 h-8 text-foreground" />
                 </div>
                 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
                   Telegram Bot поддержки
                 </h3>
                 
-                <p className="text-gray-300 mb-2 text-lg font-mono">
+                <p className="text-muted-foreground mb-2 text-lg font-mono">
                   @careeros_bot
                 </p>
                 
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   Пишите нам в любое время - отвечаем быстро! Поможем с любыми вопросами по платформе.
                 </p>
                 
@@ -819,7 +819,7 @@ export default function InterviewResultsPage() {
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3">
+                    <Button className="bg-blue-500 hover:bg-primary text-foreground px-6 py-3">
                       <MessageSquare className="w-5 h-5 mr-2" />
                       Написать в Telegram
                     </Button>
@@ -827,7 +827,7 @@ export default function InterviewResultsPage() {
                   
                   <Button 
                     variant="outline" 
-                    className="border-blue-500/50 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400 px-6 py-3 bg-transparent"
+                    className="border-blue-500/50 text-sky-600 hover:bg-sky-50 hover:border-blue-400 px-6 py-3 bg-transparent"
                     onClick={() => window.open('mailto:support@careeros.ru', '_blank')}
                   >
                     <MessageSquare className="w-5 h-5 mr-2" />
@@ -835,18 +835,18 @@ export default function InterviewResultsPage() {
                   </Button>
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+                <div className="mt-6 pt-6 border-t border-border/60">
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-green-400" />
+                      <Clock className="w-4 h-4 text-emerald-600" />
                       <span>Быстрые ответы</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
                       <span>Техническая поддержка</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Star className="w-4 h-4 text-green-400" />
+                      <Star className="w-4 h-4 text-emerald-600" />
                       <span>Предложения и отзывы</span>
                     </div>
                   </div>
