@@ -500,46 +500,145 @@ export default function LandingPage() {
             </Link>
           </nav>
           <div className="flex items-center gap-2">
+
             {!isSupabaseConfigured && (
+
               <Badge variant="outline" className="hidden md:inline-flex border-dashed text-xs">
+
                 Demo-режим
+
               </Badge>
+
             )}
+
+            {isClient && currentUser ? (
+
+              <Button
+
+                size="sm"
+
+                variant="outline"
+
+                className="hidden md:inline-flex rounded-full border-border/60 bg-white/80 px-4 text-sm shadow-sm hover:bg-white"
+
+                asChild
+
+              >
+
+                <Link href="/profile">Личный кабинет</Link>
+
+              </Button>
+
+            ) : (
+
+              <Button
+
+                size="sm"
+
+                variant="outline"
+
+                className="hidden md:inline-flex rounded-full border-border/60 bg-white/80 px-4 text-sm shadow-sm hover:bg-white"
+
+                onClick={() => setShowAuthDialog(true)}
+
+              >
+
+                Личный кабинет
+
+              </Button>
+
+            )}
+
+            {isClient && currentUser ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="md:hidden rounded-full border-border/60 bg-white/90 px-3 text-sm shadow-sm"
+                asChild
+              >
+                <Link href="/profile">Личный кабинет</Link>
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                className="md:hidden rounded-full border-border/60 bg-white/90 px-3 text-sm shadow-sm"
+                onClick={() => setShowAuthDialog(true)}
+              >
+                Личный кабинет
+              </Button>
+            )}
+
             {isClient && (
+
               <>
+
                 {isPremium ? (
+
                   <Badge className="hidden md:inline-flex gap-1 bg-gradient-to-r from-amber-400 to-orange-500 text-amber-950">
+
                     <Crown className="h-3 w-3" />
+
                     Premium
+
                   </Badge>
+
                 ) : (
+
                   <Badge variant="outline" className="hidden md:inline-flex border-primary/40 text-primary">
+
                     {attemptsLabel}
+
                   </Badge>
+
                 )}
+
                 {currentUser ? (
+
                   <Button
+
                     size="sm"
+
                     variant="ghost"
+
                     className="gap-2 text-sm text-muted-foreground hover:text-foreground"
+
                     onClick={() => SupabaseAuthService.logout()}
+
                   >
+
                     <LogOut className="h-4 w-4" />
+
                     Выйти
+
                   </Button>
+
                 ) : (
+
                   <Button
+
                     size="sm"
+
                     variant="secondary"
+
                     className="gap-2 rounded-full bg-white/80 px-4 text-sm shadow-sm hover:bg-white"
+
                     onClick={() => setShowAuthDialog(true)}
+
                   >
+
                     <LogIn className="h-4 w-4" />
+
                     Войти
+
                   </Button>
+
                 )}
+
               </>
+
             )}
+
             <VpnWarningMobile className="flex md:hidden" />
           </div>
         </div>
